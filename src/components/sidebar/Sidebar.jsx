@@ -6,9 +6,10 @@ import {
   PlayCircleFilledOutlined,
   School,
   WorkOutline,
+  RssFeed,
+  Event,
 } from "@mui/icons-material";
 import "./Sidebar.css";
-import { RssFeed } from "@mui/icons";
 
 function Sidebar() {
   return (
