@@ -12,15 +12,15 @@ function Profile() {
         <Sidebar />
         <div className="profileRight">
           <div className="profileRightTop">
-            <div className="profile">
+            <div className="profileCover">
               <img
                 className="profileCoverImg"
-                src="public/assets/post/img3.jpg"
+                src="/assets/post/img3.jpg"
                 alt=""
               />
               <img
                 className="profileUserImg"
-                src="public/assets/person/img7.jpg"
+                src="/assets/person/img7.jpg"
                 alt=""
               />
             </div>

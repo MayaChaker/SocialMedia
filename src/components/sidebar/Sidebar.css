@@ -1,9 +1,13 @@
 .sidebar {
-  flex: 3px;
-  height: calc(100vh - 50px);
-  overflow-y: scroll;
+  flex: 2;
+  max-width: 260px;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
   position: sticky;
-  top: 50px;
+  top: 60px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 16px -8px rgba(0, 0, 0, 0.2);
 }
 
 ::-webkit-scrollbar {
@@ -17,7 +21,7 @@
 }
 
 .sidebarWrapper {
-  padding: 20px;
+  padding: 20px 20px 20px 8px;
 }
 .sidebarList {
   padding: 0;
@@ -40,6 +44,8 @@
   padding: 10px;
   border-radius: 5px;
   font-weight: 500;
+  background-color: #e4e6eb;
+  cursor: pointer;
 }
 
 .sidebarHr {

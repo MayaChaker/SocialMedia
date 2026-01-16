@@ -1,4 +1,31 @@
 .homeContainer {
   display: flex;
   width: 100%;
+  margin: 20px 0;
+  gap: 16px;
+  padding: 0 16px;
+}
+
+@media (max-width: 992px) {
+  .homeContainer {
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .homeContainer {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .rightbar {
+    display: none;
+  }
+
+  .feed {
+    flex: 1;
+  }
 }

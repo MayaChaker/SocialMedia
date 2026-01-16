@@ -16,7 +16,7 @@ import CloseFriend from "../closeFriend/CloseFriend";
 function Sidebar() {
   return (
     <div className="sidebar">
-      <div className="sidebarwrapper">
+      <div className="sidebarWrapper">
         <ul className="sidebarList">
           <li className="sidebarListItem">
             <RssFeed className="sidebarIcon" />
