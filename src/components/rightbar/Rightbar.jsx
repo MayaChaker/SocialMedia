@@ -6,12 +6,16 @@ function Rightbar({ profile }) {
     return (
       <>
         <div className="birthdayContainer">
-          <img src="" alt="public/assets/gift.png" className="birthdayImg" />
+          <img
+            src="/assets/gift.png"
+            alt="Birthday gift"
+            className="birthdayImg"
+          />
           <span className="birthdayText">
             <b>Pola Foster</b> and <b>3 other friends</b> have a birthday today.
           </span>
         </div>
-        <img src="public/assets/ad.png" alt="" className="rightbarAd" />
+        <img src="/assets/ad.png" alt="Advertisement" className="rightbarAd" />
         <h4 className="rightbarTitle">Online Friends</h4>
         <ul className="rightbarFriendList">
           {Users.map((u) => (
@@ -25,15 +29,15 @@ function Rightbar({ profile }) {
     return (
       <>
         <div className="rightbarInfo">
-          <div className="rightbarInfoIntem">
+          <div className="rightbarInfoItem">
             <span className="rightbarInfoKey">City:</span>
             <span className="rightbarInfoValue">New York</span>
           </div>
-          <div className="rightbarInfoIntem">
+          <div className="rightbarInfoItem">
             <span className="rightbarInfoKey">From:</span>
             <span className="rightbarInfoValue">Madrid</span>
           </div>
-          <div className="rightbarInfoIntem">
+          <div className="rightbarInfoItem">
             <span className="rightbarInfoKey">Relationship:</span>
             <span className="rightbarInfoValue">Single</span>
           </div>
@@ -42,48 +46,48 @@ function Rightbar({ profile }) {
         <div className="rightbarFollowings">
           <div className="rightbarFollowing">
             <img
-              src=""
-              alt="public/assets/person/img1.jpg"
+              src="/assets/person/img1.jpg"
+              alt="John Carter"
               className="rightbarFollowingImg"
             />
             <span className="rightbarFollowingName">John Carter</span>
           </div>
           <div className="rightbarFollowing">
             <img
-              src=""
-              alt="public/assets/person/img2.jpg"
+              src="/assets/person/img2.jpg"
+              alt="John Carter"
               className="rightbarFollowingImg"
             />
             <span className="rightbarFollowingName">John Carter</span>
           </div>
           <div className="rightbarFollowing">
             <img
-              src=""
-              alt="public/assets/person/img3.jpg"
+              src="/assets/person/img3.jpg"
+              alt="John Carter"
               className="rightbarFollowingImg"
             />
             <span className="rightbarFollowingName">John Carter</span>
           </div>
           <div className="rightbarFollowing">
             <img
-              src=""
-              alt="public/assets/person/img4.jpg"
+              src="/assets/person/img4.jpg"
+              alt="John Carter"
               className="rightbarFollowingImg"
             />
             <span className="rightbarFollowingName">John Carter</span>
           </div>
           <div className="rightbarFollowing">
             <img
-              src=""
-              alt="public/assets/person/img5.jpg"
+              src="/assets/person/img5.jpg"
+              alt="John Carter"
               className="rightbarFollowingImg"
             />
             <span className="rightbarFollowingName">John Carter</span>
           </div>
           <div className="rightbarFollowing">
             <img
-              src=""
-              alt="public/assets/person/img6.jpg"
+              src="/assets/person/img6.jpg"
+              alt="John Carter"
               className="rightbarFollowingImg"
             />
             <span className="rightbarFollowingName">John Carter</span>

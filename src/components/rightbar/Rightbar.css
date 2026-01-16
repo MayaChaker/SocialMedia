@@ -1,14 +1,23 @@
 .rightbar {
-  flex: 4px;
+  flex: 2;
+  max-width: 260px;
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
 }
 
 .rightbarWrapper {
-  padding: 20px 20px 0 0;
+  padding: 20px 0 20px 0;
 }
 
 .birthdayContainer {
   display: flex;
   align-items: center;
+  background-color: #ffffff;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 0 16px -8px rgba(0, 0, 0, 0.2);
 }
 .birthdayImg {
   width: 40px;
@@ -24,6 +33,7 @@
   width: 100%;
   border-radius: 10px;
   margin: 30px 0;
+  box-shadow: 0 0 16px -8px rgba(0, 0, 0, 0.2);
 }
 
 .rightbarTitle {
@@ -42,6 +52,10 @@
 }
 .rightbarInfo {
   margin-bottom: 30px;
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 0 16px -8px rgba(0, 0, 0, 0.2);
 }
 
 .rightbarInfoItem {

@@ -1,40 +1,53 @@
 import "./Topbar.css";
-import { Search, Person, Chat, Notifications } from "@mui/icons-material";
+import { Search, Person, Chat, Notifications, Add } from "@mui/icons-material";
 
 function Topbar() {
   return (
     <div className="topbarContainer">
-      <div className="topbarleft"></div>
-      <span className="logo">Laamasocial</span>
+      <div className="topbarLeft">
+        <div className="logoMark">L</div>
+        <span className="logoText">Laamasocial</span>
+      </div>
       <div className="topbarCenter">
         <div className="searchbar">
           <Search className="searchIcon" />
           <input
-            placeholder="Search for friend , post or video"
+            placeholder="Search for friend, post or video"
             className="searchInput"
           />
         </div>
       </div>
       <div className="topbarRight">
         <div className="topbarLinks">
-          <span className="topbarLink">Homepage</span>
-          <span className="topbarLink">Timeline</span>
+          <span className="topbarLink topbarLinkActive">Home</span>
+          <span className="topbarLink">Explore</span>
+          <span className="topbarLink">Messages</span>
         </div>
+        <button className="topbarActionButton">
+          <Add className="topbarActionIcon" />
+          Create
+        </button>
         <div className="topbarIcons">
-          <div className="topbarIconItem">
+          <div className="topbarIconsItem">
             <Person />
-            <span className="topbarIconBadge">1</span>
+            <span className="topbarIconsBadge">1</span>
           </div>
-          <div className="topbarIconItem">
+          <div className="topbarIconsItem">
             <Chat />
-            <span className="topbarIconBadge">2</span>
+            <span className="topbarIconsBadge">2</span>
           </div>
-          <div className="topbarIconItem">
+          <div className="topbarIconsItem">
             <Notifications />
-            <span className="topbarIconBadge">1</span>
+            <span className="topbarIconsBadge">3</span>
           </div>
         </div>
-        <img src="assets/person/img1.jpg" alt="" className="topbarImg" />
+        <div className="topbarUser">
+          <div className="topbarUserAvatar">
+            <img src="assets/person/img1.jpg" alt="Profile" className="topbarImg" />
+            <span className="topbarUserStatus" />
+          </div>
+          <span className="topbarUsername">Safak</span>
+        </div>
       </div>
     </div>
   );
