@@ -1,0 +1,133 @@
+.inboxPage {
+  min-height: calc(100vh - 60px);
+  background: transparent;
+  padding: 28px 16px;
+}
+
+.inboxWrapper {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.inboxHeader {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.inboxTitle {
+  margin: 0;
+  font-size: 28px;
+  font-family: "Roboto", sans-serif;
+  color: #111;
+}
+
+.inboxSubtitle {
+  margin-top: 6px;
+  color: rgba(17, 17, 17, 0.65);
+  font-size: 13px;
+}
+
+.inboxHeaderRight {
+  display: flex;
+  gap: 10px;
+}
+
+.inboxActionButton {
+  border: 1px solid rgba(124, 92, 255, 0.3);
+  background: rgba(124, 92, 255, 0.12);
+  color: rgba(17, 17, 17, 0.9);
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.inboxActionButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.inboxActionButton.danger {
+  border-color: rgba(244, 67, 54, 0.35);
+  background: rgba(244, 67, 54, 0.08);
+}
+
+.inboxList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.inboxItem {
+  text-align: left;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 14px;
+  padding: 14px;
+  cursor: pointer;
+  color: rgba(17, 17, 17, 0.92);
+}
+
+.inboxItem.unread {
+  border-color: rgba(124, 92, 255, 0.32);
+  background: rgba(124, 92, 255, 0.12);
+}
+
+.inboxItemTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.inboxItemTitle {
+  font-weight: 800;
+}
+
+.inboxItemTime {
+  font-size: 12px;
+  opacity: 0.75;
+  white-space: nowrap;
+}
+
+.inboxItemBody {
+  font-size: 13px;
+  opacity: 0.92;
+  line-height: 1.4;
+}
+
+.inboxEmpty {
+  border: 1px dashed rgba(0, 0, 0, 0.18);
+  border-radius: 14px;
+  padding: 18px;
+  color: rgba(17, 17, 17, 0.65);
+  background: rgba(255, 255, 255, 0.7);
+}
+
+body.luxeDark .inboxTitle {
+  color: #e9e9e9;
+}
+
+body.luxeDark .inboxSubtitle {
+  color: rgba(233, 233, 233, 0.7);
+}
+
+body.luxeDark .inboxActionButton {
+  color: #e9e9e9;
+}
+
+body.luxeDark .inboxItem {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e9e9e9;
+}
+
+body.luxeDark .inboxEmpty {
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  color: rgba(233, 233, 233, 0.8);
+  background: rgba(255, 255, 255, 0.02);
+}

@@ -1,0 +1,249 @@
+.settingsPage {
+  min-height: calc(100vh - 60px);
+  padding: 28px 16px;
+}
+
+.settingsWrapper {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.settingsHeader {
+  margin-bottom: 18px;
+}
+
+.settingsTitle {
+  margin: 0;
+  font-size: 34px;
+  font-family: "Roboto", sans-serif;
+  color: #111;
+}
+
+.settingsSubtitle {
+  margin-top: 6px;
+  color: rgba(17, 17, 17, 0.65);
+  font-size: 15px;
+}
+
+.settingsCard {
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.settingsSectionTitle {
+  font-weight: 800;
+  margin-bottom: 12px;
+  color: rgba(17, 17, 17, 0.92);
+  font-size: 16px;
+}
+
+.settingsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.settingsFieldFull {
+  grid-column: 1 / -1;
+}
+
+.settingsField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settingsLabel {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(17, 17, 17, 0.7);
+}
+
+.settingsInput {
+  height: 40px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.9);
+  color: #111;
+  padding: 0 12px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.settingsInput::placeholder {
+  color: rgba(17, 17, 17, 0.45);
+  opacity: 1;
+}
+
+.settingsInput:focus {
+  border-color: rgba(124, 92, 255, 0.65);
+}
+
+.settingsTextarea {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.9);
+  color: #111;
+  padding: 10px 12px;
+  outline: none;
+  min-height: 40px;
+  resize: vertical;
+  font-family: "Roboto", sans-serif;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.settingsTextarea:focus {
+  border-color: rgba(124, 92, 255, 0.65);
+}
+
+.settingsPillDanger {
+  border-color: rgba(220, 38, 38, 0.35);
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.settingsActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.settingsButton {
+  border-radius: 12px;
+  padding: 10px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(17, 17, 17, 0.9);
+  font-weight: 900;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.settingsButtonPrimary {
+  border-color: rgba(124, 92, 255, 0.35);
+  background: rgba(124, 92, 255, 0.12);
+}
+
+.settingsButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.settingsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.settingsHint {
+  margin-top: 6px;
+  font-size: 13px;
+  color: rgba(17, 17, 17, 0.6);
+}
+
+.settingsRowRight {
+  display: flex;
+  gap: 8px;
+}
+
+.settingsPill {
+  border-radius: 999px;
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(0, 0, 0, 0.03);
+  color: rgba(17, 17, 17, 0.85);
+  font-weight: 800;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.settingsPill.active {
+  border-color: rgba(124, 92, 255, 0.65);
+  background: rgba(124, 92, 255, 0.2);
+}
+
+.settingsFooterNote {
+  display: none;
+  margin-top: 8px;
+  margin-bottom: 0;
+  color: rgba(17, 17, 17, 0.55);
+  font-size: 13px;
+}
+
+body.luxeDark .settingsTitle {
+  color: #e9e9e9;
+}
+
+body.luxeDark .settingsSubtitle {
+  color: rgba(233, 233, 233, 0.7);
+}
+
+body.luxeDark .settingsCard {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body.luxeDark .settingsSectionTitle {
+  color: rgba(233, 233, 233, 0.92);
+}
+
+body.luxeDark .settingsLabel {
+  color: rgba(233, 233, 233, 0.75);
+}
+
+body.luxeDark .settingsInput {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.22);
+  color: #e9e9e9;
+}
+
+body.luxeDark .settingsTextarea {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.22);
+  color: #e9e9e9;
+}
+
+body.luxeDark .settingsInput::placeholder {
+  color: rgba(233, 233, 233, 0.45);
+}
+
+body.luxeDark .settingsHint {
+  color: rgba(233, 233, 233, 0.6);
+}
+
+body.luxeDark .settingsPill {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e9e9e9;
+}
+
+body.luxeDark .settingsButton {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #e9e9e9;
+}
+
+body.luxeDark .settingsButtonPrimary {
+  border-color: rgba(124, 92, 255, 0.45);
+  background: rgba(124, 92, 255, 0.18);
+}
+
+body.luxeDark .settingsFooterNote {
+  color: rgba(233, 233, 233, 0.6);
+}
+
+@media (max-width: 800px) {
+  .settingsGrid {
+    grid-template-columns: 1fr;
+  }
+}

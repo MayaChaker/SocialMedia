@@ -1,0 +1,695 @@
+.post {
+  width: 100%;
+  border-radius: 12px;
+  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin: 0;
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.post:hover {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
+  transform: none;
+}
+
+.post.isModalOpen,
+.post.isModalOpen:hover {
+  transform: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.post.postModal {
+  width: min(760px, 100%);
+  height: auto;
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  border-radius: 16px;
+}
+
+.postModalTitle {
+  margin-bottom: 12px;
+}
+
+.postModalClose {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.04);
+  color: rgba(17, 17, 17, 0.92);
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.postModalClose:hover {
+  border-color: rgba(124, 92, 255, 0.6);
+  background: rgba(124, 92, 255, 0.12);
+}
+
+.postDescriptionFull {
+  display: block;
+  -webkit-line-clamp: initial;
+  -webkit-box-orient: initial;
+  overflow: visible;
+}
+
+body.luxeDark .postModalClose {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: #eaeaea;
+}
+
+@media (hover: none) {
+  .post:hover {
+    transform: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post {
+    transition: none;
+  }
+
+  .post:hover {
+    transform: none;
+  }
+}
+.postWrapper {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.postHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.postHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.postStatusGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.postStatus {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+.postStatus.open {
+  background-color: rgba(124, 92, 255, 0.12);
+  color: #5b6bff;
+}
+.postStatus.assigned {
+  background-color: rgba(33, 150, 243, 0.15);
+  color: #2196f3;
+}
+.postStatus.completed {
+  background-color: rgba(76, 175, 80, 0.15);
+  color: #4caf50;
+}
+
+.postType {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #f5f5f5;
+  color: #666;
+  border: 1px solid #eee;
+}
+
+.postType.online {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border-color: #bbdefb;
+}
+
+.postType.physical {
+  background-color: #fbe9e7;
+  color: #d84315;
+  border-color: #ffccbc;
+}
+
+.postBudget {
+  font-family: "Roboto", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+}
+
+.postTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+  color: #333;
+  line-height: 1.4;
+}
+
+.postTitleButton {
+  background: transparent;
+  border: none;
+  padding: 0;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.postTitleButton:focus {
+  outline: none;
+}
+
+.postTitleButton:focus-visible {
+  outline: 2px solid rgba(124, 92, 255, 0.55);
+  outline-offset: 4px;
+  border-radius: 10px;
+}
+
+.postTitleButton:active .postTitle {
+  color: rgba(17, 17, 17, 0.92);
+  text-decoration-color: rgba(124, 92, 255, 0.9);
+}
+
+.postTitleButton:hover .postTitle {
+  color: #111;
+  text-decoration: underline;
+  text-decoration-color: rgba(124, 92, 255, 0.7);
+  text-underline-offset: 4px;
+}
+
+.postDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.postDetailItem {
+  display: flex;
+  align-items: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.postIcon {
+  font-size: 18px !important;
+  margin-right: 8px;
+  color: rgba(124, 92, 255, 0.9);
+}
+
+.postDescription {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.postFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+.postPoster {
+  display: flex;
+  align-items: center;
+}
+
+.posterAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #111;
+  display: block;
+  object-fit: cover;
+  flex-shrink: 0;
+  margin-right: 10px;
+}
+
+.posterName {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+}
+
+.postActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.actionButton {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+  padding: 0;
+}
+
+.actionButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.actionButton.isLoading {
+  cursor: wait;
+  gap: 8px;
+}
+
+.actionButtonSpinner {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 2px solid rgba(124, 92, 255, 0.22);
+  border-top-color: rgba(124, 92, 255, 0.9);
+  animation: actionButtonSpin 0.8s linear infinite;
+}
+
+@keyframes actionButtonSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.actionButton.view {
+  border: 1px solid rgba(124, 92, 255, 0.25);
+  border-radius: 20px;
+  width: auto;
+  height: auto;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #111;
+  background: rgba(124, 92, 255, 0.08);
+}
+
+.actionButton.view:hover {
+  background: rgba(124, 92, 255, 0.14);
+  border-color: rgba(124, 92, 255, 0.45);
+}
+
+.actionButton.delete {
+  border: 1px solid rgba(229, 115, 115, 0.35);
+  border-radius: 999px;
+  width: auto;
+  height: auto;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(229, 115, 115, 0.95);
+  background: rgba(229, 115, 115, 0.08);
+  white-space: nowrap;
+}
+.actionButton.delete:hover {
+  background: rgba(229, 115, 115, 0.14);
+  border-color: rgba(229, 115, 115, 0.55);
+}
+
+.actionButton.complete {
+  border: 1px solid rgba(76, 175, 80, 0.35);
+  border-radius: 999px;
+  width: auto;
+  height: auto;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(76, 175, 80, 0.95);
+  background: rgba(76, 175, 80, 0.08);
+  white-space: nowrap;
+}
+.actionButton.complete:hover {
+  background: rgba(76, 175, 80, 0.14);
+  border-color: rgba(76, 175, 80, 0.55);
+}
+
+.actionButton.accept {
+  border: 1px solid rgba(124, 92, 255, 0.85);
+  border-radius: 999px;
+  width: auto;
+  height: auto;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(124, 92, 255, 0.95);
+}
+.actionButton.accept:hover {
+  background: rgba(124, 92, 255, 0.9);
+  color: white;
+}
+
+.actionButton.save {
+  border: 1px solid rgba(124, 92, 255, 0.25);
+  border-radius: 999px;
+  width: auto;
+  height: auto;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(124, 92, 255, 0.95);
+  background: rgba(124, 92, 255, 0.08);
+}
+
+.actionButton.save:hover {
+  background: rgba(124, 92, 255, 0.14);
+  border-color: rgba(124, 92, 255, 0.45);
+}
+
+.actionButton.save.saved {
+  background: rgba(124, 92, 255, 0.18);
+  border-color: rgba(124, 92, 255, 0.6);
+}
+
+.assignedBadge {
+  font-size: 12px;
+  color: #2196f3;
+  font-weight: 600;
+  padding: 4px 8px;
+  background: rgba(33, 150, 243, 0.1);
+  border-radius: 12px;
+}
+
+.taskModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 8, 8, 0.72);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.taskModal {
+  width: min(720px, 100%);
+  background: rgba(255, 255, 255, 0.96);
+  color: rgba(17, 17, 17, 0.92);
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  max-height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+}
+
+.taskModalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 18px 14px 18px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.taskModalHeaderLeft {
+  min-width: 0;
+  flex: 1;
+}
+
+.taskModalBadges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.taskModalTitle {
+  font-family: "Roboto", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.taskModalHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.taskModalBudget {
+  font-family: "Roboto", sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: rgba(17, 17, 17, 0.85);
+}
+
+.taskModalClose {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.04);
+  color: rgba(17, 17, 17, 0.92);
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.taskModalClose:hover {
+  border-color: rgba(124, 92, 255, 0.6);
+  background: rgba(124, 92, 255, 0.12);
+}
+
+body.luxeDark .post {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+}
+
+body.luxeDark .postTitle {
+  color: rgba(233, 233, 233, 0.92);
+}
+
+body.luxeDark .postBudget {
+  color: rgba(233, 233, 233, 0.92);
+}
+
+body.luxeDark .postDetailItem {
+  color: rgba(233, 233, 233, 0.72);
+}
+
+body.luxeDark .postDescription {
+  color: rgba(233, 233, 233, 0.72);
+}
+
+body.luxeDark .postFooter {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.luxeDark .posterName {
+  color: rgba(233, 233, 233, 0.85);
+}
+
+body.luxeDark .actionButton.view {
+  color: rgba(233, 233, 233, 0.92);
+}
+
+body.luxeDark .actionButton.save {
+  border-color: rgba(124, 92, 255, 0.35);
+  background: rgba(124, 92, 255, 0.12);
+}
+
+body.luxeDark .actionButton.delete {
+  border-color: rgba(248, 113, 113, 0.28);
+  background: rgba(248, 113, 113, 0.08);
+  color: rgba(248, 113, 113, 0.92);
+}
+
+body.luxeDark .actionButton.delete:hover {
+  background: rgba(248, 113, 113, 0.14);
+  border-color: rgba(248, 113, 113, 0.45);
+}
+
+body.luxeDark .actionButton.complete {
+  border-color: rgba(74, 222, 128, 0.22);
+  background: rgba(74, 222, 128, 0.08);
+  color: rgba(74, 222, 128, 0.92);
+}
+
+body.luxeDark .actionButton.complete:hover {
+  background: rgba(74, 222, 128, 0.14);
+  border-color: rgba(74, 222, 128, 0.4);
+}
+
+.taskModalBody {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow: auto;
+}
+
+.taskModalMeta {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  color: rgba(17, 17, 17, 0.7);
+  font-size: 14px;
+}
+
+.taskModalMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.taskModalDescription {
+  color: rgba(17, 17, 17, 0.9);
+  line-height: 1.65;
+  font-size: 14px;
+  padding: 14px 14px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  white-space: pre-wrap;
+}
+
+.taskModalFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 18px 18px 18px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.taskModalPoster {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.taskModalActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.taskModalActions .actionButton {
+  border-radius: 999px;
+  width: auto;
+  height: auto;
+  padding: 8px 14px;
+}
+
+.taskModalActions .actionButton.delete {
+  border: 1px solid rgba(229, 115, 115, 0.45);
+  color: #c62828;
+}
+
+.taskModalActions .actionButton.delete:hover {
+  background: rgba(229, 115, 115, 0.12);
+}
+
+.taskModalActions .actionButton.complete {
+  border: 1px solid rgba(76, 175, 80, 0.45);
+  color: #2e7d32;
+}
+
+.taskModalActions .actionButton.complete:hover {
+  background: rgba(76, 175, 80, 0.12);
+}
+
+.taskModalActions .actionButton.accept {
+  border-radius: 999px;
+  padding: 8px 16px;
+}
+
+body.luxeDark .taskModal {
+  background: #0b0f14;
+  color: #eaeaea;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.65);
+}
+
+body.luxeDark .taskModalHeader {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.luxeDark .taskModalBudget {
+  color: rgba(233, 233, 233, 0.92);
+}
+
+body.luxeDark .taskModalClose {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: #eaeaea;
+}
+
+body.luxeDark .taskModalBody {
+  overflow: auto;
+}
+
+body.luxeDark .taskModalMeta {
+  color: rgba(234, 234, 234, 0.85);
+}
+
+body.luxeDark .taskModalDescription {
+  color: rgba(234, 234, 234, 0.92);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.luxeDark .taskModalFooter {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.luxeDark .taskModalActions .actionButton.delete {
+  color: #ffb3b3;
+}
+
+body.luxeDark .taskModalActions .actionButton.complete {
+  color: #b5f2b7;
+}

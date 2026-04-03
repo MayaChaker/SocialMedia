@@ -1,0 +1,198 @@
+.share {
+  width: 100%;
+  border-radius: 12px;
+  -webkit-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+.shareWrapper {
+  padding: 20px;
+}
+.shareTop {
+  display: flex;
+  align-items: center;
+}
+
+.shareInput {
+  border: none;
+  width: 100%;
+  font-size: 18px;
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+.shareInput:focus {
+  outline: none;
+  border-bottom: 1px solid rgba(124, 92, 255, 0.7);
+}
+
+.shareForm {
+  margin-top: 15px;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.shareTypeSelector {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 5px;
+}
+
+.typeButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.typeButton.active {
+  background: rgba(124, 92, 255, 0.9);
+  color: white;
+  border-color: rgba(124, 92, 255, 0.9);
+}
+
+.typeIcon {
+  font-size: 18px !important;
+}
+
+.shareTextarea {
+  width: 100%;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 10px;
+  font-family: "Roboto", sans-serif;
+  resize: vertical;
+  min-height: 80px;
+}
+.shareTextarea:focus {
+  outline: 1px solid rgba(124, 92, 255, 0.7);
+}
+
+.shareInputsRow {
+  display: flex;
+  gap: 20px;
+}
+
+.shareInputGroup {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.shareInputIcon {
+  color: rgba(124, 92, 255, 0.9);
+  margin-right: 8px;
+}
+
+.shareSmallInput {
+  border: none;
+  background: transparent;
+  width: 100%;
+  font-size: 14px;
+}
+.shareSmallInput:focus {
+  outline: none;
+}
+
+.shareHr {
+  margin: 20px;
+  border: none;
+  height: 1px;
+  background-color: #eee;
+}
+.shareBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.shareActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.shareOptionText {
+  font-size: 14px;
+  color: #666;
+  font-style: italic;
+}
+
+.shareButton {
+  border: 1px solid rgba(124, 92, 255, 0.9);
+  padding: 10px 24px;
+  border-radius: 12px;
+  background: rgba(124, 92, 255, 0.9);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 22px rgba(124, 92, 255, 0.18);
+}
+.shareButton:hover {
+  background: rgba(124, 92, 255, 0.78);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(124, 92, 255, 0.22);
+}
+
+.shareButton.shareButtonSecondary {
+  background: transparent;
+  color: rgba(124, 92, 255, 0.95);
+  box-shadow: none;
+}
+
+.shareButton.shareButtonSecondary:hover {
+  background: rgba(124, 92, 255, 0.1);
+  box-shadow: none;
+}
+
+body.luxeDark .share {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+}
+
+body.luxeDark .shareInput {
+  color: rgba(233, 233, 233, 0.92);
+  background: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+body.luxeDark .shareTextarea {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(233, 233, 233, 0.9);
+}
+
+body.luxeDark .shareInputGroup {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body.luxeDark .shareSmallInput {
+  color: rgba(233, 233, 233, 0.9);
+}
+
+body.luxeDark .typeButton {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(233, 233, 233, 0.75);
+}
