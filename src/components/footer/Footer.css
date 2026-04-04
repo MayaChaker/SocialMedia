@@ -5,6 +5,12 @@
   color: rgba(233, 233, 233, 0.8);
 }
 
+body:not(.luxeDark) .appFooter {
+  background: #ffffff;
+  border-top: 1px solid rgba(15, 23, 42, 0.12);
+  color: rgba(17, 24, 39, 0.72);
+}
+
 .appFooterInner {
   max-width: none;
   margin: 0;
@@ -24,6 +30,10 @@
   font-size: 20px;
 }
 
+body:not(.luxeDark) .appFooterBrand {
+  color: rgba(17, 24, 39, 0.92);
+}
+
 .appFooterLinks {
   display: flex;
   align-items: center;
@@ -38,11 +48,23 @@
   font-weight: 700;
 }
 
+body:not(.luxeDark) .appFooterLink {
+  color: rgba(17, 24, 39, 0.7);
+}
+
 .appFooterLink:hover {
   color: rgba(233, 233, 233, 0.92);
+}
+
+body:not(.luxeDark) .appFooterLink:hover {
+  color: rgba(17, 24, 39, 0.92);
 }
 
 .appFooterCopy {
   font-size: 16px;
   color: rgba(233, 233, 233, 0.6);
+}
+
+body:not(.luxeDark) .appFooterCopy {
+  color: rgba(17, 24, 39, 0.55);
 }
