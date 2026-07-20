@@ -1,0 +1,21 @@
+import { useState } from "react";
+import { ArrowBack, ArrowForward, Check } from "@mui/icons-material";
+import { motion, AnimatePresence } from "framer-motion";
+import { PRODUCTS } from "../../data/products";
+import { useStore } from "../../hooks/useStore";
+import ProductCard from "../products/ProductCard";
+
+const questions = [
+  { key: "goal", eyebrow: "Your focus", title: "What would you most like to support?", options: [["Dehydration","Comfort and lasting hydration"],["Dullness","A brighter, more rested look"],["Fine lines","Smoothness and resilience"],["Sensitive skin","Calm, barrier-first care"]] },
+  { key: "time", eyebrow: "Your pace", title: "How much time feels realistic?", options: [["Essential","Two effortless steps"],["Balanced","A complete three-step ritual"],["Immersive","Four considered layers"]] },
+  { key: "texture", eyebrow: "Your preference", title: "Which textures do you reach for?", options: [["Weightless","Fresh gels and fluid layers"],["Cushioning","Soft creams and comforting emulsions"],["Rich","Velvety, replenishing finishes"]] },
+];
+
+export default function RitualsPage({ openCart }) {
+  const { setRoutineResults } = useStore(); const [started,setStarted]=useState(false); const [step,setStep]=useState(0); const [answers,setAnswers]=useState({}); const [result,setResult]=useState(null);
+  const choose=(value)=>{const next={...answers,[questions[step].key]:value};setAnswers(next);if(step===questions.length-1){const ids=next.time==="Essential"?[2,1]:next.texture==="Rich"?[2,1,5]:[2,1,5];setResult(ids.map(id=>PRODUCTS.find(product=>product.id===id)));}else setStep(step+1)};
+  const save=()=>setRoutineResults(result.map(product=>product.name));
+  if(!started) return <main className="contentPage"><section className="contentHero ritualsHero"><span className="kicker">Routine builder</span><h1>Your ritual,<br/><em>beautifully simple.</em></h1><p>Three thoughtful questions. A concise routine shaped around your skin, your preferences, and the time you actually have.</p><button className="button dark" onClick={()=>setStarted(true)}>Build my ritual <ArrowForward/></button></section><section className="ritualPrinciples"><article><span>01</span><h2>Personal</h2><p>Built around what your skin needs now.</p></article><article><span>02</span><h2>Concise</h2><p>Only the steps that earn their place.</p></article><article><span>03</span><h2>Flexible</h2><p>Easy to revisit as your needs change.</p></article></section></main>;
+  if(result) return <main className="builderPage"><span className="kicker">Your Veloura ritual</span><h1>{answers.time} care for {answers.goal.toLowerCase()}.</h1><p>Layer in this order, from lightest to richest. Your result is saved locally when you choose “Save my ritual.”</p><ol className="resultOrder">{result.map((product,index)=><li key={product.id}><span>{String(index+1).padStart(2,"0")}</span><div><strong>{product.name}</strong><small>{product.ritual}</small></div></li>)}</ol><div className="builderActions"><button className="button dark" onClick={save}><Check/> Save my ritual</button><button className="textLink" onClick={()=>{setResult(null);setStep(0);setAnswers({})}}>Start again</button></div><section className="builderProducts"><div className="sectionHeader"><div><span className="kicker">Your edit</span><h2>The recommended formulas.</h2></div></div><div className="productGrid">{result.map(product=><ProductCard key={product.id} product={product} onAdded={openCart}/>)}</div></section></main>;
+  const question=questions[step]; return <main className="builderPage questionPage"><div className="builderProgress"><span style={{width:`${((step+1)/questions.length)*100}%`}}/></div><button className="backLink" onClick={()=>step?setStep(step-1):setStarted(false)}><ArrowBack/> Back</button><AnimatePresence mode="wait"><motion.section key={question.key} initial={{opacity:0,y:14}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-10}}><span className="kicker">{question.eyebrow} · {step+1} of {questions.length}</span><h1>{question.title}</h1><div className="choiceGrid">{question.options.map(([value,copy])=><button onClick={()=>choose(value)} key={value}><strong>{value}</strong><span>{copy}</span><ArrowForward/></button>)}</div></motion.section></AnimatePresence></main>;
+}
