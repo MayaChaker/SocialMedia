@@ -17,8 +17,8 @@ export function StoreProvider({ children }) {
   const value = useMemo(() => ({
     cart, wishlist, orders, profile, routineResults, theme, recentlyViewed, searchHistory,
     setOrders, setProfile, setRoutineResults, setTheme,
-    addToCart(product) { setCart((items) => { const found = items.find((item) => item.id === product.id); return found ? items.map((item) => item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item) : [...items, { ...product, quantity: 1 }]; }); },
-    updateQuantity(id, delta) { setCart((items) => items.map((item) => item.id === id ? { ...item, quantity: item.quantity + delta } : item).filter((item) => item.quantity > 0)); },
+    addToCart(product) { setCart((items) => { const cartId = product.cartId || String(product.id); const found = items.find((item) => (item.cartId || String(item.id)) === cartId); return found ? items.map((item) => (item.cartId || String(item.id)) === cartId ? { ...item, quantity: item.quantity + 1 } : item) : [...items, { ...product, cartId, productId: product.productId || product.id, quantity: 1 }]; }); },
+    updateQuantity(id, delta) { setCart((items) => items.map((item) => (item.cartId || String(item.id)) === String(id) ? { ...item, quantity: item.quantity + delta } : item).filter((item) => item.quantity > 0)); },
     clearCart() { setCart([]); },
     toggleWishlist(id) { setWishlist((items) => items.includes(id) ? items.filter((item) => item !== id) : [...items, id]); },
     addRecentlyViewed(id) { setRecentlyViewed((items) => [id, ...items.filter((item) => item !== id)].slice(0, 6)); },
