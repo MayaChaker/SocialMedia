@@ -6,8 +6,8 @@ import { useStore } from "../hooks/useStore";
 import { MOTION } from "../theme/tokens";
 
 const navItems = [
-  ["Shop", "/shop"], ["Skincare", "/shop/skincare"], ["Makeup", "/shop/makeup"], ["Sets", "/shop/sets"],
-  ["New arrivals", "/shop?collection=new"], ["Routine builder", "/rituals"], ["Shade match", "/shade-match"], ["Our story", "/about"],
+  ["Shop", "/shop"],
+  ["Routine builder", "/rituals"], ["Shade match", "/shade-match"], ["Our story", "/about"],
 ];
 
 export default function Layout({ openCart }) {
