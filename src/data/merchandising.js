@@ -1,4 +1,4 @@
-export const BESTSELLER_IDS = [1, 4, 12, 14];
+export const BESTSELLER_IDS = [2, 3, 8, 14];
 
 export const PRODUCT_OPTIONS = {
   3: { label: "Shade", values: ["Porcelain", "Light", "Medium", "Tan", "Deep"], swatches: ["#ead2c2", "#d8ad8e", "#b77c58", "#8a543d", "#503127"] },
