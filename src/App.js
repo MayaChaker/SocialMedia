@@ -14,11 +14,12 @@ const BeautyProfilePage = lazy(() => import("./features/beauty-profile/BeautyPro
 const WishlistPage = lazy(() => import("./features/wishlist/WishlistPage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const PolicyPage = lazy(() => import("./pages/PolicyPage"));
+const HomePage = lazy(() => import("./pages/HomePage"));
 
 function App() {
   const [cartOpen, setCartOpen] = useState(false);
   const openCart = () => setCartOpen(true);
-  return <StoreProvider><BrowserRouter><Suspense fallback={<div className="pageLoading" aria-live="polite">Preparing your ritual…</div>}><Routes><Route element={<Layout openCart={openCart}/>}><Route index element={<AboutPage/>}/><Route path="our-story" element={<AboutPage/>}/><Route path="about" element={<AboutPage/>}/><Route path="shop" element={<ShopPage openCart={openCart}/>}/><Route path="shop/:category" element={<ShopPage openCart={openCart}/>}/><Route path="product/:slug" element={<ProductPage openCart={openCart}/>}/><Route path="wishlist" element={<WishlistPage openCart={openCart}/>}/><Route path="rituals" element={<RitualsPage openCart={openCart}/>}/><Route path="shade-match" element={<ShadeMatchPage/>}/><Route path="profile" element={<BeautyProfilePage/>}/><Route path="care/:policy" element={<PolicyPage/>}/></Route><Route path="checkout" element={<CheckoutPage/>}/></Routes></Suspense><CartDrawer open={cartOpen} close={()=>setCartOpen(false)}/></BrowserRouter></StoreProvider>;
+  return <StoreProvider><BrowserRouter><Suspense fallback={<div className="pageLoading" aria-live="polite">Preparing your routine…</div>}><Routes><Route element={<Layout openCart={openCart}/>}><Route index element={<HomePage openCart={openCart}/>}/><Route path="our-story" element={<AboutPage/>}/><Route path="about" element={<AboutPage/>}/><Route path="shop" element={<ShopPage openCart={openCart}/>}/><Route path="shop/:category" element={<ShopPage openCart={openCart}/>}/><Route path="product/:slug" element={<ProductPage openCart={openCart}/>}/><Route path="wishlist" element={<WishlistPage openCart={openCart}/>}/><Route path="rituals" element={<RitualsPage openCart={openCart}/>}/><Route path="shade-match" element={<ShadeMatchPage/>}/><Route path="profile" element={<BeautyProfilePage/>}/><Route path="care/:policy" element={<PolicyPage/>}/></Route><Route path="checkout" element={<CheckoutPage/>}/></Routes></Suspense><CartDrawer open={cartOpen} close={()=>setCartOpen(false)}/></BrowserRouter></StoreProvider>;
 }
 
 export default App;

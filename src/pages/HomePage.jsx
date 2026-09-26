@@ -6,7 +6,7 @@ import { BESTSELLER_IDS, HOME_CATEGORIES } from "../data/merchandising";
 import ProductCard from "../features/products/ProductCard";
 import { useStore } from "../hooks/useStore";
 
-const trustPoints = ["Skin-respecting formulas", "Cruelty-free", "Secure checkout", "Complimentary delivery over $75"];
+const trustPoints = ["Skincare, makeup, and sets", "Browser-saved profile", "Guided shade suggestions", "Complimentary delivery on $75+"];
 
 export default function HomePage({ openCart }) {
   const { addToCart } = useStore();
@@ -20,9 +20,9 @@ export default function HomePage({ openCart }) {
       <motion.div className="heroCopy" initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{duration:.35}}>
         <span className="kicker">Beauty, considered.</span>
         <h1>Quiet luxury<br/>for your skin.</h1>
-        <p>High-performance essentials created to make your daily ritual feel instinctive, sensorial, and entirely your own.</p>
+        <p>Explore Veloura skincare, makeup, and coordinated sets, with guided tools that narrow the collection around your routine and shade preferences.</p>
         <div className="heroActions"><Link className="button dark" to="/shop">Shop the collection <ArrowForward/></Link><Link className="textLink" to="/shop?collection=bestsellers">Shop bestsellers</Link></div>
-        <p className="heroReassurance"><LockOutlined/> Complimentary delivery over $75 · Easy returns · Secure checkout</p>
+        <p className="heroReassurance"><LockOutlined/> Complimentary delivery on $75+ · Checkout is clearly marked when in demo mode</p>
       </motion.div>
       <div className="heroImage"><img src="/lifestyle/veloura-hero-campaign-burgundy.png" alt="Rose-gold Veloura serum, cream jar and burgundy lipstick photographed on warm travertine" width="1536" height="1024" fetchpriority="high"/></div>
     </section>

@@ -10,7 +10,7 @@ export const PRODUCT_OPTIONS = {
   16: { label: "Shade", values: ["Bare", "Rose", "Berry"], swatches: ["#c58e7d", "#aa606a", "#753c4d"] },
 };
 
-export const OUT_OF_STOCK_IDS = [6];
+export const OUT_OF_STOCK_IDS = [];
 
 export const HOME_CATEGORIES = [
   { title: "Skincare", copy: "Barrier-minded essentials", href: "/shop/skincare", image: "/products/veloura-serum.webp", tone: "blush" },

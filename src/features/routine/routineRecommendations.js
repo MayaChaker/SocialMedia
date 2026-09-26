@@ -63,3 +63,8 @@ export function routineTitle({ goal, time }) {
   const pace = time === "Essential" ? "Essential" : time === "Immersive" ? "Layered" : "Balanced";
   return `${pace} care for ${goal.toLowerCase()}.`;
 }
+
+export function routineAlternatives(product, recommendations) {
+  const selectedIds = new Set(recommendations.map((item) => item.product.id));
+  return PRODUCTS.filter((candidate) => candidate.category === "Skincare" && candidate.id !== product.id && !selectedIds.has(candidate.id) && candidate.type === product.type).slice(0, 2);
+}
