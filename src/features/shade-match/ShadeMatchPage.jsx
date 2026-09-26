@@ -4,6 +4,8 @@ import { ArrowBack, ArrowForward, Check } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import { useStore } from "../../hooks/useStore";
 import { matchShade, matchedProductUrl, SHADE_PROFILES } from "./shadeMatchLogic";
+import { productBySlug } from "../../data/products";
+import ProductVisual from "../products/ProductVisual";
 
 const steps = [
   { title: "How does your skin read in daylight?", key: "depth", options: ["Fair", "Light", "Medium", "Tan", "Deep"] },
@@ -12,6 +14,14 @@ const steps = [
 ];
 
 const depthColors = Object.fromEntries(SHADE_PROFILES.map((shade) => [shade.depth, shade.color]));
+const optionGuidance = {
+  "Fresh and sheer": "Light coverage that lets natural skin show through.",
+  "Soft satin": "Balanced radiance without looking dewy or flat.",
+  "Polished glow": "A more luminous, light-reflecting finish.",
+  "Silver · cool": "Blue, pink, or rosy tones tend to feel harmonious.",
+  "Both · neutral": "Warm and cool tones tend to feel equally balanced.",
+  "Gold · warm": "Golden, peach, or olive tones tend to feel harmonious.",
+};
 
 export default function ShadeMatchPage() {
   const { profile, setProfile } = useStore();
@@ -56,25 +66,29 @@ export default function ShadeMatchPage() {
 
   if (completed) {
     const result = matchShade(answers);
+    const product = productBySlug(result.productSlug);
+    const resultIndex = SHADE_PROFILES.findIndex(item => item.variantId === result.variantId);
+    const nearby = [SHADE_PROFILES[resultIndex - 1], SHADE_PROFILES[resultIndex + 1]].filter(Boolean);
     const saveShade = () => {
-      setProfile({ ...profile, shade: result.name, shadeVariantId: result.variantId });
+      setProfile({ ...profile, shade: result.name, shadeVariantId: result.variantId, shadeAnswers: answers });
       setSaved(true);
     };
     return <main className="shadeResultPage">
       <div className="shadeResultLayout">
         <section className="shadeResultVisual" aria-label={`${result.name} shade sample`}>
-          <div className="matchedShadeSample" style={{ "--shade": result.color }}><span>{result.name}</span></div>
+          <ProductVisual type={product.type} product={{...product,image:result.image,selectedVariant:result.name}}/><div className="matchedShadeSample" style={{ "--shade": result.color }}><span>{result.name}</span></div>
         </section>
         <section className="shadeResultCopy">
-          <span className="kicker">Your shade match</span>
+          <span className="kicker">Your suggested match</span>
           <h1>{result.name}</h1>
           <p className="shadeProfile">{result.depth} depth <i/> {result.undertone} undertone</p>
-          <p className="shadeExplanation">{result.description}</p>
+          <p className="shadeExplanation">{result.description} This is a suggested starting point; compare it in natural light for your best match.</p>
           <dl className="shadeFacts">
             <div><dt>Depth</dt><dd>{result.depth}</dd></div>
             <div><dt>Undertone</dt><dd>{result.undertone}</dd></div>
             <div><dt>Preferred finish</dt><dd>{answers.finish}</dd></div>
           </dl>
+          {nearby.length>0&&<div className="nearbyShades"><span>Compare nearby shades</span>{nearby.map(shade=><Link key={shade.variantId} to={matchedProductUrl(shade)}><i style={{"--shade":shade.color}}/>{shade.name}</Link>)}</div>}
           <div className="shadeResultActions">
             <Link className="button dark" to={matchedProductUrl(result)}>Shop {result.name}</Link>
             <button className={`saveShadeButton ${saved ? "saved" : ""}`} onClick={saveShade} aria-pressed={saved}>{saved && <Check/>}{saved ? "Shade saved" : "Save my shade"}</button>
@@ -102,12 +116,12 @@ export default function ShadeMatchPage() {
               const swatchColor = current.key === "depth" ? depthColors[value] : null;
               return <button type="button" role="radio" aria-checked={isSelected} className={`${isSelected ? "selected" : ""} ${swatchColor ? "hasSwatch" : ""}`} onClick={() => selectAnswer(value)} key={value}>
                 {swatchColor && <i style={{ "--shade": swatchColor }} aria-hidden="true"/>}
-                <strong>{value}</strong>
+                <span className="shadeChoiceCopy"><strong>{value}</strong>{optionGuidance[value] && <small>{optionGuidance[value]}</small>}</span>
                 <span className="shadeChoiceIndicator" aria-hidden="true">{isSelected ? <Check/> : <ArrowForward/>}</span>
               </button>;
             })}
           </div>
-          <div className="questionActions"><button className="button dark" disabled={!selected} onClick={continueQuiz}>{step === steps.length - 1 ? "See my shade" : "Continue"}<ArrowForward/></button></div>
+          <p className="selectionHelp" aria-live="polite">{selected ? `${selected} selected.` : "Choose one option to continue."}</p><div className="questionActions"><button className="button dark" disabled={!selected} onClick={continueQuiz}>{step === steps.length - 1 ? "See my shade" : "Continue"}<ArrowForward/></button></div>
         </motion.section>
       </AnimatePresence>
     </div>
