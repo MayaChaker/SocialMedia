@@ -27,11 +27,9 @@ export const money = (value) => `$${Number(value).toFixed(2)}`;
 
 export const FREE_SHIPPING_THRESHOLD = 75;
 
-export const productById = (id) => PRODUCTS.find((product) => product.id === Number(id));
-
 export function resolveProductSelection(productOrId, variantId = "") {
   const id = typeof productOrId === "object" ? (productOrId.productId || productOrId.id) : productOrId;
-  const product = productById(id);
+  const product = PRODUCTS.find((item) => item.id === Number(id));
   if (!product) return null;
   const requestedVariant = variantId || (typeof productOrId === "object" ? productOrId.variantId : "");
   const variant = product.variants?.find((item) => item.id === requestedVariant);
