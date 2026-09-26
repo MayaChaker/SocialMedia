@@ -15,6 +15,8 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
   const [actionState, setActionState] = useState("idle");
   const previewRef = useRef(null);
   const quickViewRef = useRef(null);
+  const addingTimerRef = useRef(null);
+  const resetTimerRef = useRef(null);
   const selected = useMemo(() => product.variants?.find((variant) => variant.id === selectedId), [product.variants, selectedId]);
   const display = selected ? { ...product, ...selected, selectedVariant: selected.name, variantId: selected.id } : product;
   const outOfStock = OUT_OF_STOCK_IDS.includes(product.id) || selected?.stock === 0;
@@ -42,14 +44,19 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
     return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", onKey); trigger?.focus(); };
   }, [preview]);
 
+  useEffect(() => () => {
+    window.clearTimeout(addingTimerRef.current);
+    window.clearTimeout(resetTimerRef.current);
+  }, []);
+
   const add = () => {
     if (outOfStock || needsShade || actionState === "adding") return;
     setActionState("adding");
     addToCart({ ...display, productId: product.id, cartId: selected ? `${product.id}:${selected.id}` : String(product.id) });
-    window.setTimeout(() => {
+    addingTimerRef.current = window.setTimeout(() => {
       setActionState("added");
       onAdded?.();
-      window.setTimeout(() => setActionState("idle"), 1600);
+      resetTimerRef.current = window.setTimeout(() => setActionState("idle"), 1600);
     }, 180);
   };
 
