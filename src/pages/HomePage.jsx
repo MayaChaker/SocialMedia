@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { ArrowForward, Check, LockOutlined } from "@mui/icons-material";
 import { motion } from "framer-motion";
-import { PRODUCTS, money } from "../data/products";
+import { money } from "../data/products";
 import { BESTSELLER_IDS, HOME_CATEGORIES } from "../data/merchandising";
+import { productRepository } from "../repositories/productRepository";
 import ProductCard from "../features/products/ProductCard";
 import { useStore } from "../hooks/useStore";
 
@@ -10,8 +11,8 @@ const trustPoints = ["Skincare, makeup, and sets", "Browser-saved profile", "Gui
 
 export default function HomePage({ openCart }) {
   const { addToCart } = useStore();
-  const bestsellers = BESTSELLER_IDS.map(id => PRODUCTS.find(product => product.id === id)).filter(Boolean).map(product => product.id === 1 ? { ...product, image: "/products/veloura-serum-bestseller-v2.webp" } : product);
-  const routine = [2, 1, 5].map(id => PRODUCTS.find(product => product.id === id)).filter(Boolean);
+  const bestsellers = productRepository.getManyByIds(BESTSELLER_IDS).map(product => product.id === 1 ? { ...product, image: "/products/veloura-serum-bestseller-v2.webp" } : product);
+  const routine = productRepository.getManyByIds([2, 1, 5]);
   const routineTotal = routine.reduce((sum, product) => sum + product.price, 0);
   const addRoutine = () => { routine.forEach(product => addToCart(product)); openCart(); };
 

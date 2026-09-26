@@ -1,8 +1,8 @@
-import { productBySlug } from "../../data/products";
+import { productRepository } from "../../repositories/productRepository";
 import { matchShade, matchedProductUrl, SHADE_PROFILES } from "./shadeMatchLogic";
 
 test("every shade profile maps to a real Petal Skin Tint variant", () => {
-  const variantIds = new Set(productBySlug("petal-skin-tint").variants.map((variant) => variant.id));
+  const variantIds = new Set(productRepository.getBySlug("petal-skin-tint").variants.map((variant) => variant.id));
   SHADE_PROFILES.forEach((shade) => expect(variantIds.has(shade.variantId)).toBe(true));
 });
 

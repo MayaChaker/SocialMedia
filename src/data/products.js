@@ -22,7 +22,6 @@ export const PRODUCTS = [
   { id: 18, slug: "rose-melt-duo", name: "Rose Melt Double Cleanse", brand: "Veloura Rituals", category: "Sets", type: "set", price: 78, originalPrice: 88, size: "2 pieces", image: "/products/veloura-cleanser.webp", badge: "Limited", rating: 4.7, reviews: 49, note: "Balm and cream cleansing pair", description: "A gentle evening double cleanse for makeup days and unhurried nightly rituals.", ingredients: "Rose Melt · Cloud Melt", benefits: ["Complete double cleanse", "Comfort-first formulas", "Gift-ready pairing"], texture: "Balm and cream-to-milk", finish: "Clean and supple", ritual: "Melt with balm, then refresh with cream cleanser.", order: "Evening step 1", matches: ["Sensitivity", "Dryness", "Gifting"], color: "plum" },
 ];
 
-export const productBySlug = (slug) => PRODUCTS.find((product) => product.slug === slug);
 export const money = (value) => `$${Number(value).toFixed(2)}`;
 
 export const FREE_SHIPPING_THRESHOLD = 75;

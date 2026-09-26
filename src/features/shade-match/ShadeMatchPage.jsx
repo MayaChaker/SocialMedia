@@ -4,7 +4,7 @@ import { ArrowBack, ArrowForward, Check } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import { useStore } from "../../hooks/useStore";
 import { matchShade, matchedProductUrl, SHADE_PROFILES } from "./shadeMatchLogic";
-import { productBySlug } from "../../data/products";
+import { productRepository } from "../../repositories/productRepository";
 import ProductVisual from "../products/ProductVisual";
 
 const steps = [
@@ -66,7 +66,7 @@ export default function ShadeMatchPage() {
 
   if (completed) {
     const result = matchShade(answers);
-    const product = productBySlug(result.productSlug);
+    const product = productRepository.getBySlug(result.productSlug);
     const resultIndex = SHADE_PROFILES.findIndex(item => item.variantId === result.variantId);
     const nearby = [SHADE_PROFILES[resultIndex - 1], SHADE_PROFILES[resultIndex + 1]].filter(Boolean);
     const saveShade = () => {

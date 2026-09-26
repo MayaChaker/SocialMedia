@@ -150,18 +150,20 @@ Cart, wishlist, orders, profile, saved routine, and recently viewed products are
 
 `src/data/products.js` is the catalogue source of truth. It contains 18 static product objects, variant definitions, image paths, prices, inventory values, merchandising flags, descriptive content, and helpers for money formatting and canonical product/cart resolution.
 
+`src/repositories/productRepository.js` is the synchronous product data-access boundary used by UI and feature code. It exposes `getAll`, `getById`, `getBySlug`, and `getManyByIds`. The repository currently delegates to the static catalogue, returns a new array from `getAll`, and preserves requested order while omitting unknown IDs in `getManyByIds`. This boundary does not add caching, asynchronous behavior, API access, or backend inventory authority.
+
 `src/data/merchandising.js` contains the actively consumed homepage bestseller IDs/categories and the out-of-stock ID list: `BESTSELLER_IDS`, `HOME_CATEGORIES`, and `OUT_OF_STOCK_IDS`.
 
-Static product data is imported directly by `Layout`, `HomePage`, product pages/components and logic, cart, wishlist, beauty profile, routine recommendation logic, and shade-match logic. `useStore` also imports product resolution helpers directly. There is no product repository or query service insulating UI/domain code from the data source.
+UI and feature code access catalogue queries through `productRepository`. Direct catalogue access is limited to the repository implementation and low-level catalogue/repository tests. `useStore`, cart, and checkout still import formatting or cart-resolution domain helpers from `src/data/products.js`; separating those responsibilities is deferred because this step introduces only the product data-access boundary.
 
 Current limitations include:
 
 - catalogue, price, stock, copy, and variant data ship in the client bundle;
 - no remote freshness, pagination, locale, currency, or inventory authority;
-- direct imports make a future API/CMS replacement cross-cutting;
+- the synchronous repository contract will need to evolve for a future API/CMS data source;
 - cart and saved IDs are coupled to static catalogue identifiers;
 - money formatting is fixed to a dollar string rather than locale-aware formatting;
-- merchandising and domain data overlap and include confirmed unused exports.
+- catalogue data and cart-resolution/formatting domain helpers still share one module.
 
 ## Services
 
@@ -282,12 +284,13 @@ The project uses CRA's Jest configuration with Testing Library for the component
 | Test file | Coverage |
 | --- | --- |
 | `src/data/products.test.js` | Unique product IDs/slugs, canonical images, variant cart identities, and rehydration of persisted cart lines from current product data. |
+| `src/repositories/productRepository.test.js` | Repository ordering, defensive list copies, ID/slug lookup, missing products, and ordered multi-ID resolution. |
 | `src/features/products/ProductCard.test.jsx` | Variant selection/image/cart persistence and wishlist interaction through `StoreProvider`. |
 | `src/features/products/shopLogic.test.js` | Searchable shade/benefit text, combined filtering, and price sorting. |
 | `src/features/routine/routineRecommendations.test.js` | Routine length by pace, variation by answers, and valid catalogue references. |
 | `src/features/shade-match/shadeMatchLogic.test.js` | Variant/profile integrity, answer differentiation, and the medium-neutral result URL. |
 
-There are 14 declared test cases. There are no current tests for routing, layout/navigation, cart quantity/promo behavior, checkout/order service, storage failure behavior, profile persistence, full guided-flow accessibility, or 404/error states. Phase 0.2 execution results are recorded in the task report rather than asserted in this architecture description.
+There are 18 declared test cases. There are no current tests for routing, layout/navigation, cart quantity/promo behavior, checkout/order service, storage failure behavior, profile persistence, full guided-flow accessibility, or 404/error states. Execution results are recorded in task reports rather than asserted in this architecture description.
 
 ## Environment Variables
 
@@ -315,7 +318,7 @@ There are 14 declared test cases. There are no current tests for routing, layout
 ### Medium
 
 - The codebase is JavaScript/JSX without explicit product, variant, cart, order, profile, or service-contract types.
-- UI, state, and feature logic import static catalogue modules directly; product repository/service boundaries do not exist.
+- Product access now has a repository boundary, but its contract remains synchronous and the underlying catalogue is still static client-bundled data.
 - `src/index.css` is a large global stylesheet with historical selectors, repeated breakpoints, and source-order coupling.
 - The order-service endpoint contract and responses are untyped and unvalidated.
 - Checkout and profile validation are minimal and largely based on required/truthy values.
