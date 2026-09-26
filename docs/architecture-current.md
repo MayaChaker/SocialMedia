@@ -54,7 +54,7 @@ All route declarations currently live in `src/App.js`.
 | Route | Component | Purpose |
 | --- | --- | --- |
 | `/` | `HomePage` | Homepage with hero, trust points, bestsellers, category links, and a bundled routine action. |
-| `/our-story` | `AboutPage` | Alias for the current brand/story page. |
+| `/our-story` | `Navigate` | Backward-compatible client redirect to canonical `/about`, using history replacement. |
 | `/about` | `AboutPage` | Primary brand/story page. |
 | `/shop` | `ShopPage` | Full product catalogue with search, filters, sorting, and collection query parameters. |
 | `/shop/:category` | `ShopPage` | Category-filtered catalogue, currently used for skincare, makeup, and sets. |
@@ -66,7 +66,7 @@ All route declarations currently live in `src/App.js`.
 | `/care/:policy` | `PolicyPage` | Parameterized customer-care content for FAQ, shipping, refund, tracking, privacy, terms, and accessibility. Unknown policy values silently fall back to shipping content. |
 | `/checkout` | `CheckoutPage` | Standalone three-step demo/hosted-checkout handoff flow outside the shared `Layout`. |
 
-There is no wildcard route, dedicated 404 page, route error element, or route-level error boundary. `/about` and `/our-story` intentionally or historically duplicate the same component.
+There is no wildcard route, dedicated 404 page, route error element, or route-level error boundary. `/about` is the canonical story route; `/our-story` remains as a backward-compatible client redirect.
 
 ## Feature Structure
 
@@ -121,11 +121,9 @@ The context currently exposes:
 | `orders` | Array of demo or checkout-endpoint responses stored on this browser. |
 | `profile` | Skin goals, skin type, preferences, and optional saved shade details. |
 | `routineResults` | Initially an array; current saves use `{ productIds, answers }`, with compatibility logic for older array data. |
-| `theme` | Persisted string defaulting to `light`; exposed with `setTheme` but not consumed by the UI. |
 | `recentlyViewed` | Up to six product IDs; written and read by `ProductPage`. |
-| `searchHistory` | Up to eight search strings; global search writes it, but no current UI reads it. |
 
-The provider also exposes `addToCart`, `updateQuantity`, `removeFromCart`, `clearCart`, `toggleWishlist`, `addRecentlyViewed`, and `addSearch`, plus selected setters. Cart operations depend directly on helpers from `src/data/products.js`, so state/domain/data-source boundaries are currently coupled.
+The provider also exposes `addToCart`, `updateQuantity`, `removeFromCart`, `clearCart`, `toggleWishlist`, and `addRecentlyViewed`, plus selected setters. Cart operations depend directly on helpers from `src/data/products.js`, so state/domain/data-source boundaries are currently coupled.
 
 The cart drawer's open/closed state is not in Context; it is transient state owned by `App`. Page filters, checkout fields/steps, quizzes, and feedback states are also local component state.
 
@@ -144,17 +142,15 @@ All keys are prefixed with `velouraBeauty.`:
 | Orders | `velouraBeauty.orders.v1` |
 | Profile | `velouraBeauty.beautyProfile.v1` |
 | Routine | `velouraBeauty.routineResults.v1` |
-| Theme | `velouraBeauty.theme.v1` |
 | Recently viewed | `velouraBeauty.recentlyViewed.v1` |
-| Search history | `velouraBeauty.searchHistory.v1` |
 
-Cart, wishlist, orders, profile, saved routine, theme, recently viewed products, and search history are all browser-only. Clearing site storage or using another browser/device loses them. The default checkout also records orders only on the current device.
+Cart, wishlist, orders, profile, saved routine, and recently viewed products are all browser-only. Clearing site storage or using another browser/device loses them. The default checkout also records orders only on the current device.
 
 ## Data Layer
 
 `src/data/products.js` is the catalogue source of truth. It contains 18 static product objects, variant definitions, image paths, prices, inventory values, merchandising flags, descriptive content, and helpers for money formatting and canonical product/cart resolution.
 
-`src/data/merchandising.js` contains homepage IDs/categories, product-option metadata, an out-of-stock ID list, concerns, review copy, and social tiles. Only `BESTSELLER_IDS`, `HOME_CATEGORIES`, and `OUT_OF_STOCK_IDS` are currently imported outside the module.
+`src/data/merchandising.js` contains the actively consumed homepage bestseller IDs/categories and the out-of-stock ID list: `BESTSELLER_IDS`, `HOME_CATEGORIES`, and `OUT_OF_STOCK_IDS`.
 
 Static product data is imported directly by `Layout`, `HomePage`, product pages/components and logic, cart, wishlist, beauty profile, routine recommendation logic, and shade-match logic. `useStore` also imports product resolution helpers directly. There is no product repository or query service insulating UI/domain code from the data source.
 
@@ -254,7 +250,7 @@ Current inconsistencies to review later:
 
 `public/index.html` defines the default title, description, theme color, Open Graph title/description/image/type/site name, and Twitter card/title/description. The Open Graph image is `/veloura-hero.png`.
 
-`Layout` updates `document.title` for recognized top-level sections and changes the standard meta description only for the shop versus other routes. `/our-story` receives a second title effect. Product slugs, categories, policies, and query states do not receive specific descriptions or social metadata.
+`Layout` updates `document.title` for recognized top-level sections and changes the standard meta description only for the shop versus other routes. `/our-story` redirects to canonical `/about`. Product slugs, categories, policies, and query states do not receive specific descriptions or social metadata.
 
 As a client-rendered SPA, every route initially serves the same HTML metadata. There are no server-rendered route tags, canonical URLs, per-product Open Graph data, structured product data, sitemap/robots configuration in the repository, or framework-native metadata/error handling. Crawlers and link unfurlers that do not execute the client receive only the default metadata.
 
@@ -302,7 +298,6 @@ There are 14 declared test cases. There are no current tests for routing, layout
 | `PORT` | Development server port; example value is `4173`. It is a local tooling setting rather than browser application data. |
 | `REACT_APP_CHECKOUT_URL` | Optional server endpoint that starts hosted checkout or returns a confirmed order object. Because CRA embeds `REACT_APP_*` values in the client bundle, this must be a public endpoint/config value, never a secret. |
 | `REACT_APP_CONTACT_EMAIL` | Public customer-care address used by the footer and policy pages, with an in-code fallback. |
-| `REACT_APP_NEWSLETTER_URL` | Intended optional JSON subscription endpoint. It is not referenced by current source code. |
 
 ## Known Technical Debt
 
@@ -314,7 +309,7 @@ There are 14 declared test cases. There are no current tests for routing, layout
 
 - Create React App/react-scripts is unmaintained and already emits a Babel dependency warning.
 - The default checkout is a browser-only demo. Client-calculated prices, discounts, shipping, and order data are not authoritative or durable.
-- Cart, wishlist, profile, routine, search history, recently viewed items, and demo orders exist only in local storage, with no schema validation or cross-device/server ownership.
+- Cart, wishlist, profile, routine, recently viewed items, and demo orders exist only in local storage, with no schema validation or cross-device/server ownership.
 - There is no route-level error boundary or catch-all 404 experience.
 
 ### Medium
@@ -332,32 +327,18 @@ There are 14 declared test cases. There are no current tests for routing, layout
 
 ### Low
 
-- Theme state is persisted and exposed but unused.
-- Search history is persisted but never displayed or otherwise read.
-- `/about` and `/our-story` duplicate the same page component and metadata handling.
-- Confirmed unused exports and legacy CSS increase maintenance noise.
+- Legacy CSS increases maintenance noise.
 - Version-style asset names (`v2`) make long-term asset ownership less clear.
-- `REACT_APP_NEWSLETTER_URL` is documented but unused.
 - Policy URLs with unknown values fall back to shipping content instead of reporting a missing page.
 
 ## Cleanup Candidates
 
-These items are candidates only. Nothing in this table was removed in Phase 0.2.
+These retained items were not removed in Phase 0.3.
 
 | File | Symbol or area | Why it appears unused/dead | Confidence | Recommended later action |
 | --- | --- | --- | --- | --- |
-| `src/hooks/useStore.js` | `theme`, `setTheme` | Persisted and exposed by Context, but no component reads or changes them. | High | Remove the state/key if dark-theme work is not planned; otherwise implement it only in its approved phase. |
-| `src/repositories/storageRepository.js` | `STORAGE_KEYS.theme` / `theme.v1` | Exists solely for the unused theme state. | High | Remove with the theme state after checking whether stored-value migration matters. |
-| `src/hooks/useStore.js` | `searchHistory` value | `addSearch` writes terms, but no current component reads `searchHistory`. | High | Either remove persistence or introduce its use only as part of an explicitly scoped search task. |
-| `src/repositories/storageRepository.js` | `STORAGE_KEYS.search` / `searchHistory.v1` | Supports the write-only search-history state. | High | Remove together with search-history state if the feature is not retained. |
 | `src/hooks/useStore.js`, `src/features/products/ProductPage.jsx` | `recentlyViewed` | This state is active: product pages write IDs and render a recent-product shelf. It is not dead. | High | Retain; later move behind a clearer recently-viewed domain/persistence boundary. |
-| `src/App.js` | `/about` and `/our-story` | Both routes render `AboutPage`; navigation primarily uses `/about`, while title code has a special `/our-story` effect. | High | Choose a canonical URL and use a deliberate redirect/alias strategy during routing work. |
-| `src/data/merchandising.js` | `PRODUCT_OPTIONS` | Exported but has no import outside its declaration. Current variants live in product data. | High | Remove after confirming no planned consumer; avoid maintaining two option sources. |
-| `src/data/merchandising.js` | `CONCERNS`, `CUSTOMER_REVIEWS`, `SOCIAL_TILES` | Exported but not imported by current source. They appear to belong to earlier homepage sections. | High | Remove in a scoped dead-data cleanup after verifying visual requirements. |
-| `src/data/products.js` | `productById` | Exported but no current source/test imports it. | High | Remove or adopt only if a repository API needs it later. |
 | `src/index.css` | `.aboutEditorial*`, `.aboutCompact*`, `.storyV2*` families | No current JSX uses these historical story-page class families; current `AboutPage` uses `.storyFinal*`, `.storyEdit*`, `.storyCriteria*`, and `.storyShelf*`. | High | Delete only after selector-by-selector visual verification in a dedicated CSS cleanup. |
 | `src/index.css` | `.cursorSpotlight`, `.valuesStrip`, `.heroNote`, `.ritualBanner`, `.newsletter`, `.formulaSection`, `.reviewGrid`, `.socialGrid` families | Searches found stylesheet definitions but no current JSX class usage for these named areas. Some are remnants of earlier homepage iterations. | High | Validate dynamic usage and remove in a scoped stylesheet cleanup with visual regression checks. |
-| `.env.example` | `REACT_APP_NEWSLETTER_URL` | Declared but never referenced by current source. | High | Remove until a real subscription feature exists, or document/implement it only in an approved feature task. |
 | `public/veloura-hero.png` and `public/veloura-hero.webp` | Hero format pair | Same basename and likely related creative, but both have distinct current references through metadata/legacy merchandising data. | Medium | Confirm intended canonical asset and metadata requirements before consolidating. |
 | `public/lifestyle/veloura-evening-edit-v2.webp`, `public/products/veloura-serum-bestseller-v2.webp` | Versioned asset names | The files are actively referenced, but `v2` naming is unsuitable as a durable production convention. | High | Rename and update references in a dedicated asset task, not during architecture work. |
-
