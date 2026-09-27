@@ -21,23 +21,3 @@ export const PRODUCTS = [
   { id: 17, slug: "morning-light-set", name: "Morning Light Set", brand: "Veloura Rituals", category: "Sets", type: "set", price: 132, originalPrice: 159, size: "3 pieces", image: "/products/veloura-set.webp", badge: "Save $27", rating: 4.9, reviews: 71, note: "Hydrate, brighten, protect", description: "A streamlined morning wardrobe pairing brightening hydration with invisible sun protection.", ingredients: "Luminous Veil · Petal Water · Daily Silk SPF", benefits: ["Complete morning routine", "Makeup-friendly layers", "Gift-ready presentation"], texture: "Essence, serum, and SPF", finish: "Fresh protected glow", ritual: "Layer essence, serum, then SPF.", order: "Morning steps 2–4", matches: ["Dullness", "Daily protection", "Gifting"], color: "ivory" },
   { id: 18, slug: "rose-melt-duo", name: "Rose Melt Double Cleanse", brand: "Veloura Rituals", category: "Sets", type: "set", price: 78, originalPrice: 88, size: "2 pieces", image: "/products/veloura-cleanser.webp", badge: "Limited", rating: 4.7, reviews: 49, note: "Balm and cream cleansing pair", description: "A gentle evening double cleanse for makeup days and unhurried nightly rituals.", ingredients: "Rose Melt · Cloud Melt", benefits: ["Complete double cleanse", "Comfort-first formulas", "Gift-ready pairing"], texture: "Balm and cream-to-milk", finish: "Clean and supple", ritual: "Melt with balm, then refresh with cream cleanser.", order: "Evening step 1", matches: ["Sensitivity", "Dryness", "Gifting"], color: "plum" },
 ];
-
-export const money = (value) => `$${Number(value).toFixed(2)}`;
-
-export const FREE_SHIPPING_THRESHOLD = 75;
-
-export function resolveProductSelection(productOrId, variantId = "") {
-  const id = typeof productOrId === "object" ? (productOrId.productId || productOrId.id) : productOrId;
-  const product = PRODUCTS.find((item) => item.id === Number(id));
-  if (!product) return null;
-  const requestedVariant = variantId || (typeof productOrId === "object" ? productOrId.variantId : "");
-  const variant = product.variants?.find((item) => item.id === requestedVariant);
-  return variant ? { ...product, ...variant, name: product.name, productId: product.id, variantId: variant.id, selectedVariant: variant.name, cartId: `${product.id}:${variant.id}` } : { ...product, productId: product.id, cartId: String(product.id) };
-}
-
-export function resolveCart(items = []) {
-  return items.map((item) => {
-    const canonical = resolveProductSelection(item, item.variantId);
-    return canonical ? { ...canonical, quantity: Math.max(1, Number(item.quantity) || 1) } : null;
-  }).filter(Boolean);
-}

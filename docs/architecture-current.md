@@ -37,7 +37,7 @@ The build is a client-rendered single-page application. `npm start`/`npm run dev
 
 ### `StoreProvider`
 
-`StoreProvider` is implemented in `src/hooks/useStore.js`. It creates the application-wide commerce/profile context, initializes its persistent state, canonicalizes persisted cart items against current product data, and exposes state plus mutation functions.
+`StoreProvider` is implemented in `src/hooks/useStore.js`. It creates the application-wide commerce/profile context, initializes its persistent state, canonicalizes persisted cart items through the cart domain, and exposes state plus mutation functions.
 
 ### `BrowserRouter`
 
@@ -82,7 +82,7 @@ There is no wildcard route, dedicated 404 page, route error element, or route-le
 
 ### Cart
 
-`src/features/cart/CartDrawer.jsx` renders the global cart dialog. It resolves persisted cart lines through domain helpers that still depend on the static catalogue, updates quantities, removes lines, calculates subtotal and free-shipping progress, uses `productRepository` to select one additional product recommendation, and implements a hardcoded `VELOURA10` demonstration promotion. It passes promotion state to checkout through React Router location state.
+`src/features/cart/CartDrawer.jsx` renders the global cart dialog. It resolves cart selections through the product domain, updates quantities, removes lines, calculates subtotal and free-shipping progress, uses `productRepository` to select one additional product recommendation, and implements a hardcoded `VELOURA10` demonstration promotion. It passes promotion state to checkout through React Router location state.
 
 ### Checkout
 
@@ -123,7 +123,7 @@ The context currently exposes:
 | `routineResults` | Initially an array; current saves use `{ productIds, answers }`, with compatibility logic for older array data. |
 | `recentlyViewed` | Up to six product IDs; written and read by `ProductPage`. |
 
-The provider also exposes `addToCart`, `updateQuantity`, `removeFromCart`, `clearCart`, `toggleWishlist`, and `addRecentlyViewed`, plus selected setters. Cart operations depend directly on helpers from `src/data/products.js`, so state/domain/data-source boundaries are currently coupled.
+The provider also exposes `addToCart`, `updateQuantity`, `removeFromCart`, `clearCart`, `toggleWishlist`, and `addRecentlyViewed`, plus selected setters. Cart operations depend on `src/domain/cart/cart.js` and `src/domain/product/productSelection.js`; those modules use `productRepository` for catalogue lookup. StoreContext no longer imports raw product data, though it still owns several unrelated application concerns and remains a future boundary-review candidate.
 
 The cart drawer's open/closed state is not in Context; it is transient state owned by `App`. Page filters, checkout fields/steps, quizzes, and feedback states are also local component state.
 
@@ -148,13 +148,17 @@ Cart, wishlist, orders, profile, saved routine, and recently viewed products are
 
 ## Data Layer
 
-`src/data/products.js` is the catalogue source of truth. It contains 18 static product objects, variant definitions, image paths, prices, inventory values, merchandising flags, descriptive content, and helpers for money formatting and canonical product/cart resolution.
+`src/data/products.js` is the raw catalogue source of truth. It contains 18 static product objects, variant definitions, image paths, prices, inventory values, merchandising flags, and descriptive content. It no longer owns product selection, cart canonicalization, money formatting, or commerce configuration.
 
 `src/repositories/productRepository.js` is the synchronous product data-access boundary used by UI and feature code. It exposes `getAll`, `getById`, `getBySlug`, and `getManyByIds`. The repository currently delegates to the static catalogue, returns a new array from `getAll`, and preserves requested order while omitting unknown IDs in `getManyByIds`. This boundary does not add caching, asynchronous behavior, API access, or backend inventory authority.
 
 `src/data/merchandising.js` contains the actively consumed homepage bestseller IDs/categories and the out-of-stock ID list: `BESTSELLER_IDS`, `HOME_CATEGORIES`, and `OUT_OF_STOCK_IDS`.
 
-UI and feature code no longer depend directly on `PRODUCTS` for catalogue lookup; those queries go through `productRepository`. Direct catalogue access is limited to the repository implementation and low-level catalogue/repository tests. Domain utilities including `money`, `FREE_SHIPPING_THRESHOLD`, `resolveProductSelection`, and `resolveCart` remain in `src/data/products.js`. `useStore` still depends on the cart/product resolution helpers, while cart, checkout, and product presentation import the domain utilities they need. Separating those responsibilities is deferred to later Architecture Foundation work, so this is not yet complete data/domain decoupling.
+UI and feature code no longer depend directly on `PRODUCTS` for catalogue lookup; those queries go through `productRepository`. Direct catalogue access is limited to the repository implementation and low-level catalogue/repository tests.
+
+`src/domain/product/productSelection.js` owns canonical product and variant selection. It resolves catalogue entries through `productRepository` and preserves the existing product, variant, and cart identity shapes. `src/domain/cart/cart.js` owns persisted-cart canonicalization and depends on product selection; it refreshes lines from current catalogue data, normalizes quantity, and drops missing products. `src/hooks/useStore.js` consumes these domain modules without importing the raw catalogue.
+
+`src/lib/money.js` owns the existing fixed-dollar formatting behavior. `src/domain/commerce/commerceConfig.js` owns `FREE_SHIPPING_THRESHOLD`, keeping the value as simple commerce configuration shared by cart and checkout. These extractions clarify ownership but do not introduce localization, server-authoritative pricing, or a complete commerce domain.
 
 Current limitations include:
 
@@ -163,7 +167,7 @@ Current limitations include:
 - the synchronous repository contract will need to evolve for a future API/CMS data source;
 - cart and saved IDs are coupled to static catalogue identifiers;
 - money formatting is fixed to a dollar string rather than locale-aware formatting;
-- catalogue data and cart-resolution/formatting domain helpers still share one module.
+- cart mutation rules remain embedded in StoreContext and checkout calculations remain client-side; those responsibilities are not addressed by this extraction.
 
 ## Services
 
@@ -283,14 +287,17 @@ The project uses CRA's Jest configuration with Testing Library for the component
 
 | Test file | Coverage |
 | --- | --- |
-| `src/data/products.test.js` | Unique product IDs/slugs, canonical images, variant cart identities, and rehydration of persisted cart lines from current product data. |
+| `src/data/products.test.js` | Unique raw catalogue product IDs and slugs. |
 | `src/repositories/productRepository.test.js` | Repository ordering, defensive list copies, ID/slug lookup, missing products, and ordered multi-ID resolution. |
+| `src/domain/product/productSelection.test.js` | Product lookup, canonical variant identity, invalid-variant fallback, and missing-product behavior. |
+| `src/domain/cart/cart.test.js` | Persisted-cart canonicalization, quantity handling, variant identity, and removal of missing products. |
+| `src/lib/money.test.js` | Existing fixed-dollar formatting output. |
 | `src/features/products/ProductCard.test.jsx` | Variant selection/image/cart persistence and wishlist interaction through `StoreProvider`. |
 | `src/features/products/shopLogic.test.js` | Searchable shade/benefit text, combined filtering, and price sorting. |
 | `src/features/routine/routineRecommendations.test.js` | Routine length by pace, variation by answers, and valid catalogue references. |
 | `src/features/shade-match/shadeMatchLogic.test.js` | Variant/profile integrity, answer differentiation, and the medium-neutral result URL. |
 
-There are 18 declared test cases. There are no current tests for routing, layout/navigation, cart quantity/promo behavior, checkout/order service, storage failure behavior, profile persistence, full guided-flow accessibility, or 404/error states. Execution results are recorded in task reports rather than asserted in this architecture description.
+There are 24 declared test cases. There are no current tests for routing, layout/navigation, cart quantity/promo behavior, checkout/order service, storage failure behavior, profile persistence, full guided-flow accessibility, or 404/error states. Execution results are recorded in task reports rather than asserted in this architecture description.
 
 ## Environment Variables
 

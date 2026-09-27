@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Check, Star } from "@mui/icons-material";
-import { money } from "../../data/products";
+import { money } from "../../lib/money";
 import { productRepository } from "../../repositories/productRepository";
 import { useStore } from "../../hooks/useStore";
 import ProductVisual from "./ProductVisual";

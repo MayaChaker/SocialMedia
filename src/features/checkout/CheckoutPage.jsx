@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Check, ChevronLeft, ChevronRight, LockOutlined } from "@mui/icons-material";
-import { FREE_SHIPPING_THRESHOLD, money } from "../../data/products";
+import { FREE_SHIPPING_THRESHOLD } from "../../domain/commerce/commerceConfig";
+import { money } from "../../lib/money";
 import { useStore } from "../../hooks/useStore";
 import { orderService } from "../../services/orderService";
 

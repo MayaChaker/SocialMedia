@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowForward, Check, LockOutlined } from "@mui/icons-material";
 import { motion } from "framer-motion";
-import { money } from "../data/products";
+import { money } from "../lib/money";
 import { BESTSELLER_IDS, HOME_CATEGORIES } from "../data/merchandising";
 import { productRepository } from "../repositories/productRepository";
 import ProductCard from "../features/products/ProductCard";

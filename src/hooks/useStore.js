@@ -1,7 +1,8 @@
 import { createContext, useContext, useMemo } from "react";
 import { STORAGE_KEYS } from "../repositories/storageRepository";
 import { usePersistentState } from "./usePersistentState";
-import { resolveCart, resolveProductSelection } from "../data/products";
+import { resolveCart } from "../domain/cart/cart";
+import { resolveProductSelection } from "../domain/product/productSelection";
 
 const StoreContext = createContext(null);
 const defaultProfile = { skinGoals: ["Dehydration", "Dullness"], skinType: "Balanced", preferences: ["Natural coverage", "Sensitive skin"] };

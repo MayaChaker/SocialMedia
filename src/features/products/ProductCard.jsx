@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Check, Close, Star } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
-import { money } from "../../data/products";
+import { money } from "../../lib/money";
 import { OUT_OF_STOCK_IDS } from "../../data/merchandising";
 import { useStore } from "../../hooks/useStore";
 import ProductVisual from "./ProductVisual";

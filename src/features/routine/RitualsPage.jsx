@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowBack, ArrowForward, AutoAwesomeOutlined, Check, Loop, Tune } from "@mui/icons-material";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { money } from "../../data/products";
+import { money } from "../../lib/money";
 import { useStore } from "../../hooks/useStore";
 import ProductVisual from "../products/ProductVisual";
 import { buildRoutineRecommendations, routineAlternatives, routineTitle } from "./routineRecommendations";
