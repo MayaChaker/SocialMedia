@@ -1,6 +1,6 @@
 # Current Architecture
 
-This document records the repository as it exists on the `refactor/production-v2` branch after Phase 0.1. It is a baseline, not a description of the intended architecture.
+This document records the current application architecture as it evolves through the production refactor. It includes the product repository boundary introduced during Architecture Foundation work and describes the implementation as it exists today, not the intended end state.
 
 ## Stack
 
@@ -74,15 +74,15 @@ There is no wildcard route, dedicated 404 page, route error element, or route-le
 
 `src/features/products/` contains the catalogue and product presentation:
 
-- `ShopPage.jsx` reads static catalogue data, manages URL-derived category/search/collection state, owns local filters, and renders the filter dialog and product grid.
-- `ProductPage.jsx` resolves a product by slug, selects variants, records recently viewed IDs, and renders recommendations.
+- `ShopPage.jsx` reads the catalogue through `productRepository`, manages URL-derived category/search/collection state, owns local filters, and renders the filter dialog and product grid.
+- `ProductPage.jsx` resolves products and recommendation IDs through `productRepository`, selects variants, records recently viewed IDs, and renders recommendations.
 - `ProductCard.jsx` combines product presentation, variant selection, quick preview, wishlist access, and add-to-cart behavior.
 - `ProductVisual.jsx` selects static imagery and provides a CSS-rendered or textual fallback.
 - `shopLogic.js` contains searchable-text, availability, filter, and sort logic separated from the page component.
 
 ### Cart
 
-`src/features/cart/CartDrawer.jsx` renders the global cart dialog. It resolves persisted cart lines against catalogue data, updates quantities, removes lines, calculates subtotal and free-shipping progress, recommends one additional product, and implements a hardcoded `VELOURA10` demonstration promotion. It passes promotion state to checkout through React Router location state.
+`src/features/cart/CartDrawer.jsx` renders the global cart dialog. It resolves persisted cart lines through domain helpers that still depend on the static catalogue, updates quantities, removes lines, calculates subtotal and free-shipping progress, uses `productRepository` to select one additional product recommendation, and implements a hardcoded `VELOURA10` demonstration promotion. It passes promotion state to checkout through React Router location state.
 
 ### Checkout
 
@@ -90,23 +90,23 @@ There is no wildcard route, dedicated 404 page, route error element, or route-le
 
 ### Routine
 
-`src/features/routine/` contains a three-question routine builder. `RitualsPage.jsx` owns the guided flow and UI states; `routineRecommendations.js` maps answers to static product IDs, reasons, titles, and alternatives. Results can be added to cart or persisted to the browser profile area.
+`src/features/routine/` contains a three-question routine builder. `RitualsPage.jsx` owns the guided flow and UI states; `routineRecommendations.js` maps answers to product IDs, reasons, and titles, then resolves products and alternatives through `productRepository`. Results can be added to cart or persisted to the browser profile area.
 
 ### Shade Match
 
-`src/features/shade-match/` contains a three-step, image-free shade suggestion flow. `shadeMatchLogic.js` maps depth and undertone answers to static Petal Skin Tint variants. `ShadeMatchPage.jsx` presents the flow and can persist the suggested shade and answers into the profile state.
+`src/features/shade-match/` contains a three-step, image-free shade suggestion flow. `shadeMatchLogic.js` obtains Petal Skin Tint through `productRepository` and maps depth and undertone answers to its variants. `ShadeMatchPage.jsx` presents the flow, resolves the result product through the repository, and can persist the suggested shade and answers into the profile state.
 
 ### Wishlist
 
-`src/features/wishlist/` contains `WishlistButton.jsx` and `WishlistPage.jsx`. Wishlist persistence is an array of product IDs. The page resolves those IDs by importing the static catalogue directly.
+`src/features/wishlist/` contains `WishlistButton.jsx` and `WishlistPage.jsx`. Wishlist persistence is an array of product IDs. The page obtains the catalogue through `productRepository` and filters it against those IDs, preserving catalogue order.
 
 ### Beauty Profile
 
-`src/features/beauty-profile/BeautyProfilePage.jsx` edits browser-saved skin type, concerns, and preferences. It also resolves saved shade and routine data against the static catalogue for display. It is not an authenticated customer account.
+`src/features/beauty-profile/BeautyProfilePage.jsx` edits browser-saved skin type, concerns, and preferences. It resolves saved shade and routine data through `productRepository` for display. It is not an authenticated customer account.
 
 ### Shared Components and Pages
 
-`src/components/Layout.jsx` is the only component under the general shared-components folder. `ProductCard` and `ProductVisual` are feature-owned but reused by several pages/features. `src/pages/` contains the homepage, story page, and parameterized policy page. There is no current `components/ui` primitive layer.
+`src/components/Layout.jsx` is the only component under the general shared-components folder and obtains global search suggestions through `productRepository`. `ProductCard` and `ProductVisual` are feature-owned but reused by several pages/features. `src/pages/` contains the homepage, story page, and parameterized policy page; `HomePage` resolves its curated product IDs through the repository. There is no current `components/ui` primitive layer.
 
 ## State Management
 
@@ -154,7 +154,7 @@ Cart, wishlist, orders, profile, saved routine, and recently viewed products are
 
 `src/data/merchandising.js` contains the actively consumed homepage bestseller IDs/categories and the out-of-stock ID list: `BESTSELLER_IDS`, `HOME_CATEGORIES`, and `OUT_OF_STOCK_IDS`.
 
-UI and feature code access catalogue queries through `productRepository`. Direct catalogue access is limited to the repository implementation and low-level catalogue/repository tests. `useStore`, cart, and checkout still import formatting or cart-resolution domain helpers from `src/data/products.js`; separating those responsibilities is deferred because this step introduces only the product data-access boundary.
+UI and feature code no longer depend directly on `PRODUCTS` for catalogue lookup; those queries go through `productRepository`. Direct catalogue access is limited to the repository implementation and low-level catalogue/repository tests. Domain utilities including `money`, `FREE_SHIPPING_THRESHOLD`, `resolveProductSelection`, and `resolveCart` remain in `src/data/products.js`. `useStore` still depends on the cart/product resolution helpers, while cart, checkout, and product presentation import the domain utilities they need. Separating those responsibilities is deferred to later Architecture Foundation work, so this is not yet complete data/domain decoupling.
 
 Current limitations include:
 
