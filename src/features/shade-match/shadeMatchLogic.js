@@ -1,6 +1,6 @@
-import { productBySlug } from "../../data/products";
+import { productRepository } from "../../repositories/productRepository";
 
-const SKIN_TINT = productBySlug("petal-skin-tint");
+const SKIN_TINT = productRepository.getBySlug("petal-skin-tint");
 
 const PROFILE_BY_VARIANT = {
   porcelain: { depth: "Fair", undertone: "Cool-neutral", description: "A light, softly balanced tint for fair complexions." },

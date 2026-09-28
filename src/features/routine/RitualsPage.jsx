@@ -2,8 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowBack, ArrowForward, AutoAwesomeOutlined, Check, Loop, Tune } from "@mui/icons-material";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { money } from "../../data/products";
-import { useStore } from "../../hooks/useStore";
+import { money } from "../../lib/money";
+import { useCommerce } from "../../hooks/useCommerce";
+import { useCustomer } from "../../hooks/useCustomer";
 import ProductVisual from "../products/ProductVisual";
 import { buildRoutineRecommendations, routineAlternatives, routineTitle } from "./routineRecommendations";
 
@@ -23,7 +24,8 @@ const timeLabel = { Essential: "2-step routine", Balanced: "3-step routine", Imm
 const isAvailable = (product) => Boolean(product) && product.stock !== 0;
 
 export default function RitualsPage({ openCart }) {
-  const { addToCart, setRoutineResults } = useStore();
+  const { addToCart } = useCommerce();
+  const { saveRoutine: persistRoutine } = useCustomer();
   const reduceMotion = useReducedMotion();
   const headingRef = useRef(null);
   const generationTimer = useRef(null);
@@ -116,7 +118,7 @@ export default function RitualsPage({ openCart }) {
 
   const saveRoutine = () => {
     try {
-      setRoutineResults({ productIds: recommendations.map(({ product }) => product.id), answers: result });
+      persistRoutine({ productIds: recommendations.map(({ product }) => product.id), answers: result });
       setSaved(true);
       setSaveStatus("Routine saved in this browser.");
     } catch { setSaveStatus("We could not save your routine. Please try again."); }

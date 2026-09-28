@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowBack, ArrowForward, Check } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
-import { useStore } from "../../hooks/useStore";
+import { useCustomer } from "../../hooks/useCustomer";
 import { matchShade, matchedProductUrl, SHADE_PROFILES } from "./shadeMatchLogic";
-import { productBySlug } from "../../data/products";
+import { productRepository } from "../../repositories/productRepository";
 import ProductVisual from "../products/ProductVisual";
 
 const steps = [
@@ -24,7 +24,7 @@ const optionGuidance = {
 };
 
 export default function ShadeMatchPage() {
-  const { profile, setProfile } = useStore();
+  const { profile, saveProfile } = useCustomer();
   const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
@@ -66,11 +66,11 @@ export default function ShadeMatchPage() {
 
   if (completed) {
     const result = matchShade(answers);
-    const product = productBySlug(result.productSlug);
+    const product = productRepository.getBySlug(result.productSlug);
     const resultIndex = SHADE_PROFILES.findIndex(item => item.variantId === result.variantId);
     const nearby = [SHADE_PROFILES[resultIndex - 1], SHADE_PROFILES[resultIndex + 1]].filter(Boolean);
     const saveShade = () => {
-      setProfile({ ...profile, shade: result.name, shadeVariantId: result.variantId, shadeAnswers: answers });
+      saveProfile({ ...profile, shade: result.name, shadeVariantId: result.variantId, shadeAnswers: answers });
       setSaved(true);
     };
     return <main className="shadeResultPage">

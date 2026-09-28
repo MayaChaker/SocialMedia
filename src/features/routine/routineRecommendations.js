@@ -1,6 +1,7 @@
-import { PRODUCTS } from "../../data/products";
+import { productRepository } from "../../repositories/productRepository";
 
-const byId = (id) => PRODUCTS.find((product) => product.id === id);
+const catalogue = productRepository.getAll();
+const byId = (id) => productRepository.getById(id);
 
 const treatmentByGoal = {
   Dehydration: 1,
@@ -66,5 +67,5 @@ export function routineTitle({ goal, time }) {
 
 export function routineAlternatives(product, recommendations) {
   const selectedIds = new Set(recommendations.map((item) => item.product.id));
-  return PRODUCTS.filter((candidate) => candidate.category === "Skincare" && candidate.id !== product.id && !selectedIds.has(candidate.id) && candidate.type === product.type).slice(0, 2);
+  return catalogue.filter((candidate) => candidate.category === "Skincare" && candidate.id !== product.id && !selectedIds.has(candidate.id) && candidate.type === product.type).slice(0, 2);
 }

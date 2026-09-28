@@ -1,0 +1,7 @@
+import { Link } from "react-router-dom";
+
+export default function Footer() {
+  const contact = process.env.REACT_APP_CONTACT_EMAIL || "care@velourabeauty.com";
+
+  return <footer className="siteFooter"><div className="footerInner"><div className="footerGrid"><div className="footerBrand"><Link className="wordmark" to="/">VELOURA<span>BEAUTY</span></Link><p>Skincare, colour, and sets for considered everyday routines.</p></div><div className="footerColumn"><h4>Shop</h4><Link to="/shop">All products</Link><Link to="/shop/skincare">Skincare</Link><Link to="/shop/makeup">Makeup</Link><Link to="/shop/sets">Sets</Link><Link to="/shop?collection=new">New arrivals</Link></div><div className="footerColumn"><h4>Customer care</h4><a href={`mailto:${contact}`}>Contact</a><Link to="/care/faq">FAQ</Link><Link to="/care/shipping">Shipping & returns</Link><Link to="/care/refund">Refund policy</Link><Link to="/care/track">Track order</Link></div><div className="footerColumn"><h4>About Veloura</h4><Link to="/about">Our story</Link><Link to="/rituals">Routine builder</Link><Link to="/shade-match">Shade match</Link><Link to="/care/accessibility">Accessibility</Link></div></div><div className="footerBottom"><span>© {new Date().getFullYear()} Veloura Beauty</span><div className="footerLegal"><Link to="/care/privacy">Privacy</Link><Link to="/care/terms">Terms</Link></div>{process.env.REACT_APP_CHECKOUT_URL&&<span className="checkoutProviderNote">Payment methods shown by the secure checkout provider</span>}</div></div></footer>;
+}
