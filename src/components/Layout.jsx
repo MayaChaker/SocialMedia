@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { AccountCircleOutlined, Close, FavoriteBorder, Menu, Search, ShoppingBagOutlined } from "@mui/icons-material";
-import { useStore } from "../hooks/useStore";
+import { useCommerce } from "../hooks/useCommerce";
 import { MOTION } from "../theme/tokens";
 import { productRepository } from "../repositories/productRepository";
 
@@ -13,7 +13,7 @@ const navItems = [
 const productSuggestions = productRepository.getAll();
 
 export default function Layout({ openCart }) {
-  const { cart, wishlist } = useStore();
+  const { cart, wishlist } = useCommerce();
   const [menuOpen,setMenuOpen]=useState(false);
   const [searchOpen,setSearchOpen]=useState(false);
   const [query,setQuery]=useState("");

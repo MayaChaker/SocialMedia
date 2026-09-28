@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { productRepository } from "../../repositories/productRepository";
-import { StoreProvider } from "../../hooks/useStore";
+import { CommerceProvider } from "../../hooks/useCommerce";
 import ProductCard from "./ProductCard";
 
-const renderCard = (product) => render(<StoreProvider><MemoryRouter><ProductCard product={product}/></MemoryRouter></StoreProvider>);
+const renderCard = (product) => render(<CommerceProvider><MemoryRouter><ProductCard product={product}/></MemoryRouter></CommerceProvider>);
 
 beforeEach(() => window.localStorage.clear());
 

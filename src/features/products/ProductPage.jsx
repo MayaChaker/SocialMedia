@@ -3,7 +3,8 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Check, Star } from "@mui/icons-material";
 import { money } from "../../lib/money";
 import { productRepository } from "../../repositories/productRepository";
-import { useStore } from "../../hooks/useStore";
+import { useCommerce } from "../../hooks/useCommerce";
+import { useCustomer } from "../../hooks/useCustomer";
 import ProductVisual from "./ProductVisual";
 import ProductCard from "./ProductCard";
 import WishlistButton from "../wishlist/WishlistButton";
@@ -18,7 +19,8 @@ export default function ProductPage({ openCart }) {
   const requestedVariant = new URLSearchParams(location.search).get("variant");
   const initialVariant = product?.variants?.some((variant) => variant.id === requestedVariant) ? requestedVariant : product?.variants?.[0]?.id || "";
   const [selectedId, setSelectedId] = useState(initialVariant);
-  const { addToCart, addRecentlyViewed, recentlyViewed, profile } = useStore();
+  const { addToCart } = useCommerce();
+  const { addRecentlyViewed, recentlyViewed, profile } = useCustomer();
   useEffect(() => { if (product) addRecentlyViewed(product.id); }, [product?.id]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     const nextVariant = product?.variants?.some((variant) => variant.id === requestedVariant) ? requestedVariant : product?.variants?.[0]?.id || "";

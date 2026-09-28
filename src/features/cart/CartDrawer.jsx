@@ -6,14 +6,14 @@ import { FREE_SHIPPING_THRESHOLD } from "../../domain/commerce/commerceConfig";
 import { resolveProductSelection } from "../../domain/product/productSelection";
 import { money } from "../../lib/money";
 import { productRepository } from "../../repositories/productRepository";
-import { useStore } from "../../hooks/useStore";
+import { useCommerce } from "../../hooks/useCommerce";
 import ProductVisual from "../products/ProductVisual";
 import { MOTION } from "../../theme/tokens";
 
 const catalogue = productRepository.getAll();
 
 export default function CartDrawer({ open, close }) {
-  const { cart, updateQuantity, removeFromCart, addToCart } = useStore();
+  const { cart, updateQuantity, removeFromCart, addToCart } = useCommerce();
   const navigate = useNavigate(); const drawerRef = useRef(null); const closeRef = useRef(null);
   const [promo, setPromo] = useState(""); const [applied, setApplied] = useState(false); const [promoMessage, setPromoMessage] = useState(""); const [promoOpen, setPromoOpen] = useState(false);
   const resolvedCart = useMemo(() => cart.map(item => ({ ...(resolveProductSelection(item, item.variantId) || item), quantity: item.quantity })), [cart]);

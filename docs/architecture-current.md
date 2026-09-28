@@ -30,14 +30,14 @@ The build is a client-rendered single-page application. `npm start`/`npm run dev
 
 - declares all page-level lazy imports;
 - owns the transient `cartOpen` state;
-- wraps the application in `StoreProvider` and then `BrowserRouter`;
+- wraps the application in `AppProviders` and then `BrowserRouter`;
 - provides a single `Suspense` fallback for lazy route chunks;
 - declares every route;
 - mounts `CartDrawer` globally inside the router but outside the route tree.
 
-### `StoreProvider`
+### Application Providers
 
-`StoreProvider` is implemented in `src/hooks/useStore.js`. It creates the application-wide commerce/profile context, initializes its persistent state, canonicalizes persisted cart items through the cart domain, and exposes state plus mutation functions.
+`src/providers/AppProviders.jsx` composes `CommerceProvider` and `CustomerProvider`. The commerce provider initializes cart, wishlist, and order persistence and canonicalizes persisted cart items through the cart domain. The customer provider initializes profile, routine-result, and recently-viewed persistence. Neither provider changes the existing storage keys or persisted value shapes.
 
 ### `BrowserRouter`
 
@@ -110,20 +110,27 @@ There is no wildcard route, dedicated 404 page, route error element, or route-le
 
 ## State Management
 
-The application uses one React Context created by `StoreProvider`. `useStore()` reads that context and throws when called outside the provider. Each global state value uses `usePersistentState`; there is no reducer, action type system, server cache, or external state library.
+The application uses two cohesive React Context boundaries composed by `AppProviders`. Each global state value continues to use `usePersistentState`; there is no reducer, action type system, server cache, or external state library.
 
-The context currently exposes:
+`CommerceProvider` is consumed through `useCommerce()` and owns:
 
-| State | Current shape/use |
+| State | Current shape/use and actions |
 | --- | --- |
-| `cart` | Array of canonicalized cart lines with product/variant data and quantity. |
-| `wishlist` | Array of numeric product IDs. |
-| `orders` | Array of demo or checkout-endpoint responses stored on this browser. |
-| `profile` | Skin goals, skin type, preferences, and optional saved shade details. |
-| `routineResults` | Initially an array; current saves use `{ productIds, answers }`, with compatibility logic for older array data. |
-| `recentlyViewed` | Up to six product IDs; written and read by `ProductPage`. |
+| `cart` | Canonicalized cart lines plus `addToCart`, `updateQuantity`, `removeFromCart`, and `clearCart`. |
+| `wishlist` | Numeric product IDs plus `toggleWishlist`. |
+| `orders` | Demo or checkout-endpoint responses plus the descriptive `addOrder` action. |
 
-The provider also exposes `addToCart`, `updateQuantity`, `removeFromCart`, `clearCart`, `toggleWishlist`, and `addRecentlyViewed`, plus selected setters. Cart operations depend on `src/domain/cart/cart.js` and `src/domain/product/productSelection.js`; those modules use `productRepository` for catalogue lookup. StoreContext no longer imports raw product data, though it still owns several unrelated application concerns and remains a future boundary-review candidate.
+`CustomerProvider` is consumed through `useCustomer()` and owns:
+
+| State | Current shape/use and actions |
+| --- | --- |
+| `profile` | Skin goals, skin type, preferences, and optional shade details plus `saveProfile`. |
+| `routineResults` | An older array or current `{ productIds, answers }` value plus `saveRoutine`. |
+| `recentlyViewed` | Up to six product IDs plus `addRecentlyViewed`. |
+
+Raw profile, routine, and order setters are no longer public. `ProductPage` intentionally consumes both contexts because it combines cart actions with profile-aware and recently-viewed behavior. `RitualsPage` also intentionally crosses the boundary because it both adds recommendations to the cart and saves the resulting routine. Other consumers depend only on their relevant boundary, reducing unrelated commerce/customer rerenders without splitting state into many small contexts.
+
+Commerce cart operations use pure helpers from `src/domain/cart/cartState.js`, canonicalization from `src/domain/cart/cart.js`, and product selection from `src/domain/product/productSelection.js`. Wishlist and recently-viewed transitions are also pure domain helpers. Provider values remain memoized at the boundary level; no additional component memoization was introduced.
 
 The cart drawer's open/closed state is not in Context; it is transient state owned by `App`. Page filters, checkout fields/steps, quizzes, and feedback states are also local component state.
 
@@ -156,7 +163,7 @@ Cart, wishlist, orders, profile, saved routine, and recently viewed products are
 
 UI and feature code no longer depend directly on `PRODUCTS` for catalogue lookup; those queries go through `productRepository`. Direct catalogue access is limited to the repository implementation and low-level catalogue/repository tests.
 
-`src/domain/product/productSelection.js` owns canonical product and variant selection. It resolves catalogue entries through `productRepository` and preserves the existing product, variant, and cart identity shapes. `src/domain/cart/cart.js` owns persisted-cart canonicalization and depends on product selection; it refreshes lines from current catalogue data, normalizes quantity, and drops missing products. `src/hooks/useStore.js` consumes these domain modules without importing the raw catalogue.
+`src/domain/product/productSelection.js` owns canonical product and variant selection. It resolves catalogue entries through `productRepository` and preserves the existing product, variant, and cart identity shapes. `src/domain/cart/cart.js` owns persisted-cart canonicalization and depends on product selection; it refreshes lines from current catalogue data, normalizes quantity, and drops missing products. `src/hooks/useCommerce.js` consumes these domain modules without importing the raw catalogue.
 
 `src/lib/money.js` owns the existing fixed-dollar formatting behavior. `src/domain/commerce/commerceConfig.js` owns `FREE_SHIPPING_THRESHOLD`, keeping the value as simple commerce configuration shared by cart and checkout. These extractions clarify ownership but do not introduce localization, server-authoritative pricing, or a complete commerce domain.
 
@@ -167,7 +174,7 @@ Current limitations include:
 - the synchronous repository contract will need to evolve for a future API/CMS data source;
 - cart and saved IDs are coupled to static catalogue identifiers;
 - money formatting is fixed to a dollar string rather than locale-aware formatting;
-- cart mutation rules remain embedded in StoreContext and checkout calculations remain client-side; those responsibilities are not addressed by this extraction.
+- checkout totals and promotion rules remain client-side and are not part of the context-boundary refactor.
 
 ## Services
 
@@ -291,13 +298,17 @@ The project uses CRA's Jest configuration with Testing Library for the component
 | `src/repositories/productRepository.test.js` | Repository ordering, defensive list copies, ID/slug lookup, missing products, and ordered multi-ID resolution. |
 | `src/domain/product/productSelection.test.js` | Product lookup, canonical variant identity, invalid-variant fallback, and missing-product behavior. |
 | `src/domain/cart/cart.test.js` | Persisted-cart canonicalization, quantity handling, variant identity, and removal of missing products. |
+| `src/domain/cart/cartState.test.js` | Adding, incrementing, quantity updates, and line removal. |
+| `src/domain/wishlist/wishlist.test.js` | Wishlist toggle behavior. |
+| `src/domain/customer/recentlyViewed.test.js` | Duplicate ordering and the six-item limit. |
 | `src/lib/money.test.js` | Existing fixed-dollar formatting output. |
-| `src/features/products/ProductCard.test.jsx` | Variant selection/image/cart persistence and wishlist interaction through `StoreProvider`. |
+| `src/hooks/useCustomer.test.jsx` | Profile and routine action compatibility with existing persistence keys and shapes. |
+| `src/features/products/ProductCard.test.jsx` | Variant selection/image/cart persistence and wishlist interaction through `CommerceProvider`. |
 | `src/features/products/shopLogic.test.js` | Searchable shade/benefit text, combined filtering, and price sorting. |
 | `src/features/routine/routineRecommendations.test.js` | Routine length by pace, variation by answers, and valid catalogue references. |
 | `src/features/shade-match/shadeMatchLogic.test.js` | Variant/profile integrity, answer differentiation, and the medium-neutral result URL. |
 
-There are 24 declared test cases. There are no current tests for routing, layout/navigation, cart quantity/promo behavior, checkout/order service, storage failure behavior, profile persistence, full guided-flow accessibility, or 404/error states. Execution results are recorded in task reports rather than asserted in this architecture description.
+There are 31 declared test cases. There are no current tests for routing, layout/navigation, cart promo behavior, checkout/order service, storage failure behavior, full guided-flow accessibility, or 404/error states. Execution results are recorded in task reports rather than asserted in this architecture description.
 
 ## Environment Variables
 
@@ -332,7 +343,7 @@ There are 24 declared test cases. There are no current tests for routing, layout
 - Route metadata is mostly generic and client-mutated; SPA rendering limits SEO and social previews.
 - Large unoptimized PNGs and the absence of responsive image generation increase transfer and rendering cost.
 - Accessibility implementations are useful but duplicated and inconsistent, particularly for reduced motion, custom radio keyboard behavior, and validation feedback.
-- Test coverage emphasizes product/recommendation logic and one component but does not cover critical cart, checkout, persistence, routing, or error paths.
+- Test coverage now includes core product, cart, wishlist, customer-state, and recommendation behavior but does not cover checkout/order service, storage failures, routing, or error paths.
 - `storageRepository` silently swallows all failures, preventing the UI or telemetry from distinguishing unavailable/corrupt persistence.
 
 ### Low
@@ -347,7 +358,7 @@ These retained items were not removed in Phase 0.3.
 
 | File | Symbol or area | Why it appears unused/dead | Confidence | Recommended later action |
 | --- | --- | --- | --- | --- |
-| `src/hooks/useStore.js`, `src/features/products/ProductPage.jsx` | `recentlyViewed` | This state is active: product pages write IDs and render a recent-product shelf. It is not dead. | High | Retain; later move behind a clearer recently-viewed domain/persistence boundary. |
+| `src/hooks/useCustomer.js`, `src/domain/customer/recentlyViewed.js`, `src/features/products/ProductPage.jsx` | `recentlyViewed` | This state is active: product pages write IDs and render a recent-product shelf. Its ordering/limit rules now have a customer-domain helper and focused tests. | High | Retain in the customer-state boundary. |
 | `src/index.css` | `.aboutEditorial*`, `.aboutCompact*`, `.storyV2*` families | No current JSX uses these historical story-page class families; current `AboutPage` uses `.storyFinal*`, `.storyEdit*`, `.storyCriteria*`, and `.storyShelf*`. | High | Delete only after selector-by-selector visual verification in a dedicated CSS cleanup. |
 | `src/index.css` | `.cursorSpotlight`, `.valuesStrip`, `.heroNote`, `.ritualBanner`, `.newsletter`, `.formulaSection`, `.reviewGrid`, `.socialGrid` families | Searches found stylesheet definitions but no current JSX class usage for these named areas. Some are remnants of earlier homepage iterations. | High | Validate dynamic usage and remove in a scoped stylesheet cleanup with visual regression checks. |
 | `public/veloura-hero.png` and `public/veloura-hero.webp` | Hero format pair | Same basename and likely related creative, but both have distinct current references through metadata/legacy merchandising data. | Medium | Confirm intended canonical asset and metadata requirements before consolidating. |

@@ -4,12 +4,12 @@ import { Check, Close, Star } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import { money } from "../../lib/money";
 import { OUT_OF_STOCK_IDS } from "../../data/merchandising";
-import { useStore } from "../../hooks/useStore";
+import { useCommerce } from "../../hooks/useCommerce";
 import ProductVisual from "./ProductVisual";
 import WishlistButton from "../wishlist/WishlistButton";
 
 export default function ProductCard({ product, onAdded, shopLayout = false }) {
-  const { addToCart } = useStore();
+  const { addToCart } = useCommerce();
   const [preview, setPreview] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [actionState, setActionState] = useState("idle");

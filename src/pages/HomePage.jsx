@@ -5,12 +5,12 @@ import { money } from "../lib/money";
 import { BESTSELLER_IDS, HOME_CATEGORIES } from "../data/merchandising";
 import { productRepository } from "../repositories/productRepository";
 import ProductCard from "../features/products/ProductCard";
-import { useStore } from "../hooks/useStore";
+import { useCommerce } from "../hooks/useCommerce";
 
 const trustPoints = ["Skincare, makeup, and sets", "Browser-saved profile", "Guided shade suggestions", "Complimentary delivery on $75+"];
 
 export default function HomePage({ openCart }) {
-  const { addToCart } = useStore();
+  const { addToCart } = useCommerce();
   const bestsellers = productRepository.getManyByIds(BESTSELLER_IDS).map(product => product.id === 1 ? { ...product, image: "/products/veloura-serum-bestseller-v2.webp" } : product);
   const routine = productRepository.getManyByIds([2, 1, 5]);
   const routineTotal = routine.reduce((sum, product) => sum + product.price, 0);
