@@ -45,7 +45,7 @@ The build is a client-rendered single-page application. `npm start`/`npm run dev
 
 ### `Layout`
 
-`src/components/Layout.jsx` is the shared shell for all routes except checkout. It renders the announcement region, sticky header, desktop/mobile navigation, global search, routed `<Outlet>`, route transition, and footer. It also scrolls to the top on navigation and updates the document title and description based on the current top-level path.
+`src/components/layout/Layout.jsx` composes the shared shell for all routes except checkout. It owns the routed `<Outlet>`, route transition, navigation scroll reset, and route metadata synchronization. `Header.jsx` owns the announcement region, desktop/mobile navigation state and accessibility behavior, commerce counts, and search visibility; `GlobalSearch.jsx` owns search input and product suggestions; `Footer.jsx` owns footer navigation and environment-backed contact/provider details. `routeMetadata.js` contains the existing path-to-title/description mapping and DOM synchronization.
 
 ## Routing
 
@@ -106,7 +106,7 @@ There is no wildcard route, dedicated 404 page, route error element, or route-le
 
 ### Shared Components and Pages
 
-`src/components/Layout.jsx` is the only component under the general shared-components folder and obtains global search suggestions through `productRepository`. `ProductCard` and `ProductVisual` are feature-owned but reused by several pages/features. `src/pages/` contains the homepage, story page, and parameterized policy page; `HomePage` resolves its curated product IDs through the repository. There is no current `components/ui` primitive layer.
+`src/components/layout/` contains the application-shell composition, header/navigation, global search, footer, and route metadata helper. Global search obtains product suggestions through `productRepository`. `ProductCard` and `ProductVisual` remain product-owned despite reuse by pages and features: the homepage and wishlist render `ProductCard`, while cart, routine, shade-match, and beauty-profile views render `ProductVisual`. Product presentation composes the feature-owned `WishlistButton`, and `App` composes the feature-owned `CartDrawer`; these existing cross-feature relationships were not reorganized during the shell extraction. `src/pages/` contains the homepage, story page, and parameterized policy page; `HomePage` resolves its curated product IDs through the repository. There is no current `components/ui` primitive layer.
 
 ## State Management
 
@@ -263,7 +263,7 @@ Current inconsistencies to review later:
 
 `public/index.html` defines the default title, description, theme color, Open Graph title/description/image/type/site name, and Twitter card/title/description. The Open Graph image is `/veloura-hero.png`.
 
-`Layout` updates `document.title` for recognized top-level sections and changes the standard meta description only for the shop versus other routes. `/our-story` redirects to canonical `/about`. Product slugs, categories, policies, and query states do not receive specific descriptions or social metadata.
+The layout's `routeMetadata` helper updates `document.title` for recognized top-level sections and changes the standard meta description only for the shop versus other routes. `/our-story` redirects to canonical `/about`. Product slugs, categories, policies, and query states do not receive specific descriptions or social metadata.
 
 As a client-rendered SPA, every route initially serves the same HTML metadata. There are no server-rendered route tags, canonical URLs, per-product Open Graph data, structured product data, sitemap/robots configuration in the repository, or framework-native metadata/error handling. Crawlers and link unfurlers that do not execute the client receive only the default metadata.
 
@@ -294,6 +294,7 @@ The project uses CRA's Jest configuration with Testing Library for the component
 
 | Test file | Coverage |
 | --- | --- |
+| `src/components/layout/routeMetadata.test.js` | Homepage, shop, and unknown-section metadata mappings. |
 | `src/data/products.test.js` | Unique raw catalogue product IDs and slugs. |
 | `src/repositories/productRepository.test.js` | Repository ordering, defensive list copies, ID/slug lookup, missing products, and ordered multi-ID resolution. |
 | `src/domain/product/productSelection.test.js` | Product lookup, canonical variant identity, invalid-variant fallback, and missing-product behavior. |
@@ -308,7 +309,7 @@ The project uses CRA's Jest configuration with Testing Library for the component
 | `src/features/routine/routineRecommendations.test.js` | Routine length by pace, variation by answers, and valid catalogue references. |
 | `src/features/shade-match/shadeMatchLogic.test.js` | Variant/profile integrity, answer differentiation, and the medium-neutral result URL. |
 
-There are 31 declared test cases. There are no current tests for routing, layout/navigation, cart promo behavior, checkout/order service, storage failure behavior, full guided-flow accessibility, or 404/error states. Execution results are recorded in task reports rather than asserted in this architecture description.
+There are 34 declared test cases. There are no current tests for routing, layout/navigation interactions, cart promo behavior, checkout/order service, storage failure behavior, full guided-flow accessibility, or 404/error states. Execution results are recorded in task reports rather than asserted in this architecture description.
 
 ## Environment Variables
 

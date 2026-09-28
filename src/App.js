@@ -1,7 +1,7 @@
 import { lazy, Suspense, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AppProviders from "./providers/AppProviders";
-import Layout from "./components/Layout";
+import Layout from "./components/layout/Layout";
 import CartDrawer from "./features/cart/CartDrawer";
 import "./index.css";
 
