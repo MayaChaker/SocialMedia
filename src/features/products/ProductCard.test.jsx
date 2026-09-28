@@ -1,15 +1,15 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { PRODUCTS } from "../../data/products";
-import { StoreProvider } from "../../hooks/useStore";
+import { productRepository } from "../../repositories/productRepository";
+import { CommerceProvider } from "../../hooks/useCommerce";
 import ProductCard from "./ProductCard";
 
-const renderCard = (product) => render(<StoreProvider><MemoryRouter><ProductCard product={product}/></MemoryRouter></StoreProvider>);
+const renderCard = (product) => render(<CommerceProvider><MemoryRouter><ProductCard product={product}/></MemoryRouter></CommerceProvider>);
 
 beforeEach(() => window.localStorage.clear());
 
 test("a shade selection changes the product image and the added cart variant", () => {
-  const product = PRODUCTS.find((item) => item.slug === "petal-skin-tint");
+  const product = productRepository.getBySlug("petal-skin-tint");
   renderCard(product);
   const image = screen.getByRole("img", { name: product.name });
   expect(screen.getByRole("button", { name: "Choose shade" }).disabled).toBe(true);
@@ -23,7 +23,7 @@ test("a shade selection changes the product image and the added cart variant", (
 });
 
 test("wishlist remains functional on a refined card", () => {
-  const product = PRODUCTS[0];
+  const product = productRepository.getAll()[0];
   renderCard(product);
   fireEvent.click(screen.getByRole("button", { name: `Add ${product.name} to wishlist` }));
   expect(JSON.parse(window.localStorage.getItem("velouraBeauty.wishlist.v1"))).toEqual([product.id]);

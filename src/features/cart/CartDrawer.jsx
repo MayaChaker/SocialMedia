@@ -2,19 +2,24 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Add, Close, LocalShippingOutlined, Remove, ShoppingBagOutlined } from "@mui/icons-material";
-import { FREE_SHIPPING_THRESHOLD, money, PRODUCTS, resolveProductSelection } from "../../data/products";
-import { useStore } from "../../hooks/useStore";
+import { FREE_SHIPPING_THRESHOLD } from "../../domain/commerce/commerceConfig";
+import { resolveProductSelection } from "../../domain/product/productSelection";
+import { money } from "../../lib/money";
+import { productRepository } from "../../repositories/productRepository";
+import { useCommerce } from "../../hooks/useCommerce";
 import ProductVisual from "../products/ProductVisual";
 import { MOTION } from "../../theme/tokens";
 
+const catalogue = productRepository.getAll();
+
 export default function CartDrawer({ open, close }) {
-  const { cart, updateQuantity, removeFromCart, addToCart } = useStore();
+  const { cart, updateQuantity, removeFromCart, addToCart } = useCommerce();
   const navigate = useNavigate(); const drawerRef = useRef(null); const closeRef = useRef(null);
   const [promo, setPromo] = useState(""); const [applied, setApplied] = useState(false); const [promoMessage, setPromoMessage] = useState(""); const [promoOpen, setPromoOpen] = useState(false);
   const resolvedCart = useMemo(() => cart.map(item => ({ ...(resolveProductSelection(item, item.variantId) || item), quantity: item.quantity })), [cart]);
   const subtotal = useMemo(() => resolvedCart.reduce((sum, item) => sum + item.price * item.quantity, 0), [resolvedCart]); const discount = applied ? subtotal * .1 : 0;
   const shippingRemaining = Math.max(0, FREE_SHIPPING_THRESHOLD - (subtotal - discount));
-  const recommendation = PRODUCTS.find(product => !product.variants && !resolvedCart.some(item => (item.productId || item.id) === product.id));
+  const recommendation = catalogue.find(product => !product.variants && !resolvedCart.some(item => (item.productId || item.id) === product.id));
   useEffect(() => { if (!open) return undefined; const trigger = document.activeElement; const previous = document.body.style.overflow; document.body.style.overflow = "hidden"; requestAnimationFrame(() => closeRef.current?.focus()); const onKey = event => { if (event.key === "Escape") close(); if (event.key !== "Tab") return; const nodes = drawerRef.current?.querySelectorAll('a,button,input,[tabindex]:not([tabindex="-1"])'); if (!nodes?.length) return; const first=nodes[0], last=nodes[nodes.length-1]; if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()} if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()} }; document.addEventListener("keydown",onKey); return()=>{document.body.style.overflow=previous;document.removeEventListener("keydown",onKey);trigger?.focus?.()}; }, [open, close]);
   const applyPromo = event => { event.preventDefault(); const valid=promo.trim().toUpperCase()==="VELOURA10"; setApplied(valid); setPromoMessage(valid?"VELOURA10 applied.":"That code is not valid."); };
   const checkout=()=>{close();navigate("/checkout",{state:{promo:applied?promo:"",discount}})};

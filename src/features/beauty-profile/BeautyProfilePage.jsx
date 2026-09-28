@@ -1,18 +1,20 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Check } from "@mui/icons-material";
-import { PRODUCTS, productBySlug } from "../../data/products";
-import { useStore } from "../../hooks/useStore";
+import { productRepository } from "../../repositories/productRepository";
+import { useCustomer } from "../../hooks/useCustomer";
 import ProductVisual from "../products/ProductVisual";
+
+const catalogue = productRepository.getAll();
 
 const CONCERNS=["Dehydration","Dullness","Sensitive skin","Fine lines"];
 const PREFERENCES=["Natural coverage","Fragrance-free feel","Weightless textures","Rich textures"];
 export default function BeautyProfilePage(){
-  const {profile,setProfile,routineResults}=useStore(); const [draft,setDraft]=useState(profile); const [saved,setSaved]=useState(false);
+  const {profile,saveProfile,routineResults}=useCustomer(); const [draft,setDraft]=useState(profile); const [saved,setSaved]=useState(false);
   const toggle=(key,value)=>setDraft(current=>({...current,[key]:(current[key]||[]).includes(value)?current[key].filter(item=>item!==value):[...(current[key]||[]),value]}));
-  const routineProducts=useMemo(()=>{const saved=Array.isArray(routineResults)?routineResults:routineResults?.productIds||[];return saved.map(item=>typeof item==="number"?PRODUCTS.find(product=>product.id===item):PRODUCTS.find(product=>product.name===item)).filter(Boolean)},[routineResults]);
-  const tint=productBySlug("petal-skin-tint"); const shade=tint?.variants?.find(item=>item.id===profile.shadeVariantId);
-  const save=()=>{setProfile(draft);setSaved(true)};
+  const routineProducts=useMemo(()=>{const saved=Array.isArray(routineResults)?routineResults:routineResults?.productIds||[];return saved.map(item=>typeof item==="number"?productRepository.getById(item):catalogue.find(product=>product.name===item)).filter(Boolean)},[routineResults]);
+  const tint=productRepository.getBySlug("petal-skin-tint"); const shade=tint?.variants?.find(item=>item.id===profile.shadeVariantId);
+  const save=()=>{saveProfile(draft);setSaved(true)};
   return <main className="profilePage"><header className="profileHeader"><span className="kicker">Your Veloura</span><h1>Beauty profile</h1><p>Personalise recommendations on this device. Your profile is stored only in this browser, not in an online account.</p></header><div className="profileLayout"><section className="profileForm"><label>Skin type<select value={draft.skinType} onChange={event=>setDraft({...draft,skinType:event.target.value})}><option>Balanced</option><option>Dry</option><option>Combination</option><option>Oily</option><option>Sensitive</option></select></label><ChoiceGroup legend="Skin concerns" values={CONCERNS} selected={draft.skinGoals||[]} onToggle={value=>toggle("skinGoals",value)}/><ChoiceGroup legend="Makeup and texture preferences" values={PREFERENCES} selected={draft.preferences||[]} onToggle={value=>toggle("preferences",value)}/><button className="button dark" onClick={save}>{saved?<><Check/> Profile saved</>:"Save profile"}</button><p className="profileSaveStatus" role="status">{saved?"Your browser-saved preferences are up to date.":""}</p></section><aside className="profileSaved"><article className="savedProfileCard"><span className="kicker">Saved shade</span>{shade?<div className="savedShadeContent"><div className="savedShadeVisual"><ProductVisual type={tint.type} product={{...tint,...shade,name:tint.name,selectedVariant:shade.name}}/></div><div><h2>{shade.name}</h2><p>{tint.name}</p><Link className="textLink" to={`/product/${tint.slug}?variant=${shade.id}`}>View shade</Link><Link className="textLink" to="/shade-match">Retake Shade Match</Link></div></div>:<div className="profileEmpty"><h2>No saved shade yet</h2><p>Shade Match offers a suggested starting point for Petal Skin Tint.</p><Link className="button outline" to="/shade-match">Find my shade</Link></div>}</article><article className="savedProfileCard"><span className="kicker">Saved routine</span>{routineProducts.length?<><div className="savedRoutineGrid">{routineProducts.map(product=><Link to={`/product/${product.slug}`} key={product.id}><span className={`savedRoutineThumb ${product.color}`}><ProductVisual type={product.type} product={product}/></span><span><strong>{product.name}</strong><small>{product.size}</small></span></Link>)}</div><Link className="button outline" to="/rituals">View or edit routine</Link></>:<div className="profileEmpty"><h2>No saved routine yet</h2><p>Answer three questions for a concise routine that fits your preferences.</p><Link className="button outline" to="/rituals">Build my routine</Link></div>}</article></aside></div></main>;
 }
 function ChoiceGroup({legend,values,selected,onToggle}){return <fieldset><legend>{legend}</legend><div>{values.map(value=><button type="button" className={selected.includes(value)?"selected":""} onClick={()=>onToggle(value)} key={value}>{selected.includes(value)&&<Check/>}{value}</button>)}</div></fieldset>}

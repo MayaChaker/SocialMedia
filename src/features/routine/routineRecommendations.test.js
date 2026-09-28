@@ -1,5 +1,7 @@
-import { PRODUCTS } from "../../data/products";
+import { productRepository } from "../../repositories/productRepository";
 import { buildRoutineRecommendations } from "./routineRecommendations";
+
+const PRODUCTS = productRepository.getAll();
 
 const answers = (goal, time, texture) => ({ goal, time, texture });
 

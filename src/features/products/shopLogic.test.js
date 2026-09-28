@@ -1,5 +1,7 @@
-import { PRODUCTS } from "../../data/products";
+import { productRepository } from "../../repositories/productRepository";
 import { filterAndSortProducts, searchableProductText } from "./shopLogic";
+
+const PRODUCTS = productRepository.getAll();
 
 const options = { category: "", collection: "", query: "", concern: "", underFifty: false, inStock: false, sort: "featured" };
 

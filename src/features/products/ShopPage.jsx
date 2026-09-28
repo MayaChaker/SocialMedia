@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Close, Tune } from "@mui/icons-material";
-import { PRODUCTS } from "../../data/products";
+import { productRepository } from "../../repositories/productRepository";
 import ProductCard from "./ProductCard";
 import { filterAndSortProducts } from "./shopLogic";
 
 const concerns = ["Dehydration", "Dullness", "Sensitivity", "Natural coverage", "Travel", "Gifting"];
 const categoryRoutes = { all: "/shop", skincare: "/shop/skincare", makeup: "/shop/makeup", sets: "/shop/sets", new: "/shop?collection=new" };
+const catalogue = productRepository.getAll();
 
 export default function ShopPage({ openCart }) {
   const { category } = useParams();
@@ -23,7 +24,7 @@ export default function ShopPage({ openCart }) {
   const [inStock, setInStock] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  const products = useMemo(() => filterAndSortProducts(PRODUCTS, { category, collection, query, concern, underFifty, inStock, sort }), [category, collection, query, concern, underFifty, inStock, sort]);
+  const products = useMemo(() => filterAndSortProducts(catalogue, { category, collection, query, concern, underFifty, inStock, sort }), [category, collection, query, concern, underFifty, inStock, sort]);
   const filterCount = Number(Boolean(concern)) + Number(underFifty) + Number(inStock);
   const activeCategory = collection === "new" ? "new" : category || "all";
 
