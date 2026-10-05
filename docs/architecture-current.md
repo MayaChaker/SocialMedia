@@ -5,8 +5,8 @@ This document records the current application architecture as it evolves through
 ## Stack
 
 - React 18.3.1 and React DOM 18.3.1.
-- Next.js 16.3.6 with the App Router for the migrated homepage.
-- Create React App through `react-scripts` 5.0.1 remains temporarily available for the legacy routes and Jest integration.
+- Next.js 16.3.6 with the App Router provides an isolated migration surface for the homepage.
+- Create React App through `react-scripts` 5.0.1 remains the stable, complete application runtime and provides Jest integration.
 - React Router DOM 6.30.3 (declared from 6.26.2) with a client-side `BrowserRouter` remains in the legacy application.
 - JavaScript and JSX; there is no TypeScript configuration or typed domain model.
 - React Context plus custom hooks for shared application state.
@@ -17,7 +17,7 @@ This document records the current application architecture as it evolves through
 - Testing Library packages are installed for component tests.
 - Static product and merchandising modules provide the current catalogue.
 
-The repository is in a staged framework migration. `npm run dev`, `npm run build`, and `npm start` run Next.js. `npm run dev:cra`, `npm run build:cra`, and `npm run preview:cra` run the complete legacy CRA application. `npm test` continues to use CRA's Jest runner so the existing unit and component coverage remains intact.
+The repository is in a staged framework migration, not shared-runtime route coexistence. `npm run dev`, `npm run build`, and `npm start` run the stable CRA application; the explicit `dev:cra`, `build:cra`, and `preview:cra` scripts provide the same legacy runtime. `npm run dev:next`, `npm run build:next`, and `npm run start:next` run the partial Next migration surface. `npm test` continues to use CRA's Jest runner.
 
 ## Application Entry
 
@@ -25,7 +25,7 @@ The repository is in a staged framework migration. `npm run dev`, `npm run build
 
 `src/app/layout.next.js` is the Next.js root layout. It imports the existing global stylesheet, exports the current default metadata, and composes `Providers` with the Next-owned application shell. `src/app/page.next.js` is the only migrated route and renders the existing `HomePage` with Next navigation injected. The `.next.js` suffix is intentional: `next.config.js` restricts Next route discovery so legacy components in `src/pages/` are not mistaken for Pages Router routes.
 
-`src/app/providers.jsx` is the narrow client boundary around the existing `AppProviders`; it waits for client mount before initializing the browser-only persistence hooks. `src/app/shell.jsx` owns Next navigation integration and transient cart-drawer state; it reuses the existing header, footer, search, and cart presentation. `src/app/navigation.jsx` adapts the existing `to`-based component interface to `next/link` and App Router pathname state. The special route files remain Server Components and delegate interactive work to focused client components. Domain modules, repositories, and persistence remain outside `src/app/`.
+`src/app/providers.jsx` is the narrow client boundary around the existing `AppProviders`; it waits for client mount before initializing the browser-only persistence hooks. This avoids localStorage hydration mismatches but means the current static HTML contains metadata rather than meaningful homepage body content until JavaScript mounts. `src/app/shell.jsx` owns Next navigation integration and transient cart-drawer state; it reuses the existing header, footer, search, and cart presentation. `src/app/navigation.jsx` adapts the existing `to`-based component interface to `next/link` and App Router pathname state. The special route files remain Server Components and delegate interactive work to focused client components. Domain modules, repositories, and persistence remain outside `src/app/`.
 
 ### Legacy CRA entry
 
@@ -58,7 +58,7 @@ The repository is in a staged framework migration. `npm run dev`, `npm run build
 
 ## Routing
 
-Next.js currently owns only `/` through `src/app/page.next.js`. The following complete route set remains declared in `src/App.js` for the legacy CRA runtime; every route except `/` is intentionally still unmigrated.
+Next.js currently owns only `/` through `src/app/page.next.js`. The following complete route set remains declared in `src/App.js` for the stable CRA runtime; every route except `/` is intentionally still unmigrated. The CRA and Next commands start separate applications, so they do not bridge routes within one runtime: links from the isolated Next homepage to an unmigrated path currently reach Next's not-found response. The complete navigation flow remains available through the default CRA runtime.
 
 | Route | Component | Purpose |
 | --- | --- | --- |
@@ -346,6 +346,7 @@ There are 34 declared test cases. There are no current tests for routing, layout
 ### Medium
 
 - The codebase is JavaScript/JSX without explicit product, variant, cart, order, profile, or service-contract types.
+- The isolated Next homepage is client-mounted after the persistence providers initialize, so its prerendered HTML has metadata but no meaningful application body yet.
 - Product access now has a repository boundary, but its contract remains synchronous and the underlying catalogue is still static client-bundled data.
 - `src/index.css` is a large global stylesheet with historical selectors, repeated breakpoints, and source-order coupling.
 - The order-service endpoint contract and responses are untyped and unvalidated.
