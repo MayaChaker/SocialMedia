@@ -7,12 +7,16 @@ import { productRepository } from "../../repositories/productRepository";
 const productSuggestions = productRepository.getAll();
 
 export default function GlobalSearch({ open }) {
-  const [query, setQuery] = useState("");
   const navigate = useNavigate();
+  return <GlobalSearchContent open={open} onSearch={(href) => navigate(href)}/>;
+}
+
+export function GlobalSearchContent({ open, onSearch }) {
+  const [query, setQuery] = useState("");
   const submit = (event) => {
     event.preventDefault();
     if (query.trim()) {
-      navigate(`/shop?search=${encodeURIComponent(query.trim())}`);
+      onSearch(`/shop?search=${encodeURIComponent(query.trim())}`);
       setQuery("");
     }
   };

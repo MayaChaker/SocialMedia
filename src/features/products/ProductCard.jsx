@@ -8,7 +8,7 @@ import { useCommerce } from "../../hooks/useCommerce";
 import ProductVisual from "./ProductVisual";
 import WishlistButton from "../wishlist/WishlistButton";
 
-export default function ProductCard({ product, onAdded, shopLayout = false }) {
+export default function ProductCard({ product, onAdded, shopLayout = false, LinkComponent = Link }) {
   const { addToCart } = useCommerce();
   const [preview, setPreview] = useState(false);
   const [selectedId, setSelectedId] = useState("");
@@ -71,13 +71,13 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
       <div className={`productImage ${product.color}`}>
         {(outOfStock || product.badge) && <span className="productBadge">{outOfStock ? "Out of stock" : product.badge}</span>}
         <WishlistButton productId={product.id} productName={product.name}/>
-        <Link to={productHref} className="visualLink" aria-label={`View ${product.name}${selected ? ` in ${selected.name}` : ""}`}><ProductVisual type={product.type} product={display}/></Link>
+        <LinkComponent to={productHref} className="visualLink" aria-label={`View ${product.name}${selected ? ` in ${selected.name}` : ""}`}><ProductVisual type={product.type} product={display}/></LinkComponent>
         <button ref={quickViewRef} className="quickView" onClick={() => setPreview(true)}>Quick view</button>
       </div>
       {shopLayout ? <>
         <div className="productMeta">{product.category}</div>
         <div className="productInfo shopProductInfo">
-        <Link className="productNameLink" to={productHref}><h3>{product.name}</h3></Link>
+        <LinkComponent className="productNameLink" to={productHref}><h3>{product.name}</h3></LinkComponent>
         {product.rating && product.reviews ? <div className="cardRating" aria-label={`${product.rating} out of 5 stars from ${product.reviews} reviews`}><Star/><span>{product.rating} <small>({product.reviews} reviews)</small></span></div> : <div className="cardRating neutral">Not yet rated</div>}
         <p>{product.note}</p>
         <div className="cardPrice"><strong>{money(display.price)}</strong>{product.originalPrice && <del>{money(product.originalPrice)}</del>}</div>
@@ -86,12 +86,12 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
         <div className="cardOptions">{product.variants && swatches}</div>
       </> : <>
         <div className="productMeta"><span>{product.category} · {product.brand.replace("Veloura ", "")}</span><div className="cardRating" aria-label={`${product.rating} out of 5 stars`}><Star/> {product.rating} <small>({product.reviews})</small></div></div>
-        <div className="productInfo"><div><Link to={productHref}><h3>{product.name}</h3></Link><p>{product.note}</p><small>{selected ? `Shade: ${selected.name}` : product.size}</small></div><div className="price"><span>{money(display.price)}</span>{product.originalPrice && <del>{money(product.originalPrice)}</del>}</div></div>
+        <div className="productInfo"><div><LinkComponent to={productHref}><h3>{product.name}</h3></LinkComponent><p>{product.note}</p><small>{selected ? `Shade: ${selected.name}` : product.size}</small></div><div className="price"><span>{money(display.price)}</span>{product.originalPrice && <del>{money(product.originalPrice)}</del>}</div></div>
         {product.variants && swatches}
       </>}
       <button className={`addButton ripple ${actionState === "added" ? "added" : ""}`} disabled={outOfStock || needsShade || actionState === "adding"} onClick={add}>{actionState === "added" && <Check/>}{actionLabel}</button>
       <span className="srOnly" aria-live="polite">{actionState === "added" ? `${product.name}${selected ? ` in ${selected.name}` : ""} added to bag` : ""}</span>
     </motion.article>
-    <AnimatePresence>{preview && <motion.div className="previewOverlay" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={() => setPreview(false)}><motion.section ref={previewRef} className="quickPreview" initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} exit={{opacity:0,y:10}} onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby={`preview-title-${product.id}`} aria-describedby={`preview-description-${product.id}`}><button className="previewClose" onClick={() => setPreview(false)} aria-label="Close preview"><Close/></button><div className={`previewVisual ${product.color}`}><ProductVisual type={product.type} product={display}/></div><div><span className="kicker">{product.brand}</span><h2 id={`preview-title-${product.id}`}>{product.name}</h2>{product.rating && product.reviews && <div className="rating"><Star/> {product.rating}<span>{product.reviews} reviews</span></div>}<p id={`preview-description-${product.id}`}>{product.description}</p>{product.variants && <p className="previewShade">Selected shade: <strong>{selected?.name || "Choose a shade"}</strong></p>}{product.variants && swatches}<button className="button dark full" disabled={outOfStock || needsShade || actionState === "adding"} onClick={add}>{actionState === "adding" ? "Adding…" : actionState === "added" ? "Added" : outOfStock ? "Out of stock" : needsShade ? "Choose shade" : `Add to bag · ${money(display.price)}`}</button><Link className="textLink" to={productHref}>See full details</Link></div></motion.section></motion.div>}</AnimatePresence>
+    <AnimatePresence>{preview && <motion.div className="previewOverlay" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} onClick={() => setPreview(false)}><motion.section ref={previewRef} className="quickPreview" initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} exit={{opacity:0,y:10}} onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby={`preview-title-${product.id}`} aria-describedby={`preview-description-${product.id}`}><button className="previewClose" onClick={() => setPreview(false)} aria-label="Close preview"><Close/></button><div className={`previewVisual ${product.color}`}><ProductVisual type={product.type} product={display}/></div><div><span className="kicker">{product.brand}</span><h2 id={`preview-title-${product.id}`}>{product.name}</h2>{product.rating && product.reviews && <div className="rating"><Star/> {product.rating}<span>{product.reviews} reviews</span></div>}<p id={`preview-description-${product.id}`}>{product.description}</p>{product.variants && <p className="previewShade">Selected shade: <strong>{selected?.name || "Choose a shade"}</strong></p>}{product.variants && swatches}<button className="button dark full" disabled={outOfStock || needsShade || actionState === "adding"} onClick={add}>{actionState === "adding" ? "Adding…" : actionState === "added" ? "Added" : outOfStock ? "Out of stock" : needsShade ? "Choose shade" : `Add to bag · ${money(display.price)}`}</button><LinkComponent className="textLink" to={productHref}>See full details</LinkComponent></div></motion.section></motion.div>}</AnimatePresence>
   </>;
 }

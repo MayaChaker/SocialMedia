@@ -5,8 +5,9 @@ This document records the current application architecture as it evolves through
 ## Stack
 
 - React 18.3.1 and React DOM 18.3.1.
-- Create React App through `react-scripts` 5.0.1 for development, Jest integration, and production builds.
-- React Router DOM 6.26.2 with a client-side `BrowserRouter`.
+- Next.js 16.3.6 with the App Router for the migrated homepage.
+- Create React App through `react-scripts` 5.0.1 remains temporarily available for the legacy routes and Jest integration.
+- React Router DOM 6.30.3 (declared from 6.26.2) with a client-side `BrowserRouter` remains in the legacy application.
 - JavaScript and JSX; there is no TypeScript configuration or typed domain model.
 - React Context plus custom hooks for shared application state.
 - Browser `localStorage` for persistence.
@@ -16,17 +17,25 @@ This document records the current application architecture as it evolves through
 - Testing Library packages are installed for component tests.
 - Static product and merchandising modules provide the current catalogue.
 
-The build is a client-rendered single-page application. `npm start`/`npm run dev` starts the CRA development server, `npm test` starts CRA's Jest runner, and `npm run build` creates the static `build/` output.
+The repository is in a staged framework migration. `npm run dev`, `npm run build`, and `npm start` run Next.js. `npm run dev:cra`, `npm run build:cra`, and `npm run preview:cra` run the complete legacy CRA application. `npm test` continues to use CRA's Jest runner so the existing unit and component coverage remains intact.
 
 ## Application Entry
 
+### Next.js App Router
+
+`src/app/layout.next.js` is the Next.js root layout. It imports the existing global stylesheet, exports the current default metadata, and composes `Providers` with the Next-owned application shell. `src/app/page.next.js` is the only migrated route and renders the existing `HomePage` with Next navigation injected. The `.next.js` suffix is intentional: `next.config.js` restricts Next route discovery so legacy components in `src/pages/` are not mistaken for Pages Router routes.
+
+`src/app/providers.jsx` is the narrow client boundary around the existing `AppProviders`; it waits for client mount before initializing the browser-only persistence hooks. `src/app/shell.jsx` owns Next navigation integration and transient cart-drawer state; it reuses the existing header, footer, search, and cart presentation. `src/app/navigation.jsx` adapts the existing `to`-based component interface to `next/link` and App Router pathname state. The special route files remain Server Components and delegate interactive work to focused client components. Domain modules, repositories, and persistence remain outside `src/app/`.
+
+### Legacy CRA entry
+
 ### `src/index.js`
 
-`src/index.js` is the browser entry point. It imports the global stylesheet and `App`, creates a React 18 root on `#root`, and renders the application inside `React.StrictMode`.
+`src/index.js` remains the CRA browser entry point. It imports the global stylesheet and `App`, creates a React 18 root on `#root`, and renders the application inside `React.StrictMode`.
 
 ### `src/App.js`
 
-`src/App.js` is the composition root. It:
+`src/App.js` remains the legacy composition root. It:
 
 - declares all page-level lazy imports;
 - owns the transient `cartOpen` state;
@@ -37,19 +46,19 @@ The build is a client-rendered single-page application. `npm start`/`npm run dev
 
 ### Application Providers
 
-`src/providers/AppProviders.jsx` composes `CommerceProvider` and `CustomerProvider`. The commerce provider initializes cart, wishlist, and order persistence and canonicalizes persisted cart items through the cart domain. The customer provider initializes profile, routine-result, and recently-viewed persistence. Neither provider changes the existing storage keys or persisted value shapes.
+`src/providers/AppProviders.jsx` composes `CommerceProvider` and `CustomerProvider` for both runtimes. The commerce provider initializes cart, wishlist, and order persistence and canonicalizes persisted cart items through the cart domain. The customer provider initializes profile, routine-result, and recently-viewed persistence. Neither provider changes the existing storage keys or persisted value shapes.
 
 ### `BrowserRouter`
 
-`BrowserRouter` supplies client-side navigation and history. Routes depend on the hosting platform returning `public/index.html` for unknown application paths; there is no repository-level rewrite configuration.
+`BrowserRouter` supplies client-side navigation and history only in the legacy CRA application. Legacy routes depend on the CRA host returning `public/index.html` for unknown application paths. React Router remains installed because every unmigrated route and the legacy shell still use it.
 
 ### `Layout`
 
-`src/components/layout/Layout.jsx` composes the shared shell for all routes except checkout. It owns the routed `<Outlet>`, route transition, navigation scroll reset, and route metadata synchronization. `Header.jsx` owns the announcement region, desktop/mobile navigation state and accessibility behavior, commerce counts, and search visibility; `GlobalSearch.jsx` owns search input and product suggestions; `Footer.jsx` owns footer navigation and environment-backed contact/provider details. `routeMetadata.js` contains the existing path-to-title/description mapping and DOM synchronization.
+`src/components/layout/Layout.jsx` composes the legacy shared shell for all routes except checkout. The Next root layout reuses route-agnostic content exports from the header, global search, footer, and cart drawer while injecting App Router navigation. The old layout still owns its `<Outlet>`, route transition, navigation scroll reset, and client metadata synchronization for CRA; `routeMetadata.js` remains until the corresponding legacy routes migrate.
 
 ## Routing
 
-All route declarations currently live in `src/App.js`.
+Next.js currently owns only `/` through `src/app/page.next.js`. The following complete route set remains declared in `src/App.js` for the legacy CRA runtime; every route except `/` is intentionally still unmigrated.
 
 | Route | Component | Purpose |
 | --- | --- | --- |
@@ -66,7 +75,7 @@ All route declarations currently live in `src/App.js`.
 | `/care/:policy` | `PolicyPage` | Parameterized customer-care content for FAQ, shipping, refund, tracking, privacy, terms, and accessibility. Unknown policy values silently fall back to shipping content. |
 | `/checkout` | `CheckoutPage` | Standalone three-step demo/hosted-checkout handoff flow outside the shared `Layout`. |
 
-There is no wildcard route, dedicated 404 page, route error element, or route-level error boundary. `/about` is the canonical story route; `/our-story` remains as a backward-compatible client redirect.
+Next provides its default not-found handling, but no project-specific `not-found`, loading, or error files exist yet. The legacy router still has no wildcard route, dedicated 404 page, route error element, or route-level error boundary. `/about` is the canonical story route; `/our-story` remains as a backward-compatible client redirect in CRA.
 
 ## Feature Structure
 
@@ -261,11 +270,11 @@ Current inconsistencies to review later:
 
 ## SEO / Metadata
 
-`public/index.html` defines the default title, description, theme color, Open Graph title/description/image/type/site name, and Twitter card/title/description. The Open Graph image is `/veloura-hero.png`.
+`src/app/layout.next.js` defines the default Next.js title, description, theme color, icon, Open Graph fields, and Twitter fields. The Open Graph image is `/veloura-hero.png`. `public/index.html` retains equivalent defaults for CRA.
 
 The layout's `routeMetadata` helper updates `document.title` for recognized top-level sections and changes the standard meta description only for the shop versus other routes. `/our-story` redirects to canonical `/about`. Product slugs, categories, policies, and query states do not receive specific descriptions or social metadata.
 
-As a client-rendered SPA, every route initially serves the same HTML metadata. There are no server-rendered route tags, canonical URLs, per-product Open Graph data, structured product data, sitemap/robots configuration in the repository, or framework-native metadata/error handling. Crawlers and link unfurlers that do not execute the client receive only the default metadata.
+The migrated homepage receives framework-generated metadata. Legacy CRA routes still begin with the shared HTML defaults and apply limited client metadata updates. There are no canonical URLs, per-product Open Graph data, structured product data, or sitemap/robots configuration. Route-specific metadata and framework-native error states remain later migration work.
 
 ## Assets
 
@@ -290,7 +299,7 @@ Asset renaming, compression, and reference cleanup are intentionally deferred.
 
 ## Testing
 
-The project uses CRA's Jest configuration with Testing Library for the component test. Current test files:
+The existing suite continues to use CRA's Jest configuration with Testing Library during coexistence. Next-specific test infrastructure has not been introduced. Current test files:
 
 | Test file | Coverage |
 | --- | --- |
@@ -318,8 +327,8 @@ There are 34 declared test cases. There are no current tests for routing, layout
 | Variable | Purpose |
 | --- | --- |
 | `PORT` | Development server port; example value is `4173`. It is a local tooling setting rather than browser application data. |
-| `REACT_APP_CHECKOUT_URL` | Optional server endpoint that starts hosted checkout or returns a confirmed order object. Because CRA embeds `REACT_APP_*` values in the client bundle, this must be a public endpoint/config value, never a secret. |
-| `REACT_APP_CONTACT_EMAIL` | Public customer-care address used by the footer and policy pages, with an in-code fallback. |
+| `REACT_APP_CHECKOUT_URL` | Optional public endpoint that starts hosted checkout or returns a confirmed order object. `next.config.js` exposes the existing name to the client during coexistence; it must never contain a secret. |
+| `REACT_APP_CONTACT_EMAIL` | Public customer-care address used by the footer and policy pages, with an in-code fallback. `next.config.js` preserves the existing name for the migrated shell. |
 
 ## Known Technical Debt
 
@@ -329,7 +338,7 @@ There are 34 declared test cases. There are no current tests for routing, layout
 
 ### High
 
-- Create React App/react-scripts is unmaintained and already emits a Babel dependency warning.
+- Create React App/react-scripts remains as temporary migration infrastructure and still emits a Babel dependency warning.
 - The default checkout is a browser-only demo. Client-calculated prices, discounts, shipping, and order data are not authoritative or durable.
 - Cart, wishlist, profile, routine, recently viewed items, and demo orders exist only in local storage, with no schema validation or cross-device/server ownership.
 - There is no route-level error boundary or catch-all 404 experience.
