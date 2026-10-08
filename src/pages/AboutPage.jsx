@@ -1,5 +1,4 @@
 import { ArrowForward } from "@mui/icons-material";
-import { Link } from "react-router-dom";
 
 const selectionCriteria = [
   ["01", "Performance", "Products selected for quality, reliability, and how well they fit their intended purpose."],
@@ -7,7 +6,7 @@ const selectionCriteria = [
   ["03", "Everyday Fit", "Products that can realistically become part of an everyday routine."],
 ];
 
-export default function AboutPage() {
+export default function AboutPage({ LinkComponent }) {
   return <main className="storyFinal">
     <section className="storyFinalHero">
       <img src="/lifestyle/veloura-hero-campaign.webp" alt="Veloura skincare and colour essentials arranged on warm stone" width="1536" height="1024" fetchpriority="high"/>
@@ -59,7 +58,7 @@ export default function AboutPage() {
         <span className="storyEyebrow">Discover the edit</span>
         <h2>Find your next<br/>everyday favorite.</h2>
         <p>Explore skincare, makeup, and beauty essentials selected for real routines and individual preferences.</p>
-        <Link className="button light" to="/shop">Shop the collection <ArrowForward/></Link>
+        <LinkComponent className="button light" to="/shop">Shop the collection <ArrowForward/></LinkComponent>
       </div>
     </section>
 

@@ -5,7 +5,7 @@ This document records the current application architecture as it evolves through
 ## Stack
 
 - React 18.3.1 and React DOM 18.3.1.
-- Next.js 16.3.6 with the App Router provides an isolated migration surface for the homepage.
+- Next.js 16.3.6 with the App Router provides an isolated migration surface for the homepage and story route.
 - Create React App through `react-scripts` 5.0.1 remains the stable, complete application runtime and provides Jest integration.
 - React Router DOM 6.30.3 (declared from 6.26.2) with a client-side `BrowserRouter` remains in the legacy application.
 - JavaScript and JSX; there is no TypeScript configuration or typed domain model.
@@ -23,7 +23,7 @@ The repository is in a staged framework migration, not shared-runtime route coex
 
 ### Next.js App Router
 
-`src/app/layout.next.js` is the Next.js root layout. It imports the existing global stylesheet, exports the current default metadata, and composes `Providers` with the Next-owned application shell. `src/app/page.next.js` is the only migrated route and renders the existing `HomePage` with Next navigation injected. The `.next.js` suffix is intentional: `next.config.js` restricts Next route discovery so legacy components in `src/pages/` are not mistaken for Pages Router routes.
+`src/app/layout.next.js` is the Next.js root layout. It imports the existing global stylesheet, exports the current default metadata, and composes `Providers` with the Next-owned application shell. `src/app/page.next.js` and `src/app/about/page.next.js` render the existing homepage and story page with Next navigation injected; `src/app/our-story/page.next.js` redirects the compatibility URL to `/about`. The `.next.js` suffix is intentional: `next.config.js` restricts Next route discovery so legacy components in `src/pages/` are not mistaken for Pages Router routes.
 
 `src/app/providers.jsx` is the narrow client boundary around the existing `AppProviders`; it waits for client mount before initializing the browser-only persistence hooks. This avoids localStorage hydration mismatches but means the current static HTML contains metadata rather than meaningful homepage body content until JavaScript mounts. `src/app/shell.jsx` owns Next navigation integration and transient cart-drawer state; it reuses the existing header, footer, search, and cart presentation. `src/app/navigation.jsx` adapts the existing `to`-based component interface to `next/link` and App Router pathname state. The special route files remain Server Components and delegate interactive work to focused client components. Domain modules, repositories, and persistence remain outside `src/app/`.
 
@@ -58,7 +58,7 @@ The repository is in a staged framework migration, not shared-runtime route coex
 
 ## Routing
 
-Next.js currently owns only `/` through `src/app/page.next.js`. The following complete route set remains declared in `src/App.js` for the stable CRA runtime; every route except `/` is intentionally still unmigrated. The CRA and Next commands start separate applications, so they do not bridge routes within one runtime: links from the isolated Next homepage to an unmigrated path currently reach Next's not-found response. The complete navigation flow remains available through the default CRA runtime.
+Next.js currently owns `/` and `/about`, with `/our-story` redirecting to the canonical story route. The following complete route set remains declared in `src/App.js` for the stable CRA runtime; all other routes are intentionally still unmigrated. The CRA and Next commands start separate applications, so they do not bridge routes within one runtime: links from the isolated Next surface to an unmigrated path currently reach Next's not-found response. The complete navigation flow remains available through the default CRA runtime.
 
 | Route | Component | Purpose |
 | --- | --- | --- |
@@ -75,7 +75,7 @@ Next.js currently owns only `/` through `src/app/page.next.js`. The following co
 | `/care/:policy` | `PolicyPage` | Parameterized customer-care content for FAQ, shipping, refund, tracking, privacy, terms, and accessibility. Unknown policy values silently fall back to shipping content. |
 | `/checkout` | `CheckoutPage` | Standalone three-step demo/hosted-checkout handoff flow outside the shared `Layout`. |
 
-Next provides its default not-found handling, but no project-specific `not-found`, loading, or error files exist yet. The legacy router still has no wildcard route, dedicated 404 page, route error element, or route-level error boundary. `/about` is the canonical story route; `/our-story` remains as a backward-compatible client redirect in CRA.
+Next provides its default not-found handling, but no project-specific `not-found`, loading, or error files exist yet. The legacy router still has no wildcard route, dedicated 404 page, route error element, or route-level error boundary. `/about` is the canonical story route; `/our-story` redirects there through framework-native handling in Next and a backward-compatible client redirect in CRA.
 
 ## Feature Structure
 
@@ -274,7 +274,7 @@ Current inconsistencies to review later:
 
 The layout's `routeMetadata` helper updates `document.title` for recognized top-level sections and changes the standard meta description only for the shop versus other routes. `/our-story` redirects to canonical `/about`. Product slugs, categories, policies, and query states do not receive specific descriptions or social metadata.
 
-The migrated homepage receives framework-generated metadata. Legacy CRA routes still begin with the shared HTML defaults and apply limited client metadata updates. There are no canonical URLs, per-product Open Graph data, structured product data, or sitemap/robots configuration. Route-specific metadata and framework-native error states remain later migration work.
+The migrated homepage and About route receive framework-generated metadata. Legacy CRA routes still begin with the shared HTML defaults and apply limited client metadata updates. There are no canonical URLs, per-product Open Graph data, structured product data, or sitemap/robots configuration. Broader route metadata and framework-native error states remain later migration work.
 
 ## Assets
 
