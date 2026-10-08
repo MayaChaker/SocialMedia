@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from "react";
-import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Link, Navigate, Route, Routes, useParams } from "react-router-dom";
 import AppProviders from "./providers/AppProviders";
 import Layout from "./components/layout/Layout";
 import CartDrawer from "./features/cart/CartDrawer";
@@ -16,10 +16,15 @@ const AboutPage = lazy(() => import("./pages/AboutPage"));
 const PolicyPage = lazy(() => import("./pages/PolicyPage"));
 const HomePage = lazy(() => import("./pages/HomePage"));
 
+function LegacyPolicyPage() {
+  const { policy } = useParams();
+  return <PolicyPage policy={policy} LinkComponent={Link}/>;
+}
+
 function App() {
   const [cartOpen, setCartOpen] = useState(false);
   const openCart = () => setCartOpen(true);
-  return <AppProviders><BrowserRouter><Suspense fallback={<div className="pageLoading" aria-live="polite">Preparing your routine…</div>}><Routes><Route element={<Layout openCart={openCart}/>}><Route index element={<HomePage openCart={openCart}/>}/><Route path="our-story" element={<Navigate to="/about" replace/>}/><Route path="about" element={<AboutPage LinkComponent={Link}/>}/><Route path="shop" element={<ShopPage openCart={openCart}/>}/><Route path="shop/:category" element={<ShopPage openCart={openCart}/>}/><Route path="product/:slug" element={<ProductPage openCart={openCart}/>}/><Route path="wishlist" element={<WishlistPage openCart={openCart}/>}/><Route path="rituals" element={<RitualsPage openCart={openCart}/>}/><Route path="shade-match" element={<ShadeMatchPage/>}/><Route path="profile" element={<BeautyProfilePage/>}/><Route path="care/:policy" element={<PolicyPage/>}/></Route><Route path="checkout" element={<CheckoutPage/>}/></Routes></Suspense><CartDrawer open={cartOpen} close={()=>setCartOpen(false)}/></BrowserRouter></AppProviders>;
+  return <AppProviders><BrowserRouter><Suspense fallback={<div className="pageLoading" aria-live="polite">Preparing your routine…</div>}><Routes><Route element={<Layout openCart={openCart}/>}><Route index element={<HomePage openCart={openCart}/>}/><Route path="our-story" element={<Navigate to="/about" replace/>}/><Route path="about" element={<AboutPage LinkComponent={Link}/>}/><Route path="shop" element={<ShopPage openCart={openCart}/>}/><Route path="shop/:category" element={<ShopPage openCart={openCart}/>}/><Route path="product/:slug" element={<ProductPage openCart={openCart}/>}/><Route path="wishlist" element={<WishlistPage openCart={openCart}/>}/><Route path="rituals" element={<RitualsPage openCart={openCart}/>}/><Route path="shade-match" element={<ShadeMatchPage/>}/><Route path="profile" element={<BeautyProfilePage/>}/><Route path="care/:policy" element={<LegacyPolicyPage/>}/></Route><Route path="checkout" element={<CheckoutPage/>}/></Routes></Suspense><CartDrawer open={cartOpen} close={()=>setCartOpen(false)}/></BrowserRouter></AppProviders>;
 }
 
 export default App;
