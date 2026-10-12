@@ -1,5 +1,15 @@
 # Refactor Roadmap
 
+## Status
+
+| Phase                          | State                                                                               |
+| ------------------------------ | ----------------------------------------------------------------------------------- |
+| 0 — Repository audit & cleanup | Done                                                                                |
+| 1 — Architecture foundation    | Done                                                                                |
+| Production cleanup             | Done: formatting, stylesheet split, SVG product art, checkout and routing fixes, CI |
+| 2 — Next.js migration          | In progress on `refactor/phase-2-nextjs`                                            |
+| 3–10                           | Not started                                                                         |
+
 ## Phase 0 — Repository Audit & Cleanup
 
 **Goal:** Establish a trustworthy baseline and remove repository hygiene issues before implementation work begins.
