@@ -1,5 +1,7 @@
+"use client";
+
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Check } from "@mui/icons-material";
 import { productRepository } from "../../repositories/productRepository";
 import { useCustomer } from "../../hooks/useCustomer";
@@ -104,10 +106,10 @@ export default function BeautyProfilePage() {
                 <div>
                   <h2>{shade.name}</h2>
                   <p>{tint.name}</p>
-                  <Link className="textLink" to={`/product/${tint.slug}?variant=${shade.id}`}>
+                  <Link className="textLink" href={`/product/${tint.slug}?variant=${shade.id}`}>
                     View shade
                   </Link>
-                  <Link className="textLink" to="/shade-match">
+                  <Link className="textLink" href="/shade-match">
                     Retake Shade Match
                   </Link>
                 </div>
@@ -116,7 +118,7 @@ export default function BeautyProfilePage() {
               <div className="profileEmpty">
                 <h2>No saved shade yet</h2>
                 <p>Shade Match offers a suggested starting point for Petal Skin Tint.</p>
-                <Link className="button outline" to="/shade-match">
+                <Link className="button outline" href="/shade-match">
                   Find my shade
                 </Link>
               </div>
@@ -128,7 +130,7 @@ export default function BeautyProfilePage() {
               <>
                 <div className="savedRoutineGrid">
                   {routineProducts.map((product) => (
-                    <Link to={`/product/${product.slug}`} key={product.id}>
+                    <Link href={`/product/${product.slug}`} key={product.id}>
                       <span className={`savedRoutineThumb ${product.color}`}>
                         <ProductArt product={product} />
                       </span>
@@ -139,7 +141,7 @@ export default function BeautyProfilePage() {
                     </Link>
                   ))}
                 </div>
-                <Link className="button outline" to="/rituals">
+                <Link className="button outline" href="/rituals">
                   View or edit routine
                 </Link>
               </>
@@ -147,7 +149,7 @@ export default function BeautyProfilePage() {
               <div className="profileEmpty">
                 <h2>No saved routine yet</h2>
                 <p>Answer three questions for a concise routine that fits your preferences.</p>
-                <Link className="button outline" to="/rituals">
+                <Link className="button outline" href="/rituals">
                   Build my routine
                 </Link>
               </div>

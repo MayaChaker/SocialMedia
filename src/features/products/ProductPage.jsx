@@ -1,28 +1,33 @@
+"use client";
+
 import { useEffect, useMemo } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Check, Star } from "@mui/icons-material";
 import { money } from "../../lib/money";
 import { resolveProductSelection } from "../../domain/product/productSelection";
 import { productRepository } from "../../repositories/productRepository";
+import { useCartDrawer } from "../../hooks/useCartDrawer";
 import { useCommerce } from "../../hooks/useCommerce";
 import { useCustomer } from "../../hooks/useCustomer";
 import ProductArt from "../../components/product-art/ProductArt";
-import NotFoundPage from "../../pages/NotFoundPage";
+import NotFoundPage from "../../views/NotFoundPage";
 import ProductCard from "./ProductCard";
 import WishlistButton from "../wishlist/WishlistButton";
 
 const catalogue = productRepository.getAll();
 
-export default function ProductPage({ openCart }) {
-  const { slug } = useParams();
-  const navigate = useNavigate();
-  const [params, setParams] = useSearchParams();
+export default function ProductPage({ slug }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
+  const { openCart } = useCartDrawer();
   const product = productRepository.getBySlug(slug);
   // The selected shade is part of the URL (?variant=deep) so it can be linked to directly.
   const selected =
     product?.variants?.find((variant) => variant.id === params.get("variant")) ||
     product?.variants?.[0];
-  const selectShade = (variantId) => setParams({ variant: variantId }, { replace: true });
+  const selectShade = (variantId) =>
+    router.replace(`${pathname}?variant=${encodeURIComponent(variantId)}`, { scroll: false });
   const { addToCart } = useCommerce();
   const { addRecentlyViewed, recentlyViewed, profile } = useCustomer();
   const productId = product?.id;
@@ -57,7 +62,7 @@ export default function ProductPage({ openCart }) {
   };
   return (
     <main className={`productPage ${product.slug === "petal-skin-tint" ? "shadeProductPage" : ""}`}>
-      <button className="backLink" onClick={() => navigate(-1)}>
+      <button className="backLink" onClick={() => router.back()}>
         ← Back to collection
       </button>
       <section className="productDetail">

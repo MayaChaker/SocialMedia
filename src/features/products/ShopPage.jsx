@@ -1,11 +1,13 @@
+"use client";
+
 import { useMemo, useRef, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Close, Tune } from "@mui/icons-material";
 import { productRepository } from "../../repositories/productRepository";
+import { useCartDrawer } from "../../hooks/useCartDrawer";
 import { useModalDialog } from "../../hooks/useModalDialog";
-import NotFoundPage from "../../pages/NotFoundPage";
 import ProductCard from "./ProductCard";
-import { filterAndSortProducts } from "./shopLogic";
+import { CATEGORIES, filterAndSortProducts } from "./shopLogic";
 
 const concerns = [
   "Dehydration",
@@ -15,17 +17,17 @@ const concerns = [
   "Travel",
   "Gifting",
 ];
-const CATEGORIES = ["skincare", "makeup", "sets"];
 const FILTER_KEYS = ["concern", "price", "stock"];
 const catalogue = productRepository.getAll();
 
-export default function ShopPage({ openCart }) {
-  const { category } = useParams();
-  const navigate = useNavigate();
+export default function ShopPage({ category }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const { openCart } = useCartDrawer();
   const drawerRef = useRef(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   // Every filter lives in the URL, so results survive a refresh and can be shared.
-  const [params, setParams] = useSearchParams();
+  const params = useSearchParams();
   const query = params.get("search") || "";
   const collection = params.get("collection") || "";
   const concern = params.get("concern") || "";
@@ -33,16 +35,17 @@ export default function ShopPage({ openCart }) {
   const inStock = params.get("stock") === "in";
   const sort = params.get("sort") || "featured";
 
+  const withQuery = (path, next) => {
+    const search = next.toString();
+    return search ? `${path}?${search}` : path;
+  };
+  const updateParams = (change) => {
+    const next = new URLSearchParams(params);
+    change(next);
+    router.replace(withQuery(pathname, next), { scroll: false });
+  };
   const setParam = (key, value) =>
-    setParams(
-      (current) => {
-        const next = new URLSearchParams(current);
-        if (value) next.set(key, value);
-        else next.delete(key);
-        return next;
-      },
-      { replace: true },
-    );
+    updateParams((next) => (value ? next.set(key, value) : next.delete(key)));
   const setConcern = (value) => setParam("concern", value);
   const setUnderFifty = (enabled) => setParam("price", enabled ? "under-50" : "");
   const setInStock = (enabled) => setParam("stock", enabled ? "in" : "");
@@ -54,8 +57,7 @@ export default function ShopPage({ openCart }) {
     next.delete("collection");
     if (value === "new") next.set("collection", "new");
     const path = CATEGORIES.includes(value) ? `/shop/${value}` : "/shop";
-    const search = next.toString();
-    navigate(search ? `${path}?${search}` : path);
+    router.push(withQuery(path, next));
   };
 
   const products = useMemo(
@@ -76,20 +78,10 @@ export default function ShopPage({ openCart }) {
 
   useModalDialog(filtersOpen, drawerRef, () => setFiltersOpen(false));
 
-  if (category && !CATEGORIES.includes(category.toLowerCase())) return <NotFoundPage />;
-
-  const clearFilters = () =>
-    setParams(
-      (current) => {
-        const next = new URLSearchParams(current);
-        FILTER_KEYS.forEach((key) => next.delete(key));
-        return next;
-      },
-      { replace: true },
-    );
+  const clearFilters = () => updateParams((next) => FILTER_KEYS.forEach((key) => next.delete(key)));
   const clearSearch = () => setParam("search", "");
   const clearCategory = () => goToCategory("all");
-  const clearAll = () => navigate("/shop");
+  const clearAll = () => router.push("/shop");
 
   return (
     <main className="shopPage">

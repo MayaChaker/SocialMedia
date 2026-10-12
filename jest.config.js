@@ -1,0 +1,10 @@
+const nextJest = require("next/jest");
+
+// Uses Next's compiler and env loading so tests see the same transforms as the app.
+const createJestConfig = nextJest({ dir: "./" });
+
+module.exports = createJestConfig({
+  testEnvironment: "jsdom",
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+  testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/"],
+});

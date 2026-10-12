@@ -1,5 +1,4 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
 import { productRepository } from "../../repositories/productRepository";
 import { CommerceProvider } from "../../hooks/useCommerce";
 import ProductCard from "./ProductCard";
@@ -7,13 +6,9 @@ import ProductCard from "./ProductCard";
 const renderCard = (product) =>
   render(
     <CommerceProvider>
-      <MemoryRouter>
-        <ProductCard product={product} />
-      </MemoryRouter>
+      <ProductCard product={product} />
     </CommerceProvider>,
   );
-
-beforeEach(() => window.localStorage.clear());
 
 test("a shade selection updates the product art and the added cart variant", () => {
   const product = productRepository.getBySlug("petal-skin-tint");

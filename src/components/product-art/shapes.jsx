@@ -1,5 +1,11 @@
+"use client";
+
 import { useId } from "react";
 import { shade } from "./color";
+
+// Fonts come from next/font CSS variables (see src/app/layout.jsx).
+const SERIF = { fontFamily: "var(--serif)" };
+const SANS = { fontFamily: "var(--sans)" };
 
 // Every shape is drawn in a 200 × 260 box, standing on a baseline at y = 242.
 // Gradients run left to right so each piece reads as a lit cylinder.
@@ -41,12 +47,12 @@ const Highlight = ({ x, y, height }) => (
 
 function Wordmark({ y, color, size = 8.5, line }) {
   return (
-    <g fill={color} textAnchor="middle" fontFamily="Italiana, 'Times New Roman', serif">
+    <g fill={color} textAnchor="middle" style={SERIF}>
       <text x="100" y={y} fontSize={size} letterSpacing={size * 0.24}>
         VELOURA
       </text>
       {line && (
-        <text x="100" y={y + 12} fontSize={size * 0.58} letterSpacing="1.6" fontFamily="sans-serif">
+        <text x="100" y={y + 12} fontSize={size * 0.58} letterSpacing="1.6" style={SANS}>
           {line}
         </text>
       )}
@@ -115,14 +121,7 @@ export function Wand({ pack, tint = "#d3a481" }) {
       <rect x="80" y="146" width="40" height="96" rx="8" fill="#fff" opacity="0.2" />
       <rect x="82" y="40" width="36" height="110" rx="6" fill={fill.body} />
       <rect x="82" y="140" width="36" height="8" fill={fill.cap} />
-      <text
-        x="100"
-        y="100"
-        fill={pack.ink}
-        fontSize="20"
-        textAnchor="middle"
-        fontFamily="Italiana, 'Times New Roman', serif"
-      >
+      <text x="100" y="100" fill={pack.ink} fontSize="20" textAnchor="middle" style={SERIF}>
         V
       </text>
       <Highlight x={86} y={52} height={84} />
@@ -162,7 +161,7 @@ export function Mascara({ pack }) {
         letterSpacing="2"
         textAnchor="middle"
         transform="rotate(-90 100 182)"
-        fontFamily="Italiana, 'Times New Roman', serif"
+        style={SERIF}
       >
         VELOURA
       </text>
@@ -244,7 +243,7 @@ export function Lipstick({ pack, tint = "#8f4f58" }) {
         letterSpacing="2"
         textAnchor="middle"
         transform="rotate(-90 100 200)"
-        fontFamily="Italiana, 'Times New Roman', serif"
+        style={SERIF}
       >
         VELOURA
       </text>

@@ -1,5 +1,7 @@
+"use client";
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { ArrowBack, ArrowForward, Check } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCustomer } from "../../hooks/useCustomer";
@@ -154,7 +156,7 @@ export default function ShadeMatchPage() {
               <div className="nearbyShades">
                 <span>Compare nearby shades</span>
                 {nearby.map((shade) => (
-                  <Link key={shade.variantId} to={matchedProductUrl(shade)}>
+                  <Link key={shade.variantId} href={matchedProductUrl(shade)}>
                     <i style={{ "--shade": shade.swatch }} />
                     {shade.name}
                   </Link>
@@ -162,7 +164,7 @@ export default function ShadeMatchPage() {
               </div>
             )}
             <div className="shadeResultActions">
-              <Link className="button dark" to={matchedProductUrl(result)}>
+              <Link className="button dark" href={matchedProductUrl(result)}>
                 Shop {result.name}
               </Link>
               <button

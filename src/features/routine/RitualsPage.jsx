@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import {
   ArrowBack,
   ArrowForward,
@@ -10,6 +12,7 @@ import {
 } from "@mui/icons-material";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { money } from "../../lib/money";
+import { useCartDrawer } from "../../hooks/useCartDrawer";
 import { useCommerce } from "../../hooks/useCommerce";
 import { useCustomer } from "../../hooks/useCustomer";
 import ProductArt from "../../components/product-art/ProductArt";
@@ -69,7 +72,8 @@ const timeLabel = {
 };
 const isAvailable = (product) => Boolean(product) && product.stock !== 0;
 
-export default function RitualsPage({ openCart }) {
+export default function RitualsPage() {
+  const { openCart } = useCartDrawer();
   const { addToCart } = useCommerce();
   const { saveRoutine: persistRoutine } = useCustomer();
   const reduceMotion = useReducedMotion();
@@ -305,7 +309,7 @@ export default function RitualsPage({ openCart }) {
               </p>
             )}
             <div className="routineSecondaryActions">
-              <Link className="textLink" to="/shop">
+              <Link className="textLink" href="/shop">
                 Explore All Products
               </Link>
               <button className="textLink" onClick={startAgain}>
@@ -329,7 +333,7 @@ export default function RitualsPage({ openCart }) {
                 <article className="routineProduct" key={`${index}-${product.id}`}>
                   <Link
                     className={`routineProductVisual ${product.color}`}
-                    to={`/product/${product.slug}`}
+                    href={`/product/${product.slug}`}
                     aria-label={`View ${product.name}`}
                   >
                     <ProductArt product={product} />
@@ -339,7 +343,7 @@ export default function RitualsPage({ openCart }) {
                       {String(index + 1).padStart(2, "0")} · {stepName}
                     </span>
                     <div className="routineProductTitle">
-                      <Link to={`/product/${product.slug}`}>
+                      <Link href={`/product/${product.slug}`}>
                         <h2>{product.name}</h2>
                       </Link>
                       <strong>{money(product.price)}</strong>

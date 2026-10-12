@@ -1,8 +1,12 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { productRepository } from "../../repositories/productRepository";
+import { useCartDrawer } from "../../hooks/useCartDrawer";
 import { useCommerce } from "../../hooks/useCommerce";
 import ProductCard from "../products/ProductCard";
-export default function WishlistPage({ openCart }) {
+export default function WishlistPage() {
+  const { openCart } = useCartDrawer();
   const { wishlist } = useCommerce();
   const products = productRepository.getAll().filter((p) => wishlist.includes(p.id));
   return (
@@ -19,7 +23,7 @@ export default function WishlistPage({ openCart }) {
         <div className="emptyState">
           <h2>Your edit is empty.</h2>
           <p>Save products you want to return to.</p>
-          <Link className="button dark" to="/shop">
+          <Link className="button dark" href="/shop">
             Discover the collection
           </Link>
         </div>

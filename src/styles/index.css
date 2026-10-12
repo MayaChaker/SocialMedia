@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Italiana&display=swap");
+/* Global stylesheet, imported once by src/app/layout.jsx. Order matters for the cascade. */
 @import "./base.css";
 @import "./layout.css";
 @import "./product-card.css";

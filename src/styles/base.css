@@ -17,8 +17,9 @@
   --rose: #9b6257;
   --plum: #4a2730;
   --line: #ded6d0;
-  --serif: Italiana, "Times New Roman", serif;
-  --sans: "DM Sans", Arial, sans-serif;
+  /* --font-serif / --font-sans are injected by next/font in src/app/layout.jsx */
+  --serif: var(--font-serif), "Times New Roman", serif;
+  --sans: var(--font-sans), Arial, sans-serif;
 }
 * {
   box-sizing: border-box;

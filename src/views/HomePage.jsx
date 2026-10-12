@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { ArrowForward, Check, LockOutlined } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import { money } from "../lib/money";
@@ -7,6 +9,7 @@ import { SCENES } from "../data/scenes";
 import { productRepository } from "../repositories/productRepository";
 import ProductCard from "../features/products/ProductCard";
 import ProductScene from "../components/product-art/ProductScene";
+import { useCartDrawer } from "../hooks/useCartDrawer";
 import { useCommerce } from "../hooks/useCommerce";
 
 const trustPoints = [
@@ -16,7 +19,8 @@ const trustPoints = [
   "Complimentary delivery on $75+",
 ];
 
-export default function HomePage({ openCart }) {
+export default function HomePage() {
+  const { openCart } = useCartDrawer();
   const { addToCart } = useCommerce();
   const bestsellers = productRepository.getManyByIds(BESTSELLER_IDS);
   const routine = EVENING_ROUTINE.map(({ slug, step }) => ({
@@ -49,10 +53,10 @@ export default function HomePage({ openCart }) {
             the collection around your routine and shade preferences.
           </p>
           <div className="heroActions">
-            <Link className="button dark" to="/shop">
+            <Link className="button dark" href="/shop">
               Shop the collection <ArrowForward />
             </Link>
-            <Link className="textLink" to="/shop?collection=bestsellers">
+            <Link className="textLink" href="/shop?collection=bestsellers">
               Shop bestsellers
             </Link>
           </div>
@@ -100,7 +104,7 @@ export default function HomePage({ openCart }) {
         />
         <div className="categoryGrid">
           {HOME_CATEGORIES.map((category) => (
-            <Link className="categoryCard" to={category.href} key={category.title}>
+            <Link className="categoryCard" href={category.href} key={category.title}>
               <ProductScene scene={SCENES[category.scene]} />
               <span>
                 <small>{category.copy}</small>
@@ -138,7 +142,7 @@ export default function HomePage({ openCart }) {
                   <span>0{index + 1}</span>
                   <div>
                     <small>{product.step}</small>
-                    <Link to={`/product/${product.slug}`}>{product.name}</Link>
+                    <Link href={`/product/${product.slug}`}>{product.name}</Link>
                   </div>
                   <b>{money(product.price)}</b>
                 </li>
@@ -152,7 +156,7 @@ export default function HomePage({ openCart }) {
               <button className="button light" onClick={addRoutine}>
                 Add the full routine
               </button>
-              <Link className="textLink" to="/rituals">
+              <Link className="textLink" href="/rituals">
                 Build your own
               </Link>
             </div>
@@ -178,7 +182,7 @@ function SectionHeading({ eyebrow, title, copy, href, link, external }) {
             <ArrowForward />
           </a>
         ) : (
-          <Link className="textLink" to={href}>
+          <Link className="textLink" href={href}>
             {link}
             <ArrowForward />
           </Link>

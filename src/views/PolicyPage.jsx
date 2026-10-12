@@ -1,7 +1,6 @@
-import { Link, useParams } from "react-router-dom";
-import NotFoundPage from "./NotFoundPage";
+import Link from "next/link";
 
-const policies = {
+export const POLICIES = {
   shipping: {
     title: "Shipping & returns",
     intro: "Clear delivery expectations and a simple, considered return experience.",
@@ -130,11 +129,9 @@ const policies = {
   },
 };
 
-export default function PolicyPage() {
-  const { policy } = useParams();
-  const content = policies[policy];
-  if (!content) return <NotFoundPage />;
-  const contact = process.env.REACT_APP_CONTACT_EMAIL || "care@velourabeauty.com";
+/** Server-rendered customer-care page; the route resolves content from POLICIES. */
+export default function PolicyPage({ content }) {
+  const contact = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "care@velourabeauty.com";
   return (
     <main className="policyPage">
       <span className="kicker">Customer care</span>
@@ -152,7 +149,7 @@ export default function PolicyPage() {
         <a className="button dark" href={`mailto:${contact}`}>
           Contact customer care
         </a>
-        <Link className="textLink" to="/shop">
+        <Link className="textLink" href="/shop">
           Continue shopping
         </Link>
       </div>
