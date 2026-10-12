@@ -1,13 +1,15 @@
-import { Link, useParams } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { Check } from "@mui/icons-material";
 import { money } from "../../lib/money";
 import { useCommerce } from "../../hooks/useCommerce";
-import NotFoundPage from "../../pages/NotFoundPage";
+import NotFoundPage from "../../views/NotFoundPage";
 
 // Lives on its own URL so a refresh (or a shared link on this device) still shows the order.
-export default function OrderConfirmationPage() {
-  const { orderId } = useParams();
-  const { orders } = useCommerce();
+export default function OrderConfirmationPage({ orderId }) {
+  const { orders, hydrated } = useCommerce();
+  if (!hydrated) return null;
   const order = orders.find((item) => item.id === orderId);
   if (!order) return <NotFoundPage />;
 
@@ -27,7 +29,7 @@ export default function OrderConfirmationPage() {
         <span>Contact</span>
         <strong>{order.contact.email}</strong>
       </div>
-      <Link className="button dark" to="/">
+      <Link className="button dark" href="/">
         Return home
       </Link>
     </main>

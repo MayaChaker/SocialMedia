@@ -1,3 +1,5 @@
+"use client";
+
 import { FavoriteBorder, Favorite } from "@mui/icons-material";
 import { useCommerce } from "../../hooks/useCommerce";
 export default function WishlistButton({ productId, productName }) {

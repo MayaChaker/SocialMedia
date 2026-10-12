@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Check, Close, Star } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import { money } from "../../lib/money";
@@ -82,7 +84,7 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
           )}
           <WishlistButton productId={product.id} productName={product.name} />
           <Link
-            to={productHref}
+            href={productHref}
             className="visualLink"
             aria-label={`View ${product.name}${selected ? ` in ${selected.name}` : ""}`}
           >
@@ -96,7 +98,7 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
           <>
             <div className="productMeta">{product.category}</div>
             <div className="productInfo shopProductInfo">
-              <Link className="productNameLink" to={productHref}>
+              <Link className="productNameLink" href={productHref}>
                 <h3>{product.name}</h3>
               </Link>
               {product.rating && product.reviews ? (
@@ -141,7 +143,7 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
             </div>
             <div className="productInfo">
               <div>
-                <Link to={productHref}>
+                <Link href={productHref}>
                   <h3>{product.name}</h3>
                 </Link>
                 <p>{product.note}</p>
@@ -223,7 +225,7 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
                     ? `Add to bag · ${money(display.price)}`
                     : actionLabel}
                 </button>
-                <Link className="textLink" to={productHref}>
+                <Link className="textLink" href={productHref}>
                   See full details
                 </Link>
               </div>

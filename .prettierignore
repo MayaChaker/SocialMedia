@@ -1,6 +1,8 @@
+.next
 build
 coverage
 node_modules
+next-env.d.ts
 # npm owns the formatting of these files
 package.json
 package-lock.json

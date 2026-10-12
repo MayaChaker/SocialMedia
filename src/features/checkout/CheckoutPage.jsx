@@ -1,5 +1,8 @@
-import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight, LockOutlined } from "@mui/icons-material";
 import { FREE_SHIPPING_THRESHOLD } from "../../domain/commerce/commerceConfig";
 import { money } from "../../lib/money";
@@ -9,18 +12,25 @@ import { orderService } from "../../services/orderService";
 const STEPS = ["Contact", "Shipping", "Review"];
 const emptyContact = { email: "", firstName: "", lastName: "", phone: "" };
 const emptyShipping = { address: "", apartment: "", city: "", country: "Lebanon", postalCode: "" };
-const hostedCheckout = Boolean(process.env.REACT_APP_CHECKOUT_URL);
+const hostedCheckout = Boolean(process.env.NEXT_PUBLIC_CHECKOUT_URL);
 
 export default function CheckoutPage() {
-  const navigate = useNavigate();
-  const { cart, totals, promoCode, addOrder, clearCart } = useCommerce();
+  const router = useRouter();
+  const { cart, hydrated, totals, promoCode, addOrder, clearCart } = useCommerce();
   const [step, setStep] = useState(1);
   const [contact, setContact] = useState(emptyContact);
   const [shipping, setShipping] = useState(emptyShipping);
   const [placing, setPlacing] = useState(false);
+  const [placed, setPlaced] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
+  const emptyBag = hydrated && !cart.length && !placed;
 
-  if (!cart.length) return <Navigate to="/shop" replace />;
+  // Wait until the saved bag has loaded before deciding it is empty.
+  useEffect(() => {
+    if (emptyBag) router.replace("/shop");
+  }, [emptyBag, router]);
+
+  if (!hydrated || !cart.length) return null;
 
   const bind = (setter, values, key) => ({
     name: key,
@@ -50,7 +60,8 @@ export default function CheckoutPage() {
         return;
       }
       addOrder(order);
-      navigate(`/checkout/confirmation/${order.id}`, { replace: true });
+      setPlaced(true);
+      router.replace(`/checkout/confirmation/${order.id}`);
       clearCart();
     } catch (error) {
       setCheckoutError(error.message || "Checkout could not be started.");
@@ -61,10 +72,10 @@ export default function CheckoutPage() {
   return (
     <main className="checkoutPage">
       <header>
-        <button onClick={() => navigate(-1)}>
+        <button onClick={() => router.back()}>
           <ChevronLeft /> Back
         </button>
-        <Link className="wordmark" to="/">
+        <Link className="wordmark" href="/">
           VELOURA<span>BEAUTY</span>
         </Link>
         <span>

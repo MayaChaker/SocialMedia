@@ -1,19 +1,22 @@
+"use client";
+
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search } from "@mui/icons-material";
 import { productRepository } from "../../repositories/productRepository";
 
 const productSuggestions = productRepository.getAll();
 
-export default function GlobalSearch({ open }) {
+export default function GlobalSearch({ open, onSearch }) {
   const [query, setQuery] = useState("");
-  const navigate = useNavigate();
+  const router = useRouter();
   const submit = (event) => {
     event.preventDefault();
     if (query.trim()) {
-      navigate(`/shop?search=${encodeURIComponent(query.trim())}`);
+      router.push(`/shop?search=${encodeURIComponent(query.trim())}`);
       setQuery("");
+      onSearch?.();
     }
   };
 

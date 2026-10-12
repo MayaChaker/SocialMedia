@@ -1,5 +1,8 @@
+"use client";
+
+// MUI icons render through Emotion, which needs the client runtime.
 import { ArrowForward } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import ProductScene from "../components/product-art/ProductScene";
 import { SCENES } from "../data/scenes";
 
@@ -121,7 +124,7 @@ export default function AboutPage() {
             Explore skincare, makeup, and beauty essentials selected for real routines and
             individual preferences.
           </p>
-          <Link className="button light" to="/shop">
+          <Link className="button light" href="/shop">
             Shop the collection <ArrowForward />
           </Link>
         </div>

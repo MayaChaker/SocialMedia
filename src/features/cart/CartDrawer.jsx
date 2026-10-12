@@ -1,5 +1,8 @@
+"use client";
+
 import { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Add,
@@ -28,7 +31,7 @@ export default function CartDrawer({ open, close }) {
     applyPromoCode,
     removePromoCode,
   } = useCommerce();
-  const navigate = useNavigate();
+  const router = useRouter();
   const drawerRef = useRef(null);
   const closeRef = useRef(null);
   const [promoInput, setPromoInput] = useState("");
@@ -46,7 +49,7 @@ export default function CartDrawer({ open, close }) {
   };
   const checkout = () => {
     close();
-    navigate("/checkout");
+    router.push("/checkout");
   };
   return (
     <AnimatePresence>
@@ -194,7 +197,7 @@ export default function CartDrawer({ open, close }) {
                 <ShoppingBagOutlined />
                 <h3>Your bag is waiting.</h3>
                 <p>Explore considered skincare, colour, and sets.</p>
-                <Link className="button dark" to="/shop" onClick={close}>
+                <Link className="button dark" href="/shop" onClick={close}>
                   Shop the collection
                 </Link>
               </div>

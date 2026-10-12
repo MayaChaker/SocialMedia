@@ -1,5 +1,8 @@
 import { OUT_OF_STOCK_IDS } from "../../data/merchandising";
 
+/** URL segments accepted by /shop/[category]. */
+export const CATEGORIES = ["skincare", "makeup", "sets"];
+
 export const isProductAvailable = (product) =>
   !OUT_OF_STOCK_IDS.includes(product.id) &&
   (!product.variants || product.variants.some((variant) => (variant.stock ?? 0) > 0));

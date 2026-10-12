@@ -1,5 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+"use client";
+
+import { useRef, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   AccountCircleOutlined,
   Close,
@@ -8,6 +11,7 @@ import {
   Search,
   ShoppingBagOutlined,
 } from "@mui/icons-material";
+import { useCartDrawer } from "../../hooks/useCartDrawer";
 import { useCommerce } from "../../hooks/useCommerce";
 import { useModalDialog } from "../../hooks/useModalDialog";
 import GlobalSearch from "./GlobalSearch";
@@ -19,18 +23,22 @@ const navItems = [
   ["Our story", "/about"],
 ];
 
-export default function Header({ openCart }) {
-  const { cart, wishlist } = useCommerce();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const navRef = useRef(null);
-  const location = useLocation();
-  const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
+const isActive = (pathname, href) => pathname === href || pathname.startsWith(`${href}/`);
 
-  useEffect(() => {
-    setMenuOpen(false);
-    setSearchOpen(false);
-  }, [location.pathname, location.search]);
+export default function Header() {
+  const { cart, wishlist } = useCommerce();
+  const { openCart } = useCartDrawer();
+  const pathname = usePathname();
+  // Panels remember the page they were opened on, so navigating closes them
+  // without an effect.
+  const [menuPath, setMenuPath] = useState(null);
+  const [searchPath, setSearchPath] = useState(null);
+  const menuOpen = menuPath === pathname;
+  const searchOpen = searchPath === pathname;
+  const setMenuOpen = (open) => setMenuPath(open ? pathname : null);
+  const setSearchOpen = (open) => setSearchPath(open ? pathname : null);
+  const navRef = useRef(null);
+  const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
   useModalDialog(menuOpen, navRef, () => setMenuOpen(false));
 
@@ -50,7 +58,7 @@ export default function Header({ openCart }) {
         >
           {menuOpen ? <Close /> : <Menu />}
         </button>
-        <Link className="wordmark" to="/" aria-label="Veloura Beauty home">
+        <Link className="wordmark" href="/" aria-label="Veloura Beauty home">
           VELOURA<span>BEAUTY</span>
         </Link>
         <nav
@@ -60,22 +68,22 @@ export default function Header({ openCart }) {
           aria-label="Main navigation"
         >
           {navItems.map(([label, href]) => (
-            <NavLink
-              className={({ isActive }) => (isActive ? "active" : undefined)}
+            <Link
+              className={isActive(pathname, href) ? "active" : undefined}
+              aria-current={isActive(pathname, href) ? "page" : undefined}
               onClick={() => setMenuOpen(false)}
-              end={href === "/shop" || href === "/"}
               key={label}
-              to={href}
+              href={href}
             >
               {label}
-            </NavLink>
+            </Link>
           ))}
           <div className="mobileNavExtras">
-            <Link onClick={() => setMenuOpen(false)} to="/profile">
+            <Link onClick={() => setMenuOpen(false)} href="/profile">
               <AccountCircleOutlined />
               <span>Account</span>
             </Link>
-            <Link onClick={() => setMenuOpen(false)} to="/wishlist">
+            <Link onClick={() => setMenuOpen(false)} href="/wishlist">
               <FavoriteBorder />
               <span>Wishlist{wishlist.length > 0 && ` (${wishlist.length})`}</span>
             </Link>
@@ -91,7 +99,7 @@ export default function Header({ openCart }) {
           </button>
           <Link
             className="secondaryHeaderAction"
-            to="/wishlist"
+            href="/wishlist"
             aria-label={`Wishlist with ${wishlist.length} items`}
           >
             <FavoriteBorder />
@@ -99,7 +107,7 @@ export default function Header({ openCart }) {
           </Link>
           <Link
             className="secondaryHeaderAction"
-            to="/profile"
+            href="/profile"
             aria-label="Beauty profile and account"
           >
             <AccountCircleOutlined />
@@ -116,7 +124,7 @@ export default function Header({ openCart }) {
         aria-label="Close navigation menu"
         tabIndex={menuOpen ? 0 : -1}
       />
-      <GlobalSearch open={searchOpen} />
+      <GlobalSearch open={searchOpen} onSearch={() => setSearchOpen(false)} />
     </>
   );
 }

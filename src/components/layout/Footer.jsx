@@ -1,40 +1,40 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 export default function Footer() {
-  const contact = process.env.REACT_APP_CONTACT_EMAIL || "care@velourabeauty.com";
+  const contact = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "care@velourabeauty.com";
 
   return (
     <footer className="siteFooter">
       <div className="footerInner">
         <div className="footerGrid">
           <div className="footerBrand">
-            <Link className="wordmark" to="/">
+            <Link className="wordmark" href="/">
               VELOURA<span>BEAUTY</span>
             </Link>
             <p>Skincare, colour, and sets for considered everyday routines.</p>
           </div>
           <div className="footerColumn">
             <h4>Shop</h4>
-            <Link to="/shop">All products</Link>
-            <Link to="/shop/skincare">Skincare</Link>
-            <Link to="/shop/makeup">Makeup</Link>
-            <Link to="/shop/sets">Sets</Link>
-            <Link to="/shop?collection=new">New arrivals</Link>
+            <Link href="/shop">All products</Link>
+            <Link href="/shop/skincare">Skincare</Link>
+            <Link href="/shop/makeup">Makeup</Link>
+            <Link href="/shop/sets">Sets</Link>
+            <Link href="/shop?collection=new">New arrivals</Link>
           </div>
           <div className="footerColumn">
             <h4>Customer care</h4>
             <a href={`mailto:${contact}`}>Contact</a>
-            <Link to="/care/faq">FAQ</Link>
-            <Link to="/care/shipping">Shipping & returns</Link>
-            <Link to="/care/refund">Refund policy</Link>
-            <Link to="/care/track">Track order</Link>
+            <Link href="/care/faq">FAQ</Link>
+            <Link href="/care/shipping">Shipping & returns</Link>
+            <Link href="/care/refund">Refund policy</Link>
+            <Link href="/care/track">Track order</Link>
           </div>
           <div className="footerColumn">
             <h4>About Veloura</h4>
-            <Link to="/about">Our story</Link>
-            <Link to="/rituals">Routine builder</Link>
-            <Link to="/shade-match">Shade match</Link>
-            <Link to="/care/accessibility">Accessibility</Link>
+            <Link href="/about">Our story</Link>
+            <Link href="/rituals">Routine builder</Link>
+            <Link href="/shade-match">Shade match</Link>
+            <Link href="/care/accessibility">Accessibility</Link>
           </div>
         </div>
         <div className="footerBottom">
@@ -43,10 +43,10 @@ export default function Footer() {
             payments are processed.
           </span>
           <div className="footerLegal">
-            <Link to="/care/privacy">Privacy</Link>
-            <Link to="/care/terms">Terms</Link>
+            <Link href="/care/privacy">Privacy</Link>
+            <Link href="/care/terms">Terms</Link>
           </div>
-          {process.env.REACT_APP_CHECKOUT_URL && (
+          {process.env.NEXT_PUBLIC_CHECKOUT_URL && (
             <span className="checkoutProviderNote">
               Payment methods shown by the secure checkout provider
             </span>
