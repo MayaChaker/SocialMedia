@@ -204,9 +204,16 @@
   font-size: 10px;
   margin: 4px 0 0;
 }
+/* The gallery stretches with the copy column; keep the illustration at a natural size
+   and in view while the shopper reads the details. */
+.detailVisual {
+  align-items: flex-start;
+}
 .detailVisual .productArt {
-  object-fit: contain;
-  padding: 7%;
+  position: sticky;
+  top: 110px;
+  max-height: 600px;
+  padding: 8%;
 }
 .description {
   font-size: 13px;
