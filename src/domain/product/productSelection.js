@@ -12,6 +12,7 @@ export function resolveProductSelection(productOrId, variantId = "") {
     ? {
         ...product,
         ...variant,
+        id: product.id,
         name: product.name,
         productId: product.id,
         variantId: variant.id,

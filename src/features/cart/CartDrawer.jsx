@@ -13,7 +13,7 @@ import { resolveProductSelection } from "../../domain/product/productSelection";
 import { money } from "../../lib/money";
 import { productRepository } from "../../repositories/productRepository";
 import { useCommerce } from "../../hooks/useCommerce";
-import ProductVisual from "../products/ProductVisual";
+import ProductArt from "../../components/product-art/ProductArt";
 import { MOTION } from "../../theme/tokens";
 
 const catalogue = productRepository.getAll();
@@ -124,7 +124,7 @@ export default function CartDrawer({ open, close }) {
                   {resolvedCart.map((item) => (
                     <article className="cartItem" key={item.cartId}>
                       <div className={`cartThumb ${item.color}`}>
-                        <ProductVisual type={item.type} product={item} />
+                        <ProductArt product={item} />
                       </div>
                       <div className="cartItemDetails">
                         <strong>{item.name}</strong>
@@ -163,7 +163,7 @@ export default function CartDrawer({ open, close }) {
                       <span className="kicker">Pairs well</span>
                       <div>
                         <div className={`miniVisual ${recommendation.color}`}>
-                          <ProductVisual type={recommendation.type} product={recommendation} />
+                          <ProductArt product={recommendation} />
                         </div>
                         <span>
                           <strong>{recommendation.name}</strong>

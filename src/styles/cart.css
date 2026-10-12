@@ -82,9 +82,6 @@
   justify-content: center;
   overflow: hidden;
 }
-.cartThumb .productObject {
-  transform: scale(0.25);
-}
 .cartItem > div:nth-child(2) {
   display: flex;
   flex-direction: column;
@@ -191,9 +188,6 @@
   place-items: center;
   overflow: hidden;
 }
-.miniVisual .productObject {
-  transform: scale(0.18);
-}
 .cartRecommendation > div > span {
   display: flex;
   flex-direction: column;
@@ -243,8 +237,8 @@
 .cartFooter > p svg {
   font-size: 14px;
 }
-.cartThumb .realProductImage,
-.miniVisual .realProductImage {
+.cartThumb .productArt,
+.miniVisual .productArt {
   object-fit: cover;
   padding: 0;
 }

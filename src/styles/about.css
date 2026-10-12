@@ -16,8 +16,8 @@
   background: var(--plum);
   color: #fff;
 }
-.storyFinalHero > img,
-.storyFinalPhilosophyImage img {
+.storyFinalHero > .productScene,
+.storyFinalPhilosophyImage .productScene {
   display: block;
   width: 100%;
   height: 100%;
@@ -88,7 +88,7 @@
   overflow: hidden;
   background: var(--cream);
 }
-.storyFinalPhilosophyImage img {
+.storyFinalPhilosophyImage .productScene {
   object-position: center 42%;
 }
 .storyFinalPhilosophyCopy {
@@ -119,7 +119,7 @@
   .storyFinalHero {
     height: 680px;
   }
-  .storyFinalHero > img {
+  .storyFinalHero > .productScene {
     object-position: 59%center;
   }
   .storyFinalHeroShade {
@@ -206,14 +206,14 @@
   overflow: hidden;
   background: #c7a398;
 }
-.storyEditImage img,
-.storyShelfImage img {
+.storyEditImage .productScene,
+.storyShelfImage .productScene {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.storyEditImage img {
+.storyEditImage .productScene {
   object-position: center 47%;
 }
 .storyEditImage > span {
@@ -284,7 +284,7 @@
   min-height: 610px;
   overflow: hidden;
 }
-.storyShelfImage img {
+.storyShelfImage .productScene {
   object-position: center 56%;
 }
 .storyShelfCopy {

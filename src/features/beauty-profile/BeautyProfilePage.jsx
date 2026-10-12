@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Check } from "@mui/icons-material";
 import { productRepository } from "../../repositories/productRepository";
 import { useCustomer } from "../../hooks/useCustomer";
-import ProductVisual from "../products/ProductVisual";
+import ProductArt from "../../components/product-art/ProductArt";
 
 const catalogue = productRepository.getAll();
 
@@ -97,8 +97,7 @@ export default function BeautyProfilePage() {
             {shade ? (
               <div className="savedShadeContent">
                 <div className="savedShadeVisual">
-                  <ProductVisual
-                    type={tint.type}
+                  <ProductArt
                     product={{ ...tint, ...shade, name: tint.name, selectedVariant: shade.name }}
                   />
                 </div>
@@ -131,7 +130,7 @@ export default function BeautyProfilePage() {
                   {routineProducts.map((product) => (
                     <Link to={`/product/${product.slug}`} key={product.id}>
                       <span className={`savedRoutineThumb ${product.color}`}>
-                        <ProductVisual type={product.type} product={product} />
+                        <ProductArt product={product} />
                       </span>
                       <span>
                         <strong>{product.name}</strong>

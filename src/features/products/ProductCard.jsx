@@ -4,8 +4,9 @@ import { Check, Close, Star } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import { money } from "../../lib/money";
 import { OUT_OF_STOCK_IDS } from "../../data/merchandising";
+import { resolveProductSelection } from "../../domain/product/productSelection";
 import { useCommerce } from "../../hooks/useCommerce";
-import ProductVisual from "./ProductVisual";
+import ProductArt from "../../components/product-art/ProductArt";
 import WishlistButton from "../wishlist/WishlistButton";
 
 export default function ProductCard({ product, onAdded, shopLayout = false }) {
@@ -21,9 +22,7 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
     () => product.variants?.find((variant) => variant.id === selectedId),
     [product.variants, selectedId],
   );
-  const display = selected
-    ? { ...product, ...selected, selectedVariant: selected.name, variantId: selected.id }
-    : product;
+  const display = resolveProductSelection(product, selected?.id);
   const outOfStock = OUT_OF_STOCK_IDS.includes(product.id) || selected?.stock === 0;
   const needsShade = Boolean(product.variants && !selected);
   const productHref = `/product/${product.slug}${selected ? `?variant=${selected.id}` : ""}`;
@@ -91,7 +90,7 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
           key={variant.id}
           type="button"
           className={selectedId === variant.id ? "selected" : ""}
-          style={{ "--swatch": variant.color }}
+          style={{ "--swatch": variant.swatch }}
           onClick={() => setSelectedId(variant.id)}
           aria-label={`Select ${variant.name} shade${variant.stock === 0 ? ", out of stock" : ""}`}
           aria-pressed={selectedId === variant.id}
@@ -132,7 +131,7 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
             className="visualLink"
             aria-label={`View ${product.name}${selected ? ` in ${selected.name}` : ""}`}
           >
-            <ProductVisual type={product.type} product={display} />
+            <ProductArt product={display} />
           </Link>
           <button ref={quickViewRef} className="quickView" onClick={() => setPreview(true)}>
             Quick view
@@ -244,7 +243,7 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
                 <Close />
               </button>
               <div className={`previewVisual ${product.color}`}>
-                <ProductVisual type={product.type} product={display} />
+                <ProductArt product={display} />
               </div>
               <div>
                 <span className="kicker">{product.brand}</span>

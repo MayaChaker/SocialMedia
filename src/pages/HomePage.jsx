@@ -3,8 +3,10 @@ import { ArrowForward, Check, LockOutlined } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import { money } from "../lib/money";
 import { BESTSELLER_IDS, HOME_CATEGORIES } from "../data/merchandising";
+import { SCENES } from "../data/scenes";
 import { productRepository } from "../repositories/productRepository";
 import ProductCard from "../features/products/ProductCard";
+import ProductScene from "../components/product-art/ProductScene";
 import { useCommerce } from "../hooks/useCommerce";
 
 const trustPoints = [
@@ -16,13 +18,7 @@ const trustPoints = [
 
 export default function HomePage({ openCart }) {
   const { addToCart } = useCommerce();
-  const bestsellers = productRepository
-    .getManyByIds(BESTSELLER_IDS)
-    .map((product) =>
-      product.id === 1
-        ? { ...product, image: "/products/veloura-serum-bestseller-v2.webp" }
-        : product,
-    );
+  const bestsellers = productRepository.getManyByIds(BESTSELLER_IDS);
   const routine = productRepository.getManyByIds([2, 1, 5]);
   const routineTotal = routine.reduce((sum, product) => sum + product.price, 0);
   const addRoutine = () => {
@@ -63,12 +59,9 @@ export default function HomePage({ openCart }) {
           </p>
         </motion.div>
         <div className="heroImage">
-          <img
-            src="/lifestyle/veloura-hero-campaign-burgundy.png"
-            alt="Rose-gold Veloura serum, cream jar and burgundy lipstick photographed on warm travertine"
-            width="1536"
-            height="1024"
-            fetchpriority="high"
+          <ProductScene
+            scene={SCENES.hero}
+            label="Illustration of Veloura serum, night cream and lipstick on a stone plinth"
           />
         </div>
       </section>
@@ -105,7 +98,7 @@ export default function HomePage({ openCart }) {
         <div className="categoryGrid">
           {HOME_CATEGORIES.map((category) => (
             <Link className="categoryCard" to={category.href} key={category.title}>
-              <img src={category.image} alt="" loading="lazy" width="1000" height="1250" />
+              <ProductScene scene={SCENES[category.scene]} />
               <span>
                 <small>{category.copy}</small>
                 <strong>{category.title}</strong>
@@ -120,12 +113,9 @@ export default function HomePage({ openCart }) {
 
       <section className="routineCommerce">
         <div className="routineImage">
-          <img
-            src="/lifestyle/veloura-evening-edit-v2.webp"
-            alt="Three burgundy Veloura evening skincare products arranged with a cream towel and rose-gold mirror"
-            loading="lazy"
-            width="1535"
-            height="1024"
+          <ProductScene
+            scene={SCENES.eveningEdit}
+            label="Illustration of the Veloura evening routine: cleanser, serum and night cream"
           />
         </div>
         <div className="routineCopy">

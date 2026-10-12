@@ -548,7 +548,7 @@
   position: relative;
   grid-template-rows: 1fr auto;
 }
-.shadeResultVisual > .realProductImage {
+.shadeResultVisual > .productArt {
   width: 82%;
   height: 390px;
   object-fit: contain;
@@ -561,7 +561,7 @@
   min-height: 32px;
 }
 @media (max-width: 700px) {
-  .shadeResultVisual > .realProductImage {
+  .shadeResultVisual > .productArt {
     height: 250px;
   }
 }

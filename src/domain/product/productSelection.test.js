@@ -11,7 +11,8 @@ test("resolves a valid product by ID", () => {
 
 test("resolves a selected variant with its canonical identity", () => {
   expect(resolveProductSelection(7, "deep")).toMatchObject({
-    id: "deep",
+    id: 7,
+    name: "Petal Skin Tint",
     productId: 7,
     variantId: "deep",
     selectedVariant: "Mahogany 09",

@@ -360,13 +360,13 @@
 .routineProductVisual.plum {
   background: #9e7b80;
 }
-.routineProductVisual .realProductImage {
+.routineProductVisual .productArt {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s;
 }
-.routineProductVisual:hover .realProductImage {
+.routineProductVisual:hover .productArt {
   transform: scale(1.02);
 }
 .routineProductCopy {
@@ -951,7 +951,7 @@
 .routineProductVisual {
   min-height: 250px;
 }
-.routineProductVisual img {
+.routineProductVisual .productArt {
   width: 100%;
   height: 100%;
   object-fit: contain;

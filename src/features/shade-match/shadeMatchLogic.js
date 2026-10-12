@@ -45,8 +45,7 @@ export const SHADE_PROFILES = SKIN_TINT.variants.map((variant) => ({
   ...PROFILE_BY_VARIANT[variant.id],
   variantId: variant.id,
   name: variant.name,
-  color: variant.color,
-  image: variant.image,
+  swatch: variant.swatch,
   productSlug: SKIN_TINT.slug,
 }));
 

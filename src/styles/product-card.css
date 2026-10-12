@@ -68,138 +68,6 @@
 .productImage:hover .quickView {
   bottom: 12px;
 }
-.productObject {
-  width: 110px;
-  height: 205px;
-  position: relative;
-  background: linear-gradient(90deg, #b8796c, #e2aa9b 48%, #9d5d53);
-  border-radius: 9px 9px 15px 15px;
-  box-shadow: 0 22px 30px rgba(45, 27, 22, 0.18);
-}
-.productObject .cap {
-  height: 45px;
-  position: absolute;
-  left: 4px;
-  right: 4px;
-  top: -38px;
-  background: linear-gradient(90deg, #7e4c45, #c99083 50%, #6f4039);
-  border-radius: 7px 7px 2px 2px;
-}
-.vLabel {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #fff9f4;
-  font: 400 34px var(--serif);
-}
-.vLabel span {
-  font: 500 6px var(--sans);
-  letter-spacing: 0.22em;
-}
-.productObject.tube {
-  height: 210px;
-  width: 104px;
-  border-radius: 8px 8px 13px 13px;
-  background: linear-gradient(90deg, #ded6c8, #fffaf0, #cfc5b6);
-}
-.productObject.tube .cap {
-  top: auto;
-  bottom: -18px;
-  height: 23px;
-  background: #9a776a;
-}
-.productObject.tube .vLabel {
-  color: #5b4640;
-}
-.productObject.bottle {
-  height: 190px;
-  width: 126px;
-  border-radius: 6px 6px 20px 20px;
-  background: linear-gradient(90deg, #aa876c, #dec09e, #96745e);
-}
-.productObject.lipstick {
-  height: 155px;
-  width: 58px;
-  border-radius: 2px;
-  background: linear-gradient(90deg, #29171b, #58303a, #1f1014);
-  margin-top: 50px;
-}
-.productObject.lipstick:before {
-  content: "";
-  position: absolute;
-  left: 10px;
-  right: 10px;
-  top: -82px;
-  height: 90px;
-  background: #622f3c;
-  border-radius: 18px 18px 2px 2px;
-  clip-path: polygon(0 20%, 100%0, 100% 100%, 0 100%);
-}
-.productObject.lipstick .cap {
-  display: none;
-}
-.productObject.jar {
-  height: 105px;
-  width: 170px;
-  border-radius: 12px 12px 24px 24px;
-  margin-top: 80px;
-  background: linear-gradient(90deg, #392b27, #75594f, #30231f);
-}
-.productObject.jar .cap {
-  height: 40px;
-  top: -36px;
-  left: 0;
-  right: 0;
-  background: linear-gradient(90deg, #9b7162, #d2a28f, #7d5549);
-  border-radius: 8px;
-}
-.productObject.compact {
-  height: 38px;
-  width: 180px;
-  border-radius: 50%;
-  margin-top: 80px;
-  background: linear-gradient(#b08074, #5e3e38);
-  box-shadow: 0 30px 25px rgba(45, 27, 22, 0.2);
-}
-.productObject.compact .cap {
-  height: 28px;
-  top: -22px;
-  left: 0;
-  right: 0;
-  border-radius: 50%;
-  background: #d7aaa0;
-}
-.productObject.duo,
-.productObject.set {
-  height: 205px;
-  width: 120px;
-  transform: translateX(-35px);
-}
-.duoSecond,
-.setSecond {
-  position: absolute;
-  width: 120px;
-  height: 175px;
-  left: 100px;
-  top: 30px;
-  background: linear-gradient(90deg, #e1d9c9, #fff8ea, #c9c0b2);
-  border-radius: 8px;
-  display: grid;
-  place-items: center;
-  color: #725a50;
-  font: 30px var(--serif);
-  z-index: -1;
-}
-.duoSecond {
-  width: 75px;
-  height: 150px;
-  left: 105px;
-  top: 55px;
-  background: linear-gradient(90deg, #8c5b51, #d49a8a, #75483f);
-}
 .productInfo {
   display: flex;
   align-items: flex-start;
@@ -264,13 +132,6 @@
   .productImage {
     height: 300px;
   }
-  .productObject {
-    transform: scale(0.72);
-  }
-  .productObject.duo,
-  .productObject.set {
-    transform: translateX(-25px) scale(0.72);
-  }
   .productInfo {
     display: block;
     padding-top: 12px;
@@ -300,13 +161,6 @@
   }
   .productImage {
     height: 410px;
-  }
-  .productObject {
-    transform: scale(0.9);
-  }
-  .productObject.duo,
-  .productObject.set {
-    transform: translateX(-30px) scale(0.9);
   }
 }
 .visualLink {
@@ -413,9 +267,6 @@
   .quickPreview > div:last-child {
     padding: 35px 24px;
   }
-  .previewVisual .productObject {
-    transform: scale(0.8);
-  }
 }
 .productCard {
   display: flex;
@@ -439,14 +290,21 @@
 .addButton:active {
   transform: scale(0.985);
 }
-.realProductImage {
+/* Product illustrations keep their proportions and leave breathing room inside each frame. */
+.productArt {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  padding: 14% 12% 8%;
   display: block;
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.productImage:hover .realProductImage {
+/* Still-life scenes fill their frame like a photograph would. */
+.productScene {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.productImage:hover .productArt {
   transform: scale(1.025);
 }
 @media (max-width: 700px) {
@@ -590,7 +448,6 @@
 }
 .cardRating,
 .price,
-.productImageFallback span,
 .productInfo small,
 .productMeta {
   font-size: 13px;
@@ -727,14 +584,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.productImageFallback {
-  width: 100%;
-  height: 100%;
-  display: grid;
-  place-items: center;
-  background: linear-gradient(135deg, var(--cream), var(--blush));
-  color: var(--muted);
 }
 @media (max-width: 700px) {
   .quickView {

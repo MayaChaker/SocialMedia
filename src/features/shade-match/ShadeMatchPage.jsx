@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useCustomer } from "../../hooks/useCustomer";
 import { matchShade, matchedProductUrl, SHADE_PROFILES } from "./shadeMatchLogic";
 import { productRepository } from "../../repositories/productRepository";
-import ProductVisual from "../products/ProductVisual";
+import ProductArt from "../../components/product-art/ProductArt";
 
 const steps = [
   {
@@ -25,7 +25,7 @@ const steps = [
   },
 ];
 
-const depthColors = Object.fromEntries(SHADE_PROFILES.map((shade) => [shade.depth, shade.color]));
+const depthColors = Object.fromEntries(SHADE_PROFILES.map((shade) => [shade.depth, shade.swatch]));
 const optionGuidance = {
   "Fresh and sheer": "Light coverage that lets natural skin show through.",
   "Soft satin": "Balanced radiance without looking dewy or flat.",
@@ -88,7 +88,7 @@ export default function ShadeMatchPage() {
             {SHADE_PROFILES.map((shade, index) => (
               <motion.i
                 key={shade.variantId}
-                style={{ "--shade": shade.color, "--index": index }}
+                style={{ "--shade": shade.swatch, "--index": index }}
                 initial={{ rotate: 0, y: 8 }}
                 animate={{ rotate: (index - 2) * 7, y: 0 }}
                 transition={{ duration: 0.45, delay: index * 0.035 }}
@@ -119,11 +119,10 @@ export default function ShadeMatchPage() {
       <main className="shadeResultPage">
         <div className="shadeResultLayout">
           <section className="shadeResultVisual" aria-label={`${result.name} shade sample`}>
-            <ProductVisual
-              type={product.type}
-              product={{ ...product, image: result.image, selectedVariant: result.name }}
+            <ProductArt
+              product={{ ...product, swatch: result.swatch, selectedVariant: result.name }}
             />
-            <div className="matchedShadeSample" style={{ "--shade": result.color }}>
+            <div className="matchedShadeSample" style={{ "--shade": result.swatch }}>
               <span>{result.name}</span>
             </div>
           </section>
@@ -156,7 +155,7 @@ export default function ShadeMatchPage() {
                 <span>Compare nearby shades</span>
                 {nearby.map((shade) => (
                   <Link key={shade.variantId} to={matchedProductUrl(shade)}>
-                    <i style={{ "--shade": shade.color }} />
+                    <i style={{ "--shade": shade.swatch }} />
                     {shade.name}
                   </Link>
                 ))}

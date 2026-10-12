@@ -185,8 +185,8 @@
 .savedShadeVisual {
   height: 180px;
 }
-.savedRoutineThumb img,
-.savedShadeVisual img {
+.savedRoutineThumb .productArt,
+.savedShadeVisual .productArt {
   width: 100%;
   height: 100%;
   object-fit: contain;

@@ -6,11 +6,12 @@ test("canonicalizes persisted product data while preserving quantity", () => {
   ]);
   expect(item).toMatchObject({
     name: "Soft Light Palette",
-    image: "/products/catalog/soft-light-palette.webp",
     price: 62,
     quantity: 3,
     cartId: "11",
   });
+  // Stale fields from older saved carts must not leak through.
+  expect(item.image).toBeUndefined();
 });
 
 test("preserves variant identity when canonicalizing cart lines", () => {

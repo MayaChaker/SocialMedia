@@ -5,7 +5,7 @@ import { money } from "../../lib/money";
 import { productRepository } from "../../repositories/productRepository";
 import { useCommerce } from "../../hooks/useCommerce";
 import { useCustomer } from "../../hooks/useCustomer";
-import ProductVisual from "./ProductVisual";
+import ProductArt from "../../components/product-art/ProductArt";
 import ProductCard from "./ProductCard";
 import WishlistButton from "../wishlist/WishlistButton";
 
@@ -88,7 +88,7 @@ export default function ProductPage({ openCart }) {
       <section className="productDetail">
         <div className="productGallery">
           <div className={`detailVisual ${product.color}`}>
-            <ProductVisual type={product.type} product={display} />
+            <ProductArt product={display} />
             {product.badge && <span className="detailBadge">{product.badge}</span>}
           </div>
           <div className="galleryDetails">
@@ -131,7 +131,7 @@ export default function ProductPage({ openCart }) {
                     type="button"
                     key={variant.id}
                     className={selectedId === variant.id ? "selected" : ""}
-                    style={{ "--swatch": variant.color }}
+                    style={{ "--swatch": variant.swatch }}
                     onClick={() => setSelectedId(variant.id)}
                     aria-label={`Select ${variant.name} shade`}
                     aria-pressed={selectedId === variant.id}

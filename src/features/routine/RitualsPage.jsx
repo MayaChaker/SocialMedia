@@ -12,7 +12,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { money } from "../../lib/money";
 import { useCommerce } from "../../hooks/useCommerce";
 import { useCustomer } from "../../hooks/useCustomer";
-import ProductVisual from "../products/ProductVisual";
+import ProductArt from "../../components/product-art/ProductArt";
 import {
   buildRoutineRecommendations,
   routineAlternatives,
@@ -382,7 +382,7 @@ export default function RitualsPage({ openCart }) {
                     to={`/product/${product.slug}`}
                     aria-label={`View ${product.name}`}
                   >
-                    <ProductVisual type={product.type} product={product} />
+                    <ProductArt product={product} />
                   </Link>
                   <div className="routineProductCopy">
                     <span className="routineStep">

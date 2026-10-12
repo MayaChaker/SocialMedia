@@ -1,5 +1,7 @@
 import { ArrowForward } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import ProductScene from "../components/product-art/ProductScene";
+import { SCENES } from "../data/scenes";
 
 const selectionCriteria = [
   [
@@ -19,12 +21,9 @@ export default function AboutPage() {
   return (
     <main className="storyFinal">
       <section className="storyFinalHero">
-        <img
-          src="/lifestyle/veloura-hero-campaign.webp"
-          alt="Veloura skincare and colour essentials arranged on warm stone"
-          width="1536"
-          height="1024"
-          fetchpriority="high"
+        <ProductScene
+          scene={SCENES.campaign}
+          label="Illustration of Veloura skincare and colour essentials on warm stone"
         />
         <div className="storyFinalHeroShade" aria-hidden="true" />
         <div className="storyFinalHeroCopy">
@@ -44,12 +43,9 @@ export default function AboutPage() {
 
       <section className="storyFinalPhilosophy">
         <div className="storyFinalPhilosophyImage">
-          <img
-            src="/lifestyle/veloura-lipstick-ritual-campaign.webp"
-            alt="A woman applying Veloura lipstick in warm evening light"
-            width="1122"
-            height="1400"
-            loading="lazy"
+          <ProductScene
+            scene={SCENES.lipstickShades}
+            label="Illustration of five Velvet Ritual Lip shades"
           />
         </div>
         <div className="storyFinalPhilosophyCopy">
@@ -81,12 +77,9 @@ export default function AboutPage() {
           </p>
         </div>
         <div className="storyEditImage">
-          <img
-            src="/lifestyle/veloura-routine-serum.webp"
-            alt="Veloura serum being used as part of a considered skincare ritual"
-            width="1200"
-            height="1500"
-            loading="lazy"
+          <ProductScene
+            scene={SCENES.morningLayers}
+            label="Illustration of Veloura essence, serum and SPF"
           />
           <span>Selected with intention</span>
         </div>
@@ -112,11 +105,9 @@ export default function AboutPage() {
 
       <section className="storyShelf storyDiscover">
         <div className="storyShelfImage">
-          <img
-            src="/lifestyle/veloura-evening-edit-v2.webp"
-            alt="A curated selection of skincare and beauty essentials"
-            width="1535"
-            height="1024"
+          <ProductScene
+            scene={SCENES.eveningEdit}
+            label="Illustration of the Veloura evening routine"
           />
         </div>
         <div className="storyShelfCopy">
