@@ -9,6 +9,7 @@ import {
   ShoppingBagOutlined,
 } from "@mui/icons-material";
 import { useCommerce } from "../../hooks/useCommerce";
+import { useModalDialog } from "../../hooks/useModalDialog";
 import GlobalSearch from "./GlobalSearch";
 
 const navItems = [
@@ -23,7 +24,6 @@ export default function Header({ openCart }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const navRef = useRef(null);
-  const menuButtonRef = useRef(null);
   const location = useLocation();
   const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
@@ -32,40 +32,7 @@ export default function Header({ openCart }) {
     setSearchOpen(false);
   }, [location.pathname, location.search]);
 
-  useEffect(() => {
-    if (!menuOpen) return undefined;
-    const previousOverflow = document.body.style.overflow;
-    const trigger = menuButtonRef.current;
-    document.body.style.overflow = "hidden";
-    const focusable = () =>
-      navRef.current?.querySelectorAll('a,button,[tabindex]:not([tabindex="-1"])');
-    requestAnimationFrame(() => focusable()?.[0]?.focus());
-    const onKey = (event) => {
-      if (event.key === "Escape") {
-        setMenuOpen(false);
-        return;
-      }
-      if (event.key !== "Tab") return;
-      const nodes = focusable();
-      if (!nodes?.length) return;
-      const first = nodes[0],
-        last = nodes[nodes.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      }
-      if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", onKey);
-      trigger?.focus();
-    };
-  }, [menuOpen]);
+  useModalDialog(menuOpen, navRef, () => setMenuOpen(false));
 
   return (
     <>
@@ -75,7 +42,6 @@ export default function Header({ openCart }) {
       </div>
       <header className="siteHeader">
         <button
-          ref={menuButtonRef}
           className="mobileMenu"
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label={menuOpen ? "Close menu" : "Open menu"}

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -13,6 +13,7 @@ import { resolveProductSelection } from "../../domain/product/productSelection";
 import { money } from "../../lib/money";
 import { productRepository } from "../../repositories/productRepository";
 import { useCommerce } from "../../hooks/useCommerce";
+import { useModalDialog } from "../../hooks/useModalDialog";
 import ProductArt from "../../components/product-art/ProductArt";
 import { MOTION } from "../../theme/tokens";
 
@@ -45,37 +46,7 @@ export default function CartDrawer({ open, close }) {
     (product) =>
       !product.variants && !resolvedCart.some((item) => (item.productId || item.id) === product.id),
   );
-  useEffect(() => {
-    if (!open) return undefined;
-    const trigger = document.activeElement;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    requestAnimationFrame(() => closeRef.current?.focus());
-    const onKey = (event) => {
-      if (event.key === "Escape") close();
-      if (event.key !== "Tab") return;
-      const nodes = drawerRef.current?.querySelectorAll(
-        'a,button,input,[tabindex]:not([tabindex="-1"])',
-      );
-      if (!nodes?.length) return;
-      const first = nodes[0],
-        last = nodes[nodes.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      }
-      if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = previous;
-      document.removeEventListener("keydown", onKey);
-      trigger?.focus?.();
-    };
-  }, [open, close]);
+  useModalDialog(open, drawerRef, close, closeRef);
   const applyPromo = (event) => {
     event.preventDefault();
     const valid = promo.trim().toUpperCase() === "VELOURA10";

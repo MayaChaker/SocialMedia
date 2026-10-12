@@ -6,6 +6,7 @@ import { money } from "../../lib/money";
 import { OUT_OF_STOCK_IDS } from "../../data/merchandising";
 import { resolveProductSelection } from "../../domain/product/productSelection";
 import { useCommerce } from "../../hooks/useCommerce";
+import { useModalDialog } from "../../hooks/useModalDialog";
 import ProductArt from "../../components/product-art/ProductArt";
 import WishlistButton from "../wishlist/WishlistButton";
 
@@ -15,7 +16,6 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
   const [selectedId, setSelectedId] = useState("");
   const [actionState, setActionState] = useState("idle");
   const previewRef = useRef(null);
-  const quickViewRef = useRef(null);
   const addingTimerRef = useRef(null);
   const resetTimerRef = useRef(null);
   const selected = useMemo(
@@ -27,38 +27,7 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
   const needsShade = Boolean(product.variants && !selected);
   const productHref = `/product/${product.slug}${selected ? `?variant=${selected.id}` : ""}`;
 
-  useEffect(() => {
-    if (!preview) return undefined;
-    const trigger = quickViewRef.current;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const dialog = previewRef.current;
-    const focusable = () =>
-      dialog?.querySelectorAll('a,button:not([disabled]),[tabindex]:not([tabindex="-1"])');
-    requestAnimationFrame(() => focusable()?.[0]?.focus());
-    const onKey = (event) => {
-      if (event.key === "Escape") setPreview(false);
-      if (event.key !== "Tab") return;
-      const nodes = focusable();
-      if (!nodes?.length) return;
-      const first = nodes[0];
-      const last = nodes[nodes.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      }
-      if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", onKey);
-      trigger?.focus();
-    };
-  }, [preview]);
+  useModalDialog(preview, previewRef, () => setPreview(false));
 
   useEffect(
     () => () => {
@@ -133,7 +102,7 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
           >
             <ProductArt product={display} />
           </Link>
-          <button ref={quickViewRef} className="quickView" onClick={() => setPreview(true)}>
+          <button className="quickView" onClick={() => setPreview(true)}>
             Quick view
           </button>
         </div>

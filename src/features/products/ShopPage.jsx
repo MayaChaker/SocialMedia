@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Close, Tune } from "@mui/icons-material";
 import { productRepository } from "../../repositories/productRepository";
+import { useModalDialog } from "../../hooks/useModalDialog";
 import ProductCard from "./ProductCard";
 import { filterAndSortProducts } from "./shopLogic";
 
@@ -27,7 +28,6 @@ export default function ShopPage({ openCart }) {
   const location = useLocation();
   const navigate = useNavigate();
   const drawerRef = useRef(null);
-  const filterButtonRef = useRef(null);
   const params = new URLSearchParams(location.search);
   const query = params.get("search") || "";
   const collection = params.get("collection") || "";
@@ -53,38 +53,7 @@ export default function ShopPage({ openCart }) {
   const filterCount = Number(Boolean(concern)) + Number(underFifty) + Number(inStock);
   const activeCategory = collection === "new" ? "new" : category || "all";
 
-  useEffect(() => {
-    if (!filtersOpen) return undefined;
-    const previousOverflow = document.body.style.overflow;
-    const trigger = filterButtonRef.current;
-    document.body.style.overflow = "hidden";
-    const drawer = drawerRef.current;
-    const focusable = () =>
-      drawer?.querySelectorAll('button,input,select,[href],[tabindex]:not([tabindex="-1"])');
-    requestAnimationFrame(() => focusable()?.[0]?.focus());
-    const onKey = (event) => {
-      if (event.key === "Escape") setFiltersOpen(false);
-      if (event.key !== "Tab") return;
-      const nodes = focusable();
-      if (!nodes?.length) return;
-      const first = nodes[0];
-      const last = nodes[nodes.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      }
-      if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", onKey);
-      trigger?.focus();
-    };
-  }, [filtersOpen]);
+  useModalDialog(filtersOpen, drawerRef, () => setFiltersOpen(false));
 
   const clearFilters = () => {
     setConcern("");
@@ -121,7 +90,6 @@ export default function ShopPage({ openCart }) {
             </select>
           </label>
           <button
-            ref={filterButtonRef}
             onClick={() => setFiltersOpen(true)}
             aria-expanded={filtersOpen}
             aria-controls="shopFilters"
