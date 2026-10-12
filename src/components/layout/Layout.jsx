@@ -9,9 +9,11 @@ import { syncRouteMetadata } from "./routeMetadata";
 export default function Layout({ openCart }) {
   const location = useLocation();
 
+  // Only a new page resets scroll; filter and variant changes update the query string
+  // and should leave the shopper where they are.
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
-  }, [location.pathname, location.search]);
+  }, [location.pathname]);
 
   useEffect(() => {
     syncRouteMetadata(location.pathname);
@@ -26,7 +28,7 @@ export default function Layout({ openCart }) {
       <div id="mainContent">
         <AnimatePresence mode="wait">
           <motion.div
-            key={location.pathname + location.search}
+            key={location.pathname}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

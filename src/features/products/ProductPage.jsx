@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useMemo } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Check, Star } from "@mui/icons-material";
 import { money } from "../../lib/money";
+import { resolveProductSelection } from "../../domain/product/productSelection";
 import { productRepository } from "../../repositories/productRepository";
 import { useCommerce } from "../../hooks/useCommerce";
 import { useCustomer } from "../../hooks/useCustomer";
 import ProductArt from "../../components/product-art/ProductArt";
+import NotFoundPage from "../../pages/NotFoundPage";
 import ProductCard from "./ProductCard";
 import WishlistButton from "../wishlist/WishlistButton";
 
@@ -14,35 +16,20 @@ const catalogue = productRepository.getAll();
 export default function ProductPage({ openCart }) {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
+  const [params, setParams] = useSearchParams();
   const product = productRepository.getBySlug(slug);
-  const requestedVariant = new URLSearchParams(location.search).get("variant");
-  const initialVariant = product?.variants?.some((variant) => variant.id === requestedVariant)
-    ? requestedVariant
-    : product?.variants?.[0]?.id || "";
-  const [selectedId, setSelectedId] = useState(initialVariant);
+  // The selected shade is part of the URL (?variant=deep) so it can be linked to directly.
+  const selected =
+    product?.variants?.find((variant) => variant.id === params.get("variant")) ||
+    product?.variants?.[0];
+  const selectShade = (variantId) => setParams({ variant: variantId }, { replace: true });
   const { addToCart } = useCommerce();
   const { addRecentlyViewed, recentlyViewed, profile } = useCustomer();
+  const productId = product?.id;
   useEffect(() => {
-    if (product) addRecentlyViewed(product.id);
-  }, [product?.id]); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    const nextVariant = product?.variants?.some((variant) => variant.id === requestedVariant)
-      ? requestedVariant
-      : product?.variants?.[0]?.id || "";
-    setSelectedId(nextVariant);
-  }, [product?.id, requestedVariant]); // eslint-disable-line react-hooks/exhaustive-deps
-  const selected =
-    product?.variants?.find((variant) => variant.id === selectedId) || product?.variants?.[0];
-  const display = selected
-    ? {
-        ...product,
-        ...selected,
-        name: product.name,
-        selectedVariant: selected.name,
-        variantId: selected.id,
-      }
-    : product;
+    if (productId) addRecentlyViewed(productId);
+  }, [productId, addRecentlyViewed]);
+  const display = product && resolveProductSelection(product, selected?.id);
   const related = useMemo(
     () =>
       product
@@ -57,15 +44,7 @@ export default function ProductPage({ openCart }) {
         : [],
     [product],
   );
-  if (!product)
-    return (
-      <main className="emptyState">
-        <h1>Product not found</h1>
-        <Link className="button dark" to="/shop">
-          Return to shop
-        </Link>
-      </main>
-    );
+  if (!product) return <NotFoundPage />;
   const recent = productRepository
     .getManyByIds(recentlyViewed.filter((id) => id !== product.id))
     .slice(0, 3);
@@ -73,11 +52,7 @@ export default function ProductPage({ openCart }) {
     [...profile.skinGoals, ...profile.preferences].includes(match),
   );
   const add = () => {
-    addToCart({
-      ...display,
-      productId: product.id,
-      cartId: selected ? `${product.id}:${selected.id}` : String(product.id),
-    });
+    addToCart(display);
     openCart();
   };
   return (
@@ -110,7 +85,7 @@ export default function ProductPage({ openCart }) {
           <h1>{product.name}</h1>
           <p className="detailNote">{product.note}</p>
           <div className="rating">
-            <Star /> {product.rating} <span>{product.reviews} verified reviews</span>
+            <Star /> {product.rating} <span>{product.reviews} reviews</span>
           </div>
           <div className="detailPrice">
             {money(display.price)} <small>{product.size}</small>
@@ -130,11 +105,11 @@ export default function ProductPage({ openCart }) {
                   <button
                     type="button"
                     key={variant.id}
-                    className={selectedId === variant.id ? "selected" : ""}
+                    className={selected?.id === variant.id ? "selected" : ""}
                     style={{ "--swatch": variant.swatch }}
-                    onClick={() => setSelectedId(variant.id)}
+                    onClick={() => selectShade(variant.id)}
                     aria-label={`Select ${variant.name} shade`}
-                    aria-pressed={selectedId === variant.id}
+                    aria-pressed={selected?.id === variant.id}
                   >
                     <span />
                   </button>

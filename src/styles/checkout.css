@@ -42,6 +42,9 @@
   background: #fff;
 }
 .checkoutSteps {
+  list-style: none;
+  padding: 0;
+  margin-top: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   margin-bottom: 55px;
@@ -55,12 +58,12 @@
   right: 10%;
   border-top: 1px solid var(--line);
 }
-.checkoutSteps span,
+.checkoutSteps li,
 .formGrid label span {
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
-.checkoutSteps span {
+.checkoutSteps li {
   align-items: center;
   color: #aaa;
   font-size: 8px;
@@ -75,10 +78,10 @@
   place-items: center;
   font-style: normal;
 }
-.checkoutSteps span.active {
+.checkoutSteps li.active {
   color: var(--plum);
 }
-.checkoutSteps span.active i {
+.checkoutSteps li.active i {
   background: var(--plum);
   color: #fff;
 }
@@ -97,7 +100,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 15px;
 }
-.checkoutSteps span,
+.checkoutSteps li,
 .formGrid label {
   display: flex;
   flex-direction: column;
@@ -183,12 +186,6 @@
 }
 .summaryItem small {
   color: var(--muted);
-}
-.giftSummary {
-  font-size: 9px;
-  color: var(--rose);
-  padding: 12px;
-  background: #eadfd9;
 }
 .summaryTotals {
   margin-top: 25px;

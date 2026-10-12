@@ -24,7 +24,7 @@ export const PRODUCTS = [
     finish: "Plump and fresh",
     ritual: "Press two or three drops into clean skin morning and evening.",
     order: "Step 2 · Prepare",
-    matches: ["Dehydration", "Sensitivity", "Dullness"],
+    matches: ["Dehydration", "Sensitive skin", "Dullness"],
     color: "ivory",
   },
   {
@@ -50,7 +50,7 @@ export const PRODUCTS = [
     finish: "Clean, supple, calm",
     ritual: "Massage onto dry skin and rinse with warm water.",
     order: "Step 1 · Cleanse",
-    matches: ["Dryness", "Sensitivity", "Daily makeup"],
+    matches: ["Dryness", "Sensitive skin", "Daily makeup"],
     color: "blush",
   },
   {
@@ -150,7 +150,7 @@ export const PRODUCTS = [
     finish: "Soft and replenished",
     ritual: "Massage over dry skin, add water, and rinse.",
     order: "Step 1 · Melt",
-    matches: ["Dryness", "Sensitivity", "Travel"],
+    matches: ["Dryness", "Sensitive skin", "Travel"],
     color: "blush",
   },
   {
@@ -487,7 +487,7 @@ export const PRODUCTS = [
     finish: "Clean and supple",
     ritual: "Melt with balm, then refresh with cream cleanser.",
     order: "Evening step 1",
-    matches: ["Sensitivity", "Dryness", "Gifting"],
+    matches: ["Sensitive skin", "Dryness", "Gifting"],
     color: "plum",
   },
 ];

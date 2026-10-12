@@ -38,7 +38,10 @@ export default function Footer() {
           </div>
         </div>
         <div className="footerBottom">
-          <span>© {new Date().getFullYear()} Veloura Beauty</span>
+          <span>
+            Veloura is a fictional brand: a portfolio project by Maya Chaker. No real orders or
+            payments are processed.
+          </span>
           <div className="footerLegal">
             <Link to="/care/privacy">Privacy</Link>
             <Link to="/care/terms">Terms</Link>

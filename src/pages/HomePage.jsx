@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowForward, Check, LockOutlined } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import { money } from "../lib/money";
-import { BESTSELLER_IDS, HOME_CATEGORIES } from "../data/merchandising";
+import { BESTSELLER_IDS, EVENING_ROUTINE, HOME_CATEGORIES } from "../data/merchandising";
 import { SCENES } from "../data/scenes";
 import { productRepository } from "../repositories/productRepository";
 import ProductCard from "../features/products/ProductCard";
@@ -19,7 +19,10 @@ const trustPoints = [
 export default function HomePage({ openCart }) {
   const { addToCart } = useCommerce();
   const bestsellers = productRepository.getManyByIds(BESTSELLER_IDS);
-  const routine = productRepository.getManyByIds([2, 1, 5]);
+  const routine = EVENING_ROUTINE.map(({ slug, step }) => ({
+    ...productRepository.getBySlug(slug),
+    step,
+  }));
   const routineTotal = routine.reduce((sum, product) => sum + product.price, 0);
   const addRoutine = () => {
     routine.forEach((product) => addToCart(product));
@@ -134,7 +137,7 @@ export default function HomePage({ openCart }) {
                 <li key={product.id}>
                   <span>0{index + 1}</span>
                   <div>
-                    <small>{["Cleanse", "Treat", "Moisturize"][index]}</small>
+                    <small>{product.step}</small>
                     <Link to={`/product/${product.slug}`}>{product.name}</Link>
                   </div>
                   <b>{money(product.price)}</b>

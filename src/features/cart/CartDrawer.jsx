@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -8,8 +8,6 @@ import {
   Remove,
   ShoppingBagOutlined,
 } from "@mui/icons-material";
-import { FREE_SHIPPING_THRESHOLD } from "../../domain/commerce/commerceConfig";
-import { resolveProductSelection } from "../../domain/product/productSelection";
 import { money } from "../../lib/money";
 import { productRepository } from "../../repositories/productRepository";
 import { useCommerce } from "../../hooks/useCommerce";
@@ -20,42 +18,35 @@ import { MOTION } from "../../theme/tokens";
 const catalogue = productRepository.getAll();
 
 export default function CartDrawer({ open, close }) {
-  const { cart, updateQuantity, removeFromCart, addToCart } = useCommerce();
+  const {
+    cart,
+    totals,
+    promoCode,
+    updateQuantity,
+    removeFromCart,
+    addToCart,
+    applyPromoCode,
+    removePromoCode,
+  } = useCommerce();
   const navigate = useNavigate();
   const drawerRef = useRef(null);
   const closeRef = useRef(null);
-  const [promo, setPromo] = useState("");
-  const [applied, setApplied] = useState(false);
-  const [promoMessage, setPromoMessage] = useState("");
+  const [promoInput, setPromoInput] = useState("");
+  const [promoError, setPromoError] = useState("");
   const [promoOpen, setPromoOpen] = useState(false);
-  const resolvedCart = useMemo(
-    () =>
-      cart.map((item) => ({
-        ...(resolveProductSelection(item, item.variantId) || item),
-        quantity: item.quantity,
-      })),
-    [cart],
-  );
-  const subtotal = useMemo(
-    () => resolvedCart.reduce((sum, item) => sum + item.price * item.quantity, 0),
-    [resolvedCart],
-  );
-  const discount = applied ? subtotal * 0.1 : 0;
-  const shippingRemaining = Math.max(0, FREE_SHIPPING_THRESHOLD - (subtotal - discount));
   const recommendation = catalogue.find(
-    (product) =>
-      !product.variants && !resolvedCart.some((item) => (item.productId || item.id) === product.id),
+    (product) => !product.variants && !cart.some((item) => item.productId === product.id),
   );
   useModalDialog(open, drawerRef, close, closeRef);
   const applyPromo = (event) => {
     event.preventDefault();
-    const valid = promo.trim().toUpperCase() === "VELOURA10";
-    setApplied(valid);
-    setPromoMessage(valid ? "VELOURA10 applied." : "That code is not valid.");
+    const valid = applyPromoCode(promoInput);
+    setPromoError(valid ? "" : "That code is not valid.");
+    if (valid) setPromoInput("");
   };
   const checkout = () => {
     close();
-    navigate("/checkout", { state: { promo: applied ? promo : "", discount } });
+    navigate("/checkout");
   };
   return (
     <AnimatePresence>
@@ -89,10 +80,10 @@ export default function CartDrawer({ open, close }) {
                 <Close />
               </button>
             </header>
-            {resolvedCart.length ? (
+            {cart.length ? (
               <>
                 <div className="cartItems">
-                  {resolvedCart.map((item) => (
+                  {cart.map((item) => (
                     <article className="cartItem" key={item.cartId}>
                       <div className={`cartThumb ${item.color}`}>
                         <ProductArt product={item} />
@@ -146,41 +137,52 @@ export default function CartDrawer({ open, close }) {
                   )}
                 </div>
                 <footer className="cartFooter">
-                  <button
-                    className="promoToggle"
-                    onClick={() => setPromoOpen((value) => !value)}
-                    aria-expanded={promoOpen}
-                  >
-                    Have a promo code?
-                  </button>
-                  {promoOpen && (
-                    <form className="promo" onSubmit={applyPromo}>
-                      <input
-                        value={promo}
-                        onChange={(event) => setPromo(event.target.value)}
-                        placeholder="Promo code"
-                        aria-label="Promo code"
-                      />
-                      <button>Apply</button>
-                    </form>
-                  )}
-                  {promoMessage && (
-                    <small className={applied ? "promoSuccess" : "promoError"} role="status">
-                      {promoMessage}
+                  {promoCode ? (
+                    <small className="promoSuccess" role="status">
+                      {promoCode} applied · {totals.promotion?.label}{" "}
+                      <button className="cartRemove" onClick={removePromoCode}>
+                        Remove
+                      </button>
                     </small>
+                  ) : (
+                    <>
+                      <button
+                        className="promoToggle"
+                        onClick={() => setPromoOpen((value) => !value)}
+                        aria-expanded={promoOpen}
+                      >
+                        Have a promo code?
+                      </button>
+                      {promoOpen && (
+                        <form className="promo" onSubmit={applyPromo}>
+                          <input
+                            value={promoInput}
+                            onChange={(event) => setPromoInput(event.target.value)}
+                            placeholder="Promo code"
+                            aria-label="Promo code"
+                          />
+                          <button>Apply</button>
+                        </form>
+                      )}
+                      {promoError && (
+                        <small className="promoError" role="status">
+                          {promoError}
+                        </small>
+                      )}
+                    </>
                   )}
                   <div>
                     <span>Subtotal</span>
-                    <strong>{money(subtotal - discount)}</strong>
+                    <strong>{money(totals.subtotal - totals.discount)}</strong>
                   </div>
                   <p className="shippingProgress">
                     <LocalShippingOutlined />
-                    {shippingRemaining > 0
-                      ? `${money(shippingRemaining)} away from complimentary delivery`
+                    {totals.freeShippingRemaining > 0
+                      ? `${money(totals.freeShippingRemaining)} away from complimentary delivery`
                       : "Your order qualifies for complimentary delivery"}
                   </p>
                   <button className="button dark full ripple" onClick={checkout}>
-                    Checkout · {money(subtotal - discount)}
+                    Checkout · {money(totals.subtotal - totals.discount)}
                   </button>
                   <button className="textLink" onClick={close}>
                     Continue shopping

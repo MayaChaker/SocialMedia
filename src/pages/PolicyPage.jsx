@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router-dom";
+import NotFoundPage from "./NotFoundPage";
 
 const policies = {
   shipping: {
@@ -131,7 +132,8 @@ const policies = {
 
 export default function PolicyPage() {
   const { policy } = useParams();
-  const content = policies[policy] || policies.shipping;
+  const content = policies[policy];
+  if (!content) return <NotFoundPage />;
   const contact = process.env.REACT_APP_CONTACT_EMAIL || "care@velourabeauty.com";
   return (
     <main className="policyPage">

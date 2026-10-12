@@ -14,9 +14,8 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
   const { addToCart } = useCommerce();
   const [preview, setPreview] = useState(false);
   const [selectedId, setSelectedId] = useState("");
-  const [actionState, setActionState] = useState("idle");
+  const [justAdded, setJustAdded] = useState(false);
   const previewRef = useRef(null);
-  const addingTimerRef = useRef(null);
   const resetTimerRef = useRef(null);
   const selected = useMemo(
     () => product.variants?.find((variant) => variant.id === selectedId),
@@ -29,27 +28,16 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
 
   useModalDialog(preview, previewRef, () => setPreview(false));
 
-  useEffect(
-    () => () => {
-      window.clearTimeout(addingTimerRef.current);
-      window.clearTimeout(resetTimerRef.current);
-    },
-    [],
-  );
+  useEffect(() => () => window.clearTimeout(resetTimerRef.current), []);
 
   const add = () => {
-    if (outOfStock || needsShade || actionState === "adding") return;
-    setActionState("adding");
-    addToCart({
-      ...display,
-      productId: product.id,
-      cartId: selected ? `${product.id}:${selected.id}` : String(product.id),
-    });
-    addingTimerRef.current = window.setTimeout(() => {
-      setActionState("added");
-      onAdded?.();
-      resetTimerRef.current = window.setTimeout(() => setActionState("idle"), 1600);
-    }, 180);
+    if (outOfStock || needsShade) return;
+    addToCart(display);
+    onAdded?.();
+    // Briefly confirm on the button itself, then return to the normal label.
+    setJustAdded(true);
+    window.clearTimeout(resetTimerRef.current);
+    resetTimerRef.current = window.setTimeout(() => setJustAdded(false), 1600);
   };
 
   const swatches = (
@@ -77,11 +65,9 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
     ? "Out of stock"
     : needsShade
       ? "Choose shade"
-      : actionState === "adding"
-        ? "Adding…"
-        : actionState === "added"
-          ? "Added"
-          : "Add to bag";
+      : justAdded
+        ? "Added"
+        : "Add to bag";
 
   return (
     <>
@@ -170,17 +156,15 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
           </>
         )}
         <button
-          className={`addButton ripple ${actionState === "added" ? "added" : ""}`}
-          disabled={outOfStock || needsShade || actionState === "adding"}
+          className={`addButton ripple ${justAdded ? "added" : ""}`}
+          disabled={outOfStock || needsShade}
           onClick={add}
         >
-          {actionState === "added" && <Check />}
+          {justAdded && <Check />}
           {actionLabel}
         </button>
         <span className="srOnly" aria-live="polite">
-          {actionState === "added"
-            ? `${product.name}${selected ? ` in ${selected.name}` : ""} added to bag`
-            : ""}
+          {justAdded ? `${product.name}${selected ? ` in ${selected.name}` : ""} added to bag` : ""}
         </span>
       </motion.article>
       <AnimatePresence>
@@ -232,18 +216,12 @@ export default function ProductCard({ product, onAdded, shopLayout = false }) {
                 {product.variants && swatches}
                 <button
                   className="button dark full"
-                  disabled={outOfStock || needsShade || actionState === "adding"}
+                  disabled={outOfStock || needsShade}
                   onClick={add}
                 >
-                  {actionState === "adding"
-                    ? "Adding…"
-                    : actionState === "added"
-                      ? "Added"
-                      : outOfStock
-                        ? "Out of stock"
-                        : needsShade
-                          ? "Choose shade"
-                          : `Add to bag · ${money(display.price)}`}
+                  {actionLabel === "Add to bag"
+                    ? `Add to bag · ${money(display.price)}`
+                    : actionLabel}
                 </button>
                 <Link className="textLink" to={productHref}>
                   See full details

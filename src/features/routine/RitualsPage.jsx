@@ -74,12 +74,10 @@ export default function RitualsPage({ openCart }) {
   const { saveRoutine: persistRoutine } = useCustomer();
   const reduceMotion = useReducedMotion();
   const headingRef = useRef(null);
-  const generationTimer = useRef(null);
   const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
-  const [generating, setGenerating] = useState(false);
   const [generationError, setGenerationError] = useState("");
   const [saved, setSaved] = useState(false);
   const [saveStatus, setSaveStatus] = useState("");
@@ -88,10 +86,10 @@ export default function RitualsPage({ openCart }) {
   const [replacements, setReplacements] = useState({});
   const [confirmReset, setConfirmReset] = useState(false);
 
-  useEffect(() => () => clearTimeout(generationTimer.current), []);
+  // Move focus to each new heading so screen-reader users hear the step change.
   useEffect(() => {
     if (started) requestAnimationFrame(() => headingRef.current?.focus());
-  }, [started, step, result, generating]);
+  }, [started, step, result]);
 
   const recommendations = useMemo(
     () =>
@@ -125,23 +123,13 @@ export default function RitualsPage({ openCart }) {
   };
 
   const finishQuiz = () => {
+    const next = buildRoutineRecommendations(answers);
+    if (!next.length || next.some(({ product }) => !product)) {
+      setGenerationError("No complete routine is available for these answers.");
+      return;
+    }
     setGenerationError("");
-    setGenerating(true);
-    generationTimer.current = setTimeout(
-      () => {
-        try {
-          const next = buildRoutineRecommendations(answers);
-          if (!next.length || next.some(({ product }) => !product))
-            throw new Error("No complete routine is available.");
-          setResult({ ...answers });
-        } catch (error) {
-          setGenerationError(error.message || "We could not build your routine.");
-        } finally {
-          setGenerating(false);
-        }
-      },
-      reduceMotion ? 0 : 260,
-    );
+    setResult({ ...answers });
   };
 
   const continueQuestion = () => {
@@ -176,43 +164,29 @@ export default function RitualsPage({ openCart }) {
   };
 
   const addProduct = (product) => {
-    if (!isAvailable(product) || addStatus[product.id] === "adding") return;
-    setAddStatus((current) => ({ ...current, [product.id]: "adding" }));
-    try {
-      addToCart(product);
-      setAddStatus((current) => ({ ...current, [product.id]: "added" }));
-      openCart?.();
-    } catch {
-      setAddStatus((current) => ({ ...current, [product.id]: "error" }));
-    }
+    if (!isAvailable(product)) return;
+    addToCart(product);
+    setAddStatus((current) => ({ ...current, [product.id]: "added" }));
+    openCart?.();
   };
 
   const addRoutine = () => {
-    if (!availableRecommendations.length || fullStatus === "adding") return;
-    setFullStatus("adding");
-    try {
-      availableRecommendations.forEach(({ product }) => addToCart(product));
-      setAddStatus(
-        Object.fromEntries(availableRecommendations.map(({ product }) => [product.id, "added"])),
-      );
-      setFullStatus("added");
-      openCart?.();
-    } catch {
-      setFullStatus("error");
-    }
+    if (!availableRecommendations.length) return;
+    availableRecommendations.forEach(({ product }) => addToCart(product));
+    setAddStatus(
+      Object.fromEntries(availableRecommendations.map(({ product }) => [product.id, "added"])),
+    );
+    setFullStatus("added");
+    openCart?.();
   };
 
   const saveRoutine = () => {
-    try {
-      persistRoutine({
-        productIds: recommendations.map(({ product }) => product.id),
-        answers: result,
-      });
-      setSaved(true);
-      setSaveStatus("Routine saved in this browser.");
-    } catch {
-      setSaveStatus("We could not save your routine. Please try again.");
-    }
+    persistRoutine({
+      productIds: recommendations.map(({ product }) => product.id),
+      answers: result,
+    });
+    setSaved(true);
+    setSaveStatus("Routine saved in this browser.");
   };
 
   const editAnswers = () => {
@@ -252,17 +226,6 @@ export default function RitualsPage({ openCart }) {
             </article>
           ))}
         </section>
-      </main>
-    );
-
-  if (generating)
-    return (
-      <main className="builderPage routineLoading" aria-live="polite" aria-busy="true">
-        <div className="routineLoadingMark" />
-        <h1 ref={headingRef} tabIndex="-1">
-          Building your routine…
-        </h1>
-        <p>Matching your preferences with the Veloura collection.</p>
       </main>
     );
 
@@ -316,14 +279,10 @@ export default function RitualsPage({ openCart }) {
             <div className="routinePrimaryActions">
               <button
                 className="button dark"
-                disabled={!availableRecommendations.length || fullStatus === "adding"}
+                disabled={!availableRecommendations.length}
                 onClick={addRoutine}
               >
-                {fullStatus === "adding"
-                  ? "Adding…"
-                  : fullStatus === "added"
-                    ? "Added"
-                    : `Add Full Routine — ${money(routineTotal)}`}
+                {fullStatus === "added" ? "Added" : `Add Full Routine — ${money(routineTotal)}`}
               </button>
               <button
                 className={`saveRitualButton ${saved ? "saved" : ""}`}
@@ -337,17 +296,8 @@ export default function RitualsPage({ openCart }) {
                 Edit Answers
               </button>
             </div>
-            <p
-              className={`saveRitualStatus ${fullStatus === "error" ? "error" : ""}`}
-              role="status"
-              aria-live="polite"
-            >
-              {fullStatus === "error"
-                ? "We could not add the routine. Please try again."
-                : saveStatus ||
-                  (saved
-                    ? "Routine saved in this browser."
-                    : "Save this routine to revisit it in Beauty Profile on this browser.")}
+            <p className="saveRitualStatus" role="status" aria-live="polite">
+              {saveStatus || "Save this routine to revisit it in Beauty Profile on this browser."}
             </p>
             {availableRecommendations.length < recommendations.length && (
               <p className="routineAvailabilityNote">
@@ -425,19 +375,15 @@ export default function RitualsPage({ openCart }) {
                     )}
                     <button
                       className="routineAddButton"
-                      disabled={!available || status === "adding"}
+                      disabled={!available}
                       onClick={() => addProduct(product)}
                     >
                       {!available ? (
                         "Out of stock"
-                      ) : status === "adding" ? (
-                        "Adding…"
                       ) : status === "added" ? (
                         <>
                           <Check aria-hidden="true" /> Added
                         </>
-                      ) : status === "error" ? (
-                        "Try Add Item Again"
                       ) : (
                         "Add Item"
                       )}

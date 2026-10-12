@@ -8,11 +8,6 @@
     opacity: 0;
   }
 }
-@keyframes routineSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
 :root {
   --ink: #241d1a;
   --muted: #756b66;

@@ -7,29 +7,27 @@ const CustomerContext = createContext(null);
 const defaultProfile = {
   skinGoals: ["Dehydration", "Dullness"],
   skinType: "Balanced",
-  preferences: ["Natural coverage", "Sensitive skin"],
+  preferences: ["Natural coverage"],
 };
 
 export function CustomerProvider({ children }) {
   const [profile, setProfile] = usePersistentState(STORAGE_KEYS.profile, defaultProfile);
   const [routineResults, setRoutineResults] = usePersistentState(STORAGE_KEYS.routine, []);
   const [recentlyViewed, setRecentlyViewed] = usePersistentState(STORAGE_KEYS.recent, []);
-  const value = useMemo(
+
+  // Stable actions: safe to use as effect dependencies (see ProductPage).
+  const actions = useMemo(
     () => ({
-      profile,
-      routineResults,
-      recentlyViewed,
-      saveProfile(nextProfile) {
-        setProfile(nextProfile);
-      },
-      saveRoutine(result) {
-        setRoutineResults(result);
-      },
-      addRecentlyViewed(id) {
-        setRecentlyViewed((items) => addRecentlyViewedItem(items, id));
-      },
+      saveProfile: (nextProfile) => setProfile(nextProfile),
+      saveRoutine: (result) => setRoutineResults(result),
+      addRecentlyViewed: (id) => setRecentlyViewed((items) => addRecentlyViewedItem(items, id)),
     }),
-    [profile, recentlyViewed, routineResults, setProfile, setRecentlyViewed, setRoutineResults],
+    [setProfile, setRecentlyViewed, setRoutineResults],
+  );
+
+  const value = useMemo(
+    () => ({ profile, routineResults, recentlyViewed, ...actions }),
+    [actions, profile, recentlyViewed, routineResults],
   );
   return <CustomerContext.Provider value={value}>{children}</CustomerContext.Provider>;
 }

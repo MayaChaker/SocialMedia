@@ -814,31 +814,6 @@
 .routineError button {
   color: inherit;
 }
-.routineLoading {
-  min-height: 56vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 70px 20px;
-}
-.routineLoadingMark {
-  width: 34px;
-  height: 34px;
-  border: 3px solid #dcc7c3;
-  border-top-color: var(--burgundy);
-  border-radius: 50%;
-  animation: routineSpin 0.7s linear infinite;
-}
-.routineLoading h1 {
-  font-size: clamp(42px, 5vw, 68px);
-  margin: 22px 0 10px;
-}
-.routineLoading p {
-  font-size: 16px;
-  color: #6d565a;
-}
 .routineResultPage {
   padding: clamp(68px, 7vw, 96px) var(--page-gutter) clamp(86px, 9vw, 120px);
 }
@@ -931,8 +906,7 @@
   font-size: 13px;
   line-height: 1.55;
 }
-.routineAvailabilityNote,
-.saveRitualStatus.error {
+.routineAvailabilityNote {
   color: #8e2437;
 }
 .routineSecondaryActions {
@@ -1154,9 +1128,6 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .routineLoadingMark {
-    animation: none;
-  }
   .choiceGrid button {
     transition: none;
   }

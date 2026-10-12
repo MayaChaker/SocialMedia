@@ -1,13 +1,20 @@
 import { productRepository } from "../../repositories/productRepository";
 
 const catalogue = productRepository.getAll();
-const byId = (id) => productRepository.getById(id);
+const bySlug = (slug) => productRepository.getBySlug(slug);
+
+const ESSENCE = "petal-water-essence";
+const CLEANSER = "cloud-melt-cleanser";
+const BALM = "rose-melt-cleansing-balm";
+const SERUM = "luminous-veil-serum";
+const NIGHT_CREAM = "restorative-night-cream";
+const SPF = "daily-silk-spf-50";
 
 const treatmentByGoal = {
-  Dehydration: 1,
-  Dullness: 3,
-  "Fine lines": 3,
-  "Sensitive skin": 1,
+  Dehydration: ESSENCE,
+  Dullness: SERUM,
+  "Fine lines": SERUM,
+  "Sensitive skin": ESSENCE,
 };
 
 const treatmentReasons = {
@@ -17,58 +24,58 @@ const treatmentReasons = {
   "Sensitive skin": "Comforts tight-feeling skin with a gentle milky layer.",
 };
 
-const finishByPreference = {
-  Weightless: 5,
-  Cushioning: 5,
-  Rich: 4,
+const finishByTexture = {
+  Weightless: SPF,
+  Cushioning: SPF,
+  Rich: NIGHT_CREAM,
 };
 
-const cleanserFor = (goal, texture) => (texture === "Rich" || goal === "Sensitive skin" ? 6 : 2);
+const cleanserFor = (goal, texture) =>
+  texture === "Rich" || goal === "Sensitive skin" ? BALM : CLEANSER;
 
-const recommendation = (id, step, reason) => ({ product: byId(id), step, reason });
+const recommendation = (slug, step, reason) => ({ product: bySlug(slug), step, reason });
 
+/**
+ * Builds a routine from the quiz answers:
+ * cleanse → treat → finish, trimmed to two steps for "Essential"
+ * and extended with a second hydrating layer for "Immersive".
+ */
 export function buildRoutineRecommendations({ goal, time, texture }) {
-  const cleanserId = cleanserFor(goal, texture);
-  const treatmentId = treatmentByGoal[goal] || 3;
-  const finishId = finishByPreference[texture] || 5;
+  const cleanser = cleanserFor(goal, texture);
+  const treatment = treatmentByGoal[goal] || SERUM;
+  const finish = finishByTexture[texture] || SPF;
   const cleanserReason =
-    cleanserId === 6
+    cleanser === BALM
       ? "Melts buildup while leaving skin soft and comfortable."
       : "Cleanses gently without disturbing the skin barrier.";
   const finishReason =
-    finishId === 4
+    finish === NIGHT_CREAM
       ? "Replenishes overnight with a rich, breathable finish."
       : "Adds daily protection with a smooth, lightweight finish.";
 
   if (time === "Essential") {
+    const replenish = texture === "Rich" || goal === "Fine lines";
     return [
-      recommendation(cleanserId, "Cleanse", cleanserReason),
-      recommendation(
-        texture === "Rich" || goal === "Fine lines" ? 4 : treatmentId,
-        texture === "Rich" || goal === "Fine lines" ? "Replenish" : "Treat",
-        texture === "Rich" || goal === "Fine lines"
-          ? "Comforts skin with one restorative finishing step."
-          : treatmentReasons[goal],
-      ),
+      recommendation(cleanser, "Cleanse", cleanserReason),
+      replenish
+        ? recommendation(NIGHT_CREAM, "Replenish", "Comforts skin with one restorative step.")
+        : recommendation(treatment, "Treat", treatmentReasons[goal]),
     ];
   }
 
   const routine = [
-    recommendation(cleanserId, "Cleanse", cleanserReason),
-    recommendation(treatmentId, "Treat", treatmentReasons[goal]),
-    recommendation(finishId, finishId === 4 ? "Replenish" : "Protect", finishReason),
+    recommendation(cleanser, "Cleanse", cleanserReason),
+    recommendation(treatment, "Treat", treatmentReasons[goal]),
+    recommendation(finish, finish === NIGHT_CREAM ? "Replenish" : "Protect", finishReason),
   ];
 
   if (time === "Immersive") {
-    const extraId = treatmentId === 1 ? 3 : 1;
-    const extra = recommendation(
-      extraId,
-      extraId === 1 ? "Prepare" : "Treat",
-      extraId === 1
-        ? "Adds a cushioning hydration layer before treatment."
-        : "Seals in hydration with a weightless barrier-supporting serum.",
-    );
-    routine.splice(extraId === 1 ? 1 : 2, 0, extra);
+    // Essence always goes before serum, so the extra layer is inserted in the right place.
+    const extra =
+      treatment === ESSENCE
+        ? recommendation(SERUM, "Treat", "Seals in hydration with a weightless serum.")
+        : recommendation(ESSENCE, "Prepare", "Adds a cushioning hydration layer before treatment.");
+    routine.splice(treatment === ESSENCE ? 2 : 1, 0, extra);
   }
 
   return routine;
@@ -80,14 +87,13 @@ export function routineTitle({ goal, time }) {
 }
 
 export function routineAlternatives(product, recommendations) {
-  const selectedIds = new Set(recommendations.map((item) => item.product.id));
+  const selected = new Set(recommendations.map((item) => item.product.id));
   return catalogue
     .filter(
       (candidate) =>
         candidate.category === "Skincare" &&
-        candidate.id !== product.id &&
-        !selectedIds.has(candidate.id) &&
-        candidate.type === product.type,
+        candidate.type === product.type &&
+        !selected.has(candidate.id),
     )
     .slice(0, 2);
 }

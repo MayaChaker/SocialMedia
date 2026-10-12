@@ -1,138 +1,124 @@
-import { useMemo, useState } from "react";
-import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { Check, ChevronLeft, ChevronRight, LockOutlined } from "@mui/icons-material";
+import { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { ChevronLeft, ChevronRight, LockOutlined } from "@mui/icons-material";
 import { FREE_SHIPPING_THRESHOLD } from "../../domain/commerce/commerceConfig";
 import { money } from "../../lib/money";
 import { useCommerce } from "../../hooks/useCommerce";
 import { orderService } from "../../services/orderService";
 
+const STEPS = ["Contact", "Shipping", "Review"];
 const emptyContact = { email: "", firstName: "", lastName: "", phone: "" };
 const emptyShipping = { address: "", apartment: "", city: "", country: "Lebanon", postalCode: "" };
+const hostedCheckout = Boolean(process.env.REACT_APP_CHECKOUT_URL);
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
-  const history = { back: () => navigate(-1) };
-  const { cart, addOrder, clearCart } = useCommerce();
-  const location = useLocation();
+  const { cart, totals, promoCode, addOrder, clearCart } = useCommerce();
   const [step, setStep] = useState(1);
   const [contact, setContact] = useState(emptyContact);
   const [shipping, setShipping] = useState(emptyShipping);
-  const [order, setOrder] = useState(null);
   const [placing, setPlacing] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
-  const gift = Boolean(location.state?.gift);
-  const discount = Number(location.state?.discount || 0);
-  const subtotal = useMemo(
-    () => cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
-    [cart],
-  );
-  const discountedSubtotal = subtotal - discount;
-  const shippingCost = discountedSubtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 8;
-  const total = discountedSubtotal + shippingCost;
-  if (!cart.length && !order) return <Navigate to="/shop" replace />;
-  const set = (setter, key) => (event) =>
-    setter((value) => ({ ...value, [key]: event.target.value }));
-  const validContact = contact.email && contact.firstName && contact.lastName;
-  const validShipping = shipping.address && shipping.city && shipping.country;
-  const placeOrder = async () => {
+
+  if (!cart.length) return <Navigate to="/shop" replace />;
+
+  const bind = (setter, values, key) => ({
+    name: key,
+    value: values[key],
+    onChange: (event) => setter((current) => ({ ...current, [key]: event.target.value })),
+  });
+  // Each step is a real <form>, so the browser validates required fields and email format.
+  const goTo = (nextStep) => (event) => {
+    event.preventDefault();
+    setStep(nextStep);
+  };
+
+  const placeOrder = async (event) => {
+    event.preventDefault();
     setPlacing(true);
     setCheckoutError("");
     try {
-      const next = await orderService.create({ cart, contact, shipping, gift, total });
-      if (next.redirectUrl) {
-        window.location.assign(next.redirectUrl);
+      const order = await orderService.create({
+        cart,
+        contact,
+        shipping,
+        promoCode,
+        total: totals.total,
+      });
+      if (order.redirectUrl) {
+        window.location.assign(order.redirectUrl);
         return;
       }
-      addOrder(next);
-      setOrder(next);
+      addOrder(order);
+      navigate(`/checkout/confirmation/${order.id}`, { replace: true });
       clearCart();
     } catch (error) {
       setCheckoutError(error.message || "Checkout could not be started.");
-    } finally {
       setPlacing(false);
     }
   };
-  if (order)
-    return (
-      <main className="orderConfirmation">
-        <span className="orderCheck">
-          <Check />
-        </span>
-        <span className="kicker">Demo order recorded</span>
-        <h1>Thank you, {contact.firstName}.</h1>
-        <p>No payment was taken. This browser-only demo order is saved on this device.</p>
-        <div>
-          <span>Reference</span>
-          <strong>{order.id}</strong>
-          <span>Status</span>
-          <strong>Demo only</strong>
-          <span>Contact</span>
-          <strong>{contact.email}</strong>
-        </div>
-        <a className="button dark" href="/">
-          Return home
-        </a>
-      </main>
-    );
+
   return (
     <main className="checkoutPage">
       <header>
-        <button onClick={() => history.back()}>
+        <button onClick={() => navigate(-1)}>
           <ChevronLeft /> Back
         </button>
-        <a className="wordmark" href="/">
+        <Link className="wordmark" to="/">
           VELOURA<span>BEAUTY</span>
-        </a>
+        </Link>
         <span>
-          <LockOutlined />{" "}
-          {process.env.REACT_APP_CHECKOUT_URL ? "Secure checkout" : "Demo checkout"}
+          <LockOutlined /> {hostedCheckout ? "Secure checkout" : "Demo checkout"}
         </span>
       </header>
       <div className="checkoutLayout">
         <section className="checkoutForm">
-          <div className="checkoutSteps">
-            {["Contact", "Shipping", "Review"].map((label, index) => (
-              <span className={step >= index + 1 ? "active" : ""} key={label}>
+          <ol className="checkoutSteps" aria-label="Checkout progress">
+            {STEPS.map((label, index) => (
+              <li
+                className={step >= index + 1 ? "active" : ""}
+                aria-current={step === index + 1 ? "step" : undefined}
+                key={label}
+              >
                 <i>{index + 1}</i>
                 {label}
-              </span>
+              </li>
             ))}
-          </div>
+          </ol>
           {step === 1 && (
             <CheckoutSection
               title="Your details"
               copy="We’ll use these details only for your order updates."
+              onSubmit={goTo(2)}
             >
               <div className="formGrid">
                 <Field
                   label="Email"
                   type="email"
-                  value={contact.email}
-                  onChange={set(setContact, "email")}
+                  autoComplete="email"
                   wide
+                  {...bind(setContact, contact, "email")}
                 />
                 <Field
                   label="First name"
-                  value={contact.firstName}
-                  onChange={set(setContact, "firstName")}
+                  autoComplete="given-name"
+                  {...bind(setContact, contact, "firstName")}
                 />
                 <Field
                   label="Last name"
-                  value={contact.lastName}
-                  onChange={set(setContact, "lastName")}
+                  autoComplete="family-name"
+                  {...bind(setContact, contact, "lastName")}
                 />
                 <Field
-                  label="Phone (optional)"
-                  value={contact.phone}
-                  onChange={set(setContact, "phone")}
+                  label="Phone"
+                  type="tel"
+                  autoComplete="tel"
+                  optional
                   wide
+                  {...bind(setContact, contact, "phone")}
                 />
               </div>
-              <button
-                className="button dark checkoutNext"
-                disabled={!validContact}
-                onClick={() => setStep(2)}
-              >
+              <button className="button dark checkoutNext">
                 Continue to shipping <ChevronRight />
               </button>
             </CheckoutSection>
@@ -141,44 +127,49 @@ export default function CheckoutPage() {
             <CheckoutSection
               title="Where should we send it?"
               copy={
-                shippingCost === 0
+                totals.shipping === 0
                   ? "Your order qualifies for complimentary standard delivery."
-                  : `Standard delivery is ${money(shippingCost)}; spend ${money(FREE_SHIPPING_THRESHOLD - discountedSubtotal)} more for complimentary delivery.`
+                  : `Standard delivery is ${money(totals.shipping)}; spend ${money(totals.freeShippingRemaining)} more for complimentary delivery over ${money(FREE_SHIPPING_THRESHOLD)}.`
               }
+              onSubmit={goTo(3)}
             >
               <div className="formGrid">
                 <Field
                   label="Address"
-                  value={shipping.address}
-                  onChange={set(setShipping, "address")}
+                  autoComplete="address-line1"
                   wide
+                  {...bind(setShipping, shipping, "address")}
                 />
                 <Field
-                  label="Apartment (optional)"
-                  value={shipping.apartment}
-                  onChange={set(setShipping, "apartment")}
+                  label="Apartment"
+                  autoComplete="address-line2"
+                  optional
                   wide
+                  {...bind(setShipping, shipping, "apartment")}
                 />
-                <Field label="City" value={shipping.city} onChange={set(setShipping, "city")} />
+                <Field
+                  label="City"
+                  autoComplete="address-level2"
+                  {...bind(setShipping, shipping, "city")}
+                />
                 <Field
                   label="Postal code"
-                  value={shipping.postalCode}
-                  onChange={set(setShipping, "postalCode")}
+                  autoComplete="postal-code"
+                  optional
+                  {...bind(setShipping, shipping, "postalCode")}
                 />
                 <Field
                   label="Country"
-                  value={shipping.country}
-                  onChange={set(setShipping, "country")}
+                  autoComplete="country-name"
                   wide
+                  {...bind(setShipping, shipping, "country")}
                 />
               </div>
               <div className="stepActions">
-                <button onClick={() => setStep(1)}>Back</button>
-                <button
-                  className="button dark"
-                  disabled={!validShipping}
-                  onClick={() => setStep(3)}
-                >
+                <button type="button" onClick={() => setStep(1)}>
+                  Back
+                </button>
+                <button className="button dark">
                   Review order <ChevronRight />
                 </button>
               </div>
@@ -188,10 +179,11 @@ export default function CheckoutPage() {
             <CheckoutSection
               title="Review and place order"
               copy={
-                process.env.REACT_APP_CHECKOUT_URL
+                hostedCheckout
                   ? "You will continue to our secure payment partner."
                   : "Payment is a demo until a secure checkout endpoint is configured."
               }
+              onSubmit={placeOrder}
             >
               <div className="reviewDetails">
                 <div>
@@ -201,7 +193,9 @@ export default function CheckoutPage() {
                     <br />
                     {contact.email}
                   </p>
-                  <button onClick={() => setStep(1)}>Edit</button>
+                  <button type="button" onClick={() => setStep(1)}>
+                    Edit
+                  </button>
                 </div>
                 <div>
                   <span>Shipping</span>
@@ -211,12 +205,14 @@ export default function CheckoutPage() {
                     <br />
                     {shipping.city}, {shipping.country}
                   </p>
-                  <button onClick={() => setStep(2)}>Edit</button>
+                  <button type="button" onClick={() => setStep(2)}>
+                    Edit
+                  </button>
                 </div>
                 <div>
                   <span>Payment</span>
                   <p>
-                    {process.env.REACT_APP_CHECKOUT_URL
+                    {hostedCheckout
                       ? "Hosted secure payment"
                       : "Demo payment · No charge will be made"}
                   </p>
@@ -227,45 +223,44 @@ export default function CheckoutPage() {
                   {checkoutError}
                 </p>
               )}
-              <button className="button dark full" disabled={placing} onClick={placeOrder}>
+              <button className="button dark full" disabled={placing}>
                 {placing
-                  ? "Preparing secure checkout…"
-                  : `${process.env.REACT_APP_CHECKOUT_URL ? "Continue to payment" : "Place demo order"} · ${money(total)}`}
+                  ? "Placing order…"
+                  : `${hostedCheckout ? "Continue to payment" : "Place demo order"} · ${money(totals.total)}`}
               </button>
             </CheckoutSection>
           )}
         </section>
-        <OrderSummary
-          cart={cart}
-          subtotal={subtotal}
-          discount={discount}
-          shippingCost={shippingCost}
-          total={total}
-          gift={gift}
-        />
+        <OrderSummary cart={cart} totals={totals} promoCode={promoCode} />
       </div>
     </main>
   );
 }
-function CheckoutSection({ title, copy, children }) {
+
+function CheckoutSection({ title, copy, onSubmit, children }) {
   return (
-    <div className="checkoutSection">
+    <form className="checkoutSection" onSubmit={onSubmit}>
       <span className="kicker">Step details</span>
       <h1>{title}</h1>
       <p>{copy}</p>
       {children}
-    </div>
+    </form>
   );
 }
-function Field({ label, wide, ...props }) {
+
+function Field({ label, wide, optional = false, ...props }) {
   return (
     <label className={wide ? "wide" : ""}>
-      <span>{label}</span>
-      <input required {...props} />
+      <span>
+        {label}
+        {optional && " (optional)"}
+      </span>
+      <input required={!optional} {...props} />
     </label>
   );
 }
-function OrderSummary({ cart, subtotal, discount, shippingCost, total, gift }) {
+
+function OrderSummary({ cart, totals, promoCode }) {
   return (
     <aside className="checkoutSummary">
       <h2>Order summary</h2>
@@ -282,25 +277,24 @@ function OrderSummary({ cart, subtotal, discount, shippingCost, total, gift }) {
           <b>{money(item.price * item.quantity)}</b>
         </div>
       ))}
-      {gift && <p className="giftSummary">Signature gift packaging included</p>}
       <div className="summaryTotals">
         <p>
           <span>Subtotal</span>
-          <b>{money(subtotal)}</b>
+          <b>{money(totals.subtotal)}</b>
         </p>
-        {discount > 0 && (
+        {totals.discount > 0 && (
           <p>
-            <span>Promotion</span>
-            <b>−{money(discount)}</b>
+            <span>Promotion ({promoCode})</span>
+            <b>−{money(totals.discount)}</b>
           </p>
         )}
         <p>
           <span>Delivery</span>
-          <b>{shippingCost ? money(shippingCost) : "Complimentary"}</b>
+          <b>{totals.shipping ? money(totals.shipping) : "Complimentary"}</b>
         </p>
         <p className="total">
           <span>Total</span>
-          <b>{money(total)}</b>
+          <b>{money(totals.total)}</b>
         </p>
       </div>
     </aside>
