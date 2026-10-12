@@ -51,20 +51,20 @@ The build is a client-rendered single-page application. `npm start`/`npm run dev
 
 All route declarations currently live in `src/App.js`.
 
-| Route | Component | Purpose |
-| --- | --- | --- |
-| `/` | `HomePage` | Homepage with hero, trust points, bestsellers, category links, and a bundled routine action. |
-| `/our-story` | `Navigate` | Backward-compatible client redirect to canonical `/about`, using history replacement. |
-| `/about` | `AboutPage` | Primary brand/story page. |
-| `/shop` | `ShopPage` | Full product catalogue with search, filters, sorting, and collection query parameters. |
-| `/shop/:category` | `ShopPage` | Category-filtered catalogue, currently used for skincare, makeup, and sets. |
-| `/product/:slug` | `ProductPage` | Product detail, variant selection, cart/wishlist actions, related items, and recently viewed items. |
-| `/wishlist` | `WishlistPage` | Products whose numeric IDs are saved in the wishlist state. |
-| `/rituals` | `RitualsPage` | Guided routine builder and saved routine result. |
-| `/shade-match` | `ShadeMatchPage` | Guided shade suggestion flow for Petal Skin Tint. |
-| `/profile` | `BeautyProfilePage` | Browser-saved preferences, shade, and routine summary. |
-| `/care/:policy` | `PolicyPage` | Parameterized customer-care content for FAQ, shipping, refund, tracking, privacy, terms, and accessibility. Unknown policy values silently fall back to shipping content. |
-| `/checkout` | `CheckoutPage` | Standalone three-step demo/hosted-checkout handoff flow outside the shared `Layout`. |
+| Route             | Component           | Purpose                                                                                                                                                                   |
+| ----------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`               | `HomePage`          | Homepage with hero, trust points, bestsellers, category links, and a bundled routine action.                                                                              |
+| `/our-story`      | `Navigate`          | Backward-compatible client redirect to canonical `/about`, using history replacement.                                                                                     |
+| `/about`          | `AboutPage`         | Primary brand/story page.                                                                                                                                                 |
+| `/shop`           | `ShopPage`          | Full product catalogue with search, filters, sorting, and collection query parameters.                                                                                    |
+| `/shop/:category` | `ShopPage`          | Category-filtered catalogue, currently used for skincare, makeup, and sets.                                                                                               |
+| `/product/:slug`  | `ProductPage`       | Product detail, variant selection, cart/wishlist actions, related items, and recently viewed items.                                                                       |
+| `/wishlist`       | `WishlistPage`      | Products whose numeric IDs are saved in the wishlist state.                                                                                                               |
+| `/rituals`        | `RitualsPage`       | Guided routine builder and saved routine result.                                                                                                                          |
+| `/shade-match`    | `ShadeMatchPage`    | Guided shade suggestion flow for Petal Skin Tint.                                                                                                                         |
+| `/profile`        | `BeautyProfilePage` | Browser-saved preferences, shade, and routine summary.                                                                                                                    |
+| `/care/:policy`   | `PolicyPage`        | Parameterized customer-care content for FAQ, shipping, refund, tracking, privacy, terms, and accessibility. Unknown policy values silently fall back to shipping content. |
+| `/checkout`       | `CheckoutPage`      | Standalone three-step demo/hosted-checkout handoff flow outside the shared `Layout`.                                                                                      |
 
 There is no wildcard route, dedicated 404 page, route error element, or route-level error boundary. `/about` is the canonical story route; `/our-story` remains as a backward-compatible client redirect.
 
@@ -114,19 +114,19 @@ The application uses two cohesive React Context boundaries composed by `AppProvi
 
 `CommerceProvider` is consumed through `useCommerce()` and owns:
 
-| State | Current shape/use and actions |
-| --- | --- |
-| `cart` | Canonicalized cart lines plus `addToCart`, `updateQuantity`, `removeFromCart`, and `clearCart`. |
-| `wishlist` | Numeric product IDs plus `toggleWishlist`. |
-| `orders` | Demo or checkout-endpoint responses plus the descriptive `addOrder` action. |
+| State      | Current shape/use and actions                                                                   |
+| ---------- | ----------------------------------------------------------------------------------------------- |
+| `cart`     | Canonicalized cart lines plus `addToCart`, `updateQuantity`, `removeFromCart`, and `clearCart`. |
+| `wishlist` | Numeric product IDs plus `toggleWishlist`.                                                      |
+| `orders`   | Demo or checkout-endpoint responses plus the descriptive `addOrder` action.                     |
 
 `CustomerProvider` is consumed through `useCustomer()` and owns:
 
-| State | Current shape/use and actions |
-| --- | --- |
-| `profile` | Skin goals, skin type, preferences, and optional shade details plus `saveProfile`. |
-| `routineResults` | An older array or current `{ productIds, answers }` value plus `saveRoutine`. |
-| `recentlyViewed` | Up to six product IDs plus `addRecentlyViewed`. |
+| State            | Current shape/use and actions                                                      |
+| ---------------- | ---------------------------------------------------------------------------------- |
+| `profile`        | Skin goals, skin type, preferences, and optional shade details plus `saveProfile`. |
+| `routineResults` | An older array or current `{ productIds, answers }` value plus `saveRoutine`.      |
+| `recentlyViewed` | Up to six product IDs plus `addRecentlyViewed`.                                    |
 
 Raw profile, routine, and order setters are no longer public. `ProductPage` intentionally consumes both contexts because it combines cart actions with profile-aware and recently-viewed behavior. `RitualsPage` also intentionally crosses the boundary because it both adds recommendations to the cart and saves the resulting routine. Other consumers depend only on their relevant boundary, reducing unrelated commerce/customer rerenders without splitting state into many small contexts.
 
@@ -142,13 +142,13 @@ The cart drawer's open/closed state is not in Context; it is transient state own
 
 All keys are prefixed with `velouraBeauty.`:
 
-| State | Full localStorage key |
-| --- | --- |
-| Cart | `velouraBeauty.cart.v2` |
-| Wishlist | `velouraBeauty.wishlist.v1` |
-| Orders | `velouraBeauty.orders.v1` |
-| Profile | `velouraBeauty.beautyProfile.v1` |
-| Routine | `velouraBeauty.routineResults.v1` |
+| State           | Full localStorage key             |
+| --------------- | --------------------------------- |
+| Cart            | `velouraBeauty.cart.v2`           |
+| Wishlist        | `velouraBeauty.wishlist.v1`       |
+| Orders          | `velouraBeauty.orders.v1`         |
+| Profile         | `velouraBeauty.beautyProfile.v1`  |
+| Routine         | `velouraBeauty.routineResults.v1` |
 | Recently viewed | `velouraBeauty.recentlyViewed.v1` |
 
 Cart, wishlist, orders, profile, saved routine, and recently viewed products are all browser-only. Clearing site storage or using another browser/device loses them. The default checkout also records orders only on the current device.
@@ -292,22 +292,22 @@ Asset renaming, compression, and reference cleanup are intentionally deferred.
 
 The project uses CRA's Jest configuration with Testing Library for the component test. Current test files:
 
-| Test file | Coverage |
-| --- | --- |
-| `src/components/layout/routeMetadata.test.js` | Homepage, shop, and unknown-section metadata mappings. |
-| `src/data/products.test.js` | Unique raw catalogue product IDs and slugs. |
-| `src/repositories/productRepository.test.js` | Repository ordering, defensive list copies, ID/slug lookup, missing products, and ordered multi-ID resolution. |
-| `src/domain/product/productSelection.test.js` | Product lookup, canonical variant identity, invalid-variant fallback, and missing-product behavior. |
-| `src/domain/cart/cart.test.js` | Persisted-cart canonicalization, quantity handling, variant identity, and removal of missing products. |
-| `src/domain/cart/cartState.test.js` | Adding, incrementing, quantity updates, and line removal. |
-| `src/domain/wishlist/wishlist.test.js` | Wishlist toggle behavior. |
-| `src/domain/customer/recentlyViewed.test.js` | Duplicate ordering and the six-item limit. |
-| `src/lib/money.test.js` | Existing fixed-dollar formatting output. |
-| `src/hooks/useCustomer.test.jsx` | Profile and routine action compatibility with existing persistence keys and shapes. |
-| `src/features/products/ProductCard.test.jsx` | Variant selection/image/cart persistence and wishlist interaction through `CommerceProvider`. |
-| `src/features/products/shopLogic.test.js` | Searchable shade/benefit text, combined filtering, and price sorting. |
-| `src/features/routine/routineRecommendations.test.js` | Routine length by pace, variation by answers, and valid catalogue references. |
-| `src/features/shade-match/shadeMatchLogic.test.js` | Variant/profile integrity, answer differentiation, and the medium-neutral result URL. |
+| Test file                                             | Coverage                                                                                                       |
+| ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `src/components/layout/routeMetadata.test.js`         | Homepage, shop, and unknown-section metadata mappings.                                                         |
+| `src/data/products.test.js`                           | Unique raw catalogue product IDs and slugs.                                                                    |
+| `src/repositories/productRepository.test.js`          | Repository ordering, defensive list copies, ID/slug lookup, missing products, and ordered multi-ID resolution. |
+| `src/domain/product/productSelection.test.js`         | Product lookup, canonical variant identity, invalid-variant fallback, and missing-product behavior.            |
+| `src/domain/cart/cart.test.js`                        | Persisted-cart canonicalization, quantity handling, variant identity, and removal of missing products.         |
+| `src/domain/cart/cartState.test.js`                   | Adding, incrementing, quantity updates, and line removal.                                                      |
+| `src/domain/wishlist/wishlist.test.js`                | Wishlist toggle behavior.                                                                                      |
+| `src/domain/customer/recentlyViewed.test.js`          | Duplicate ordering and the six-item limit.                                                                     |
+| `src/lib/money.test.js`                               | Existing fixed-dollar formatting output.                                                                       |
+| `src/hooks/useCustomer.test.jsx`                      | Profile and routine action compatibility with existing persistence keys and shapes.                            |
+| `src/features/products/ProductCard.test.jsx`          | Variant selection/image/cart persistence and wishlist interaction through `CommerceProvider`.                  |
+| `src/features/products/shopLogic.test.js`             | Searchable shade/benefit text, combined filtering, and price sorting.                                          |
+| `src/features/routine/routineRecommendations.test.js` | Routine length by pace, variation by answers, and valid catalogue references.                                  |
+| `src/features/shade-match/shadeMatchLogic.test.js`    | Variant/profile integrity, answer differentiation, and the medium-neutral result URL.                          |
 
 There are 34 declared test cases. There are no current tests for routing, layout/navigation interactions, cart promo behavior, checkout/order service, storage failure behavior, full guided-flow accessibility, or 404/error states. Execution results are recorded in task reports rather than asserted in this architecture description.
 
@@ -315,11 +315,11 @@ There are 34 declared test cases. There are no current tests for routing, layout
 
 `.env.example` declares public configuration names only; no secret values are documented here.
 
-| Variable | Purpose |
-| --- | --- |
-| `PORT` | Development server port; example value is `4173`. It is a local tooling setting rather than browser application data. |
-| `REACT_APP_CHECKOUT_URL` | Optional server endpoint that starts hosted checkout or returns a confirmed order object. Because CRA embeds `REACT_APP_*` values in the client bundle, this must be a public endpoint/config value, never a secret. |
-| `REACT_APP_CONTACT_EMAIL` | Public customer-care address used by the footer and policy pages, with an in-code fallback. |
+| Variable                  | Purpose                                                                                                                                                                                                              |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PORT`                    | Development server port; example value is `4173`. It is a local tooling setting rather than browser application data.                                                                                                |
+| `REACT_APP_CHECKOUT_URL`  | Optional server endpoint that starts hosted checkout or returns a confirmed order object. Because CRA embeds `REACT_APP_*` values in the client bundle, this must be a public endpoint/config value, never a secret. |
+| `REACT_APP_CONTACT_EMAIL` | Public customer-care address used by the footer and policy pages, with an in-code fallback.                                                                                                                          |
 
 ## Known Technical Debt
 
@@ -357,10 +357,10 @@ There are 34 declared test cases. There are no current tests for routing, layout
 
 These retained items were not removed in Phase 0.3.
 
-| File | Symbol or area | Why it appears unused/dead | Confidence | Recommended later action |
-| --- | --- | --- | --- | --- |
-| `src/hooks/useCustomer.js`, `src/domain/customer/recentlyViewed.js`, `src/features/products/ProductPage.jsx` | `recentlyViewed` | This state is active: product pages write IDs and render a recent-product shelf. Its ordering/limit rules now have a customer-domain helper and focused tests. | High | Retain in the customer-state boundary. |
-| `src/index.css` | `.aboutEditorial*`, `.aboutCompact*`, `.storyV2*` families | No current JSX uses these historical story-page class families; current `AboutPage` uses `.storyFinal*`, `.storyEdit*`, `.storyCriteria*`, and `.storyShelf*`. | High | Delete only after selector-by-selector visual verification in a dedicated CSS cleanup. |
-| `src/index.css` | `.cursorSpotlight`, `.valuesStrip`, `.heroNote`, `.ritualBanner`, `.newsletter`, `.formulaSection`, `.reviewGrid`, `.socialGrid` families | Searches found stylesheet definitions but no current JSX class usage for these named areas. Some are remnants of earlier homepage iterations. | High | Validate dynamic usage and remove in a scoped stylesheet cleanup with visual regression checks. |
-| `public/veloura-hero.png` and `public/veloura-hero.webp` | Hero format pair | Same basename and likely related creative, but both have distinct current references through metadata/legacy merchandising data. | Medium | Confirm intended canonical asset and metadata requirements before consolidating. |
-| `public/lifestyle/veloura-evening-edit-v2.webp`, `public/products/veloura-serum-bestseller-v2.webp` | Versioned asset names | The files are actively referenced, but `v2` naming is unsuitable as a durable production convention. | High | Rename and update references in a dedicated asset task, not during architecture work. |
+| File                                                                                                         | Symbol or area                                                                                                                            | Why it appears unused/dead                                                                                                                                     | Confidence | Recommended later action                                                                        |
+| ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------------------------------------------------------------------------------------------- |
+| `src/hooks/useCustomer.js`, `src/domain/customer/recentlyViewed.js`, `src/features/products/ProductPage.jsx` | `recentlyViewed`                                                                                                                          | This state is active: product pages write IDs and render a recent-product shelf. Its ordering/limit rules now have a customer-domain helper and focused tests. | High       | Retain in the customer-state boundary.                                                          |
+| `src/index.css`                                                                                              | `.aboutEditorial*`, `.aboutCompact*`, `.storyV2*` families                                                                                | No current JSX uses these historical story-page class families; current `AboutPage` uses `.storyFinal*`, `.storyEdit*`, `.storyCriteria*`, and `.storyShelf*`. | High       | Delete only after selector-by-selector visual verification in a dedicated CSS cleanup.          |
+| `src/index.css`                                                                                              | `.cursorSpotlight`, `.valuesStrip`, `.heroNote`, `.ritualBanner`, `.newsletter`, `.formulaSection`, `.reviewGrid`, `.socialGrid` families | Searches found stylesheet definitions but no current JSX class usage for these named areas. Some are remnants of earlier homepage iterations.                  | High       | Validate dynamic usage and remove in a scoped stylesheet cleanup with visual regression checks. |
+| `public/veloura-hero.png` and `public/veloura-hero.webp`                                                     | Hero format pair                                                                                                                          | Same basename and likely related creative, but both have distinct current references through metadata/legacy merchandising data.                               | Medium     | Confirm intended canonical asset and metadata requirements before consolidating.                |
+| `public/lifestyle/veloura-evening-edit-v2.webp`, `public/products/veloura-serum-bestseller-v2.webp`          | Versioned asset names                                                                                                                     | The files are actively referenced, but `v2` naming is unsuitable as a durable production convention.                                                           | High       | Rename and update references in a dedicated asset task, not during architecture work.           |

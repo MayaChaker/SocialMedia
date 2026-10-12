@@ -11,7 +11,8 @@ describe("getRouteMetadata", () => {
   test("returns the shop metadata for catalogue paths", () => {
     expect(getRouteMetadata("/shop/skincare")).toEqual({
       title: "Shop | Veloura Beauty",
-      description: "Shop considered skincare, makeup, and curated beauty rituals from Veloura Beauty.",
+      description:
+        "Shop considered skincare, makeup, and curated beauty rituals from Veloura Beauty.",
     });
   });
 

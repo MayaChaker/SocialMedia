@@ -31,17 +31,25 @@ export function buildRoutineRecommendations({ goal, time, texture }) {
   const cleanserId = cleanserFor(goal, texture);
   const treatmentId = treatmentByGoal[goal] || 3;
   const finishId = finishByPreference[texture] || 5;
-  const cleanserReason = cleanserId === 6
-    ? "Melts buildup while leaving skin soft and comfortable."
-    : "Cleanses gently without disturbing the skin barrier.";
-  const finishReason = finishId === 4
-    ? "Replenishes overnight with a rich, breathable finish."
-    : "Adds daily protection with a smooth, lightweight finish.";
+  const cleanserReason =
+    cleanserId === 6
+      ? "Melts buildup while leaving skin soft and comfortable."
+      : "Cleanses gently without disturbing the skin barrier.";
+  const finishReason =
+    finishId === 4
+      ? "Replenishes overnight with a rich, breathable finish."
+      : "Adds daily protection with a smooth, lightweight finish.";
 
   if (time === "Essential") {
     return [
       recommendation(cleanserId, "Cleanse", cleanserReason),
-      recommendation(texture === "Rich" || goal === "Fine lines" ? 4 : treatmentId, texture === "Rich" || goal === "Fine lines" ? "Replenish" : "Treat", texture === "Rich" || goal === "Fine lines" ? "Comforts skin with one restorative finishing step." : treatmentReasons[goal]),
+      recommendation(
+        texture === "Rich" || goal === "Fine lines" ? 4 : treatmentId,
+        texture === "Rich" || goal === "Fine lines" ? "Replenish" : "Treat",
+        texture === "Rich" || goal === "Fine lines"
+          ? "Comforts skin with one restorative finishing step."
+          : treatmentReasons[goal],
+      ),
     ];
   }
 
@@ -53,7 +61,13 @@ export function buildRoutineRecommendations({ goal, time, texture }) {
 
   if (time === "Immersive") {
     const extraId = treatmentId === 1 ? 3 : 1;
-    const extra = recommendation(extraId, extraId === 1 ? "Prepare" : "Treat", extraId === 1 ? "Adds a cushioning hydration layer before treatment." : "Seals in hydration with a weightless barrier-supporting serum.");
+    const extra = recommendation(
+      extraId,
+      extraId === 1 ? "Prepare" : "Treat",
+      extraId === 1
+        ? "Adds a cushioning hydration layer before treatment."
+        : "Seals in hydration with a weightless barrier-supporting serum.",
+    );
     routine.splice(extraId === 1 ? 1 : 2, 0, extra);
   }
 
@@ -67,5 +81,13 @@ export function routineTitle({ goal, time }) {
 
 export function routineAlternatives(product, recommendations) {
   const selectedIds = new Set(recommendations.map((item) => item.product.id));
-  return catalogue.filter((candidate) => candidate.category === "Skincare" && candidate.id !== product.id && !selectedIds.has(candidate.id) && candidate.type === product.type).slice(0, 2);
+  return catalogue
+    .filter(
+      (candidate) =>
+        candidate.category === "Skincare" &&
+        candidate.id !== product.id &&
+        !selectedIds.has(candidate.id) &&
+        candidate.type === product.type,
+    )
+    .slice(0, 2);
 }

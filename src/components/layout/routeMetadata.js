@@ -12,10 +12,13 @@ const titles = {
 export function getRouteMetadata(pathname) {
   const section = pathname.split("/").filter(Boolean)[0];
   return {
-    title: section ? `${titles[section] || "Beauty"} | Veloura Beauty` : "Veloura Beauty — Beauty, considered.",
-    description: section === "shop"
-      ? "Shop considered skincare, makeup, and curated beauty rituals from Veloura Beauty."
-      : "High-performance beauty essentials made for daily ritual.",
+    title: section
+      ? `${titles[section] || "Beauty"} | Veloura Beauty`
+      : "Veloura Beauty — Beauty, considered.",
+    description:
+      section === "shop"
+        ? "Shop considered skincare, makeup, and curated beauty rituals from Veloura Beauty."
+        : "High-performance beauty essentials made for daily ritual.",
   };
 }
 

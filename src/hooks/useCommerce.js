@@ -12,17 +12,32 @@ export function CommerceProvider({ children }) {
   const [wishlist, setWishlist] = usePersistentState(STORAGE_KEYS.wishlist, []);
   const [orders, setOrders] = usePersistentState(STORAGE_KEYS.orders, []);
   const canonicalCart = useMemo(() => resolveCart(cart), [cart]);
-  const value = useMemo(() => ({
-    cart: canonicalCart,
-    wishlist,
-    orders,
-    addToCart(selection) { setCart((items) => addCartItem(items, selection)); },
-    updateQuantity(id, delta) { setCart((items) => updateCartItemQuantity(items, id, delta)); },
-    removeFromCart(id) { setCart((items) => removeCartItem(items, id)); },
-    clearCart() { setCart([]); },
-    toggleWishlist(id) { setWishlist((items) => toggleWishlistItem(items, id)); },
-    addOrder(order) { setOrders((items) => [order, ...items]); },
-  }), [canonicalCart, orders, setCart, setOrders, setWishlist, wishlist]);
+  const value = useMemo(
+    () => ({
+      cart: canonicalCart,
+      wishlist,
+      orders,
+      addToCart(selection) {
+        setCart((items) => addCartItem(items, selection));
+      },
+      updateQuantity(id, delta) {
+        setCart((items) => updateCartItemQuantity(items, id, delta));
+      },
+      removeFromCart(id) {
+        setCart((items) => removeCartItem(items, id));
+      },
+      clearCart() {
+        setCart([]);
+      },
+      toggleWishlist(id) {
+        setWishlist((items) => toggleWishlistItem(items, id));
+      },
+      addOrder(order) {
+        setOrders((items) => [order, ...items]);
+      },
+    }),
+    [canonicalCart, orders, setCart, setOrders, setWishlist, wishlist],
+  );
   return <CommerceContext.Provider value={value}>{children}</CommerceContext.Provider>;
 }
 

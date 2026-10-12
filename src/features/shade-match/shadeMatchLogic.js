@@ -3,11 +3,31 @@ import { productRepository } from "../../repositories/productRepository";
 const SKIN_TINT = productRepository.getBySlug("petal-skin-tint");
 
 const PROFILE_BY_VARIANT = {
-  porcelain: { depth: "Fair", undertone: "Cool-neutral", description: "A light, softly balanced tint for fair complexions." },
-  light: { depth: "Light", undertone: "Neutral", description: "A balanced tint that settles naturally into light complexions." },
-  medium: { depth: "Medium", undertone: "Warm-neutral", description: "A golden-neutral tint designed to blend naturally with medium complexions." },
-  tan: { depth: "Tan", undertone: "Warm", description: "A warm, dimensional tint for tan complexions." },
-  deep: { depth: "Deep", undertone: "Neutral-warm", description: "A rich, balanced tint for deep complexions." },
+  porcelain: {
+    depth: "Fair",
+    undertone: "Cool-neutral",
+    description: "A light, softly balanced tint for fair complexions.",
+  },
+  light: {
+    depth: "Light",
+    undertone: "Neutral",
+    description: "A balanced tint that settles naturally into light complexions.",
+  },
+  medium: {
+    depth: "Medium",
+    undertone: "Warm-neutral",
+    description: "A golden-neutral tint designed to blend naturally with medium complexions.",
+  },
+  tan: {
+    depth: "Tan",
+    undertone: "Warm",
+    description: "A warm, dimensional tint for tan complexions.",
+  },
+  deep: {
+    depth: "Deep",
+    undertone: "Neutral-warm",
+    description: "A rich, balanced tint for deep complexions.",
+  },
 };
 
 const VARIANT_BY_ANSWERS = {
@@ -18,7 +38,8 @@ const VARIANT_BY_ANSWERS = {
   Deep: { cool: "deep", neutral: "deep", warm: "deep" },
 };
 
-const toneKey = (answer = "") => answer.startsWith("Silver") ? "cool" : answer.startsWith("Gold") ? "warm" : "neutral";
+const toneKey = (answer = "") =>
+  answer.startsWith("Silver") ? "cool" : answer.startsWith("Gold") ? "warm" : "neutral";
 
 export const SHADE_PROFILES = SKIN_TINT.variants.map((variant) => ({
   ...PROFILE_BY_VARIANT[variant.id],

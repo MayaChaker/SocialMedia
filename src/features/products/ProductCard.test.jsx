@@ -4,7 +4,14 @@ import { productRepository } from "../../repositories/productRepository";
 import { CommerceProvider } from "../../hooks/useCommerce";
 import ProductCard from "./ProductCard";
 
-const renderCard = (product) => render(<CommerceProvider><MemoryRouter><ProductCard product={product}/></MemoryRouter></CommerceProvider>);
+const renderCard = (product) =>
+  render(
+    <CommerceProvider>
+      <MemoryRouter>
+        <ProductCard product={product} />
+      </MemoryRouter>
+    </CommerceProvider>,
+  );
 
 beforeEach(() => window.localStorage.clear());
 
@@ -18,7 +25,12 @@ test("a shade selection changes the product image and the added cart variant", (
   expect(screen.getByText("Shade: Mahogany 09")).toBeTruthy();
   fireEvent.click(screen.getByRole("button", { name: "Add to bag" }));
   const cart = JSON.parse(window.localStorage.getItem("velouraBeauty.cart.v2"));
-  expect(cart[0]).toMatchObject({ productId: product.id, variantId: "deep", selectedVariant: "Mahogany 09", cartId: `${product.id}:deep` });
+  expect(cart[0]).toMatchObject({
+    productId: product.id,
+    variantId: "deep",
+    selectedVariant: "Mahogany 09",
+    cartId: `${product.id}:deep`,
+  });
   expect(cart[0].image).toContain("petal-skin-tint-deep.webp");
 });
 
@@ -26,5 +38,7 @@ test("wishlist remains functional on a refined card", () => {
   const product = productRepository.getAll()[0];
   renderCard(product);
   fireEvent.click(screen.getByRole("button", { name: `Add ${product.name} to wishlist` }));
-  expect(JSON.parse(window.localStorage.getItem("velouraBeauty.wishlist.v1"))).toEqual([product.id]);
+  expect(JSON.parse(window.localStorage.getItem("velouraBeauty.wishlist.v1"))).toEqual([
+    product.id,
+  ]);
 });

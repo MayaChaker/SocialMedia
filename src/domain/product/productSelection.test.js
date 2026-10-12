@@ -1,7 +1,12 @@
 import { resolveProductSelection } from "./productSelection";
 
 test("resolves a valid product by ID", () => {
-  expect(resolveProductSelection(11)).toMatchObject({ id: 11, productId: 11, slug: "soft-light-palette", cartId: "11" });
+  expect(resolveProductSelection(11)).toMatchObject({
+    id: 11,
+    productId: 11,
+    slug: "soft-light-palette",
+    cartId: "11",
+  });
 });
 
 test("resolves a selected variant with its canonical identity", () => {
