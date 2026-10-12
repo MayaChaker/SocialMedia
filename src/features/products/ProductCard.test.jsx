@@ -4,27 +4,41 @@ import { productRepository } from "../../repositories/productRepository";
 import { CommerceProvider } from "../../hooks/useCommerce";
 import ProductCard from "./ProductCard";
 
-const renderCard = (product) => render(<CommerceProvider><MemoryRouter><ProductCard product={product}/></MemoryRouter></CommerceProvider>);
+const renderCard = (product) =>
+  render(
+    <CommerceProvider>
+      <MemoryRouter>
+        <ProductCard product={product} />
+      </MemoryRouter>
+    </CommerceProvider>,
+  );
 
 beforeEach(() => window.localStorage.clear());
 
-test("a shade selection changes the product image and the added cart variant", () => {
+test("a shade selection updates the product art and the added cart variant", () => {
   const product = productRepository.getBySlug("petal-skin-tint");
   renderCard(product);
-  const image = screen.getByRole("img", { name: product.name });
+  expect(screen.getByRole("img", { name: product.name })).toBeTruthy();
   expect(screen.getByRole("button", { name: "Choose shade" }).disabled).toBe(true);
   fireEvent.click(screen.getByRole("button", { name: "Select Mahogany 09 shade" }));
-  expect(image.getAttribute("src")).toContain("petal-skin-tint-deep.webp");
+  expect(screen.getByRole("img", { name: `${product.name} in Mahogany 09` })).toBeTruthy();
   expect(screen.getByText("Shade: Mahogany 09")).toBeTruthy();
   fireEvent.click(screen.getByRole("button", { name: "Add to bag" }));
   const cart = JSON.parse(window.localStorage.getItem("velouraBeauty.cart.v2"));
-  expect(cart[0]).toMatchObject({ productId: product.id, variantId: "deep", selectedVariant: "Mahogany 09", cartId: `${product.id}:deep` });
-  expect(cart[0].image).toContain("petal-skin-tint-deep.webp");
+  expect(cart[0]).toMatchObject({
+    productId: product.id,
+    variantId: "deep",
+    selectedVariant: "Mahogany 09",
+    cartId: `${product.id}:deep`,
+  });
+  expect(cart[0].swatch).toBe("#503127");
 });
 
 test("wishlist remains functional on a refined card", () => {
   const product = productRepository.getAll()[0];
   renderCard(product);
   fireEvent.click(screen.getByRole("button", { name: `Add ${product.name} to wishlist` }));
-  expect(JSON.parse(window.localStorage.getItem("velouraBeauty.wishlist.v1"))).toEqual([product.id]);
+  expect(JSON.parse(window.localStorage.getItem("velouraBeauty.wishlist.v1"))).toEqual([
+    product.id,
+  ]);
 });

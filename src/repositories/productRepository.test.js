@@ -20,6 +20,8 @@ test("getBySlug returns the matching product and undefined when missing", () => 
 });
 
 test("getManyByIds preserves requested order and safely skips missing IDs", () => {
-  expect(productRepository.getManyByIds([3, "1", 999, 2]).map((product) => product.id)).toEqual([3, 1, 2]);
+  expect(productRepository.getManyByIds([3, "1", 999, 2]).map((product) => product.id)).toEqual([
+    3, 1, 2,
+  ]);
   expect(productRepository.getManyByIds()).toEqual([]);
 });
