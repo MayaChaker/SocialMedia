@@ -3,7 +3,6 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AppProviders from "./providers/AppProviders";
 import Layout from "./components/layout/Layout";
 import CartDrawer from "./features/cart/CartDrawer";
-import "./index.css";
 
 const ShopPage = lazy(() => import("./features/products/ShopPage"));
 const ProductPage = lazy(() => import("./features/products/ProductPage"));
