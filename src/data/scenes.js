@@ -59,13 +59,13 @@ export const SCENES = {
   campaign: {
     ...WARM_STONE,
     // The About hero overlays its heading on the left, so the still life sits right.
-    shift: 150,
-    plinthWidth: 400,
+    shift: 120,
+    plinthWidth: 360,
     items: [
-      { slug: "petal-water-essence", x: 186, scale: 0.92 },
-      { slug: "restorative-night-cream", x: 410, scale: 0.78 },
-      { slug: "luminous-veil-serum", x: 262, scale: 1.02 },
-      { slug: "velvet-ritual-lip", tint: "#8f4f58", x: 336, scale: 0.84 },
+      { slug: "petal-water-essence", x: 196, scale: 0.7 },
+      { slug: "restorative-night-cream", x: 404, scale: 0.6 },
+      { slug: "luminous-veil-serum", x: 264, scale: 0.78 },
+      { slug: "velvet-ritual-lip", tint: "#8f4f58", x: 330, scale: 0.64 },
     ],
   },
   lipstickShades: {
