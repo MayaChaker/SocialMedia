@@ -36,28 +36,39 @@ and a foundation shade finder.
 
 ## Tech stack
 
-React 18 · React Router 6 · Framer Motion · MUI icons · Create React App · Jest and React
-Testing Library · ESLint · Prettier · GitHub Actions
+Next.js 16 (App Router) · React 19 · Framer Motion · MUI icons · Jest and React Testing
+Library · ESLint · Prettier · GitHub Actions · Vercel
 
 ## How it is built
 
 ```
 src/
+├── app/                 Routes, layouts, metadata, sitemap and robots (Next.js App Router)
+│   ├── (store)/         Storefront pages sharing the header and footer
+│   └── checkout/        Checkout and order confirmation, without store navigation
 ├── components/
-│   ├── layout/          Header, footer, search, route metadata
+│   ├── layout/          Header, footer, search
 │   └── product-art/     SVG product illustrations and still-life scenes
 ├── data/                Product catalogue, merchandising and scene art direction
 ├── domain/              Framework-free business rules (cart, pricing, selection, wishlist)
 ├── features/            One folder per journey: products, cart, checkout, routine, shade-match…
 ├── hooks/               Commerce and customer state, persistence, modal behaviour
-├── pages/               Content pages (home, about, policies, 404)
+├── providers/           Client-side state shared by every page
 ├── repositories/        Access to the catalogue and to browser storage
 ├── services/            Order creation (demo or hosted checkout)
-└── styles/              Global styles split by area
+├── styles/              Global styles split by area
+└── views/               Content pages (home, about, policies, 404)
 ```
 
 Some decisions worth calling out:
 
+- **Static where possible.** Every product, category and policy page is pre-rendered at build time
+  (`generateStaticParams`) with its own title and description; unknown URLs return a real 404.
+  Interactive parts (bag, filters, quizzes) are client components inside those pages.
+- **No hydration mismatches from saved state.** The bag, wishlist and profile live in
+  `localStorage`, which the server cannot read. `usePersistentState` renders the default first
+  and loads the saved value after mount, and exposes a `hydrated` flag so checkout does not
+  redirect an "empty" bag before it has loaded.
 - **Business rules are plain functions.** Pricing, cart updates and variant resolution live in
   `src/domain` with their own unit tests, so components stay thin and the rules can move to a
   server later without rewriting the UI. Prices are calculated in whole cents to avoid
@@ -71,23 +82,24 @@ Some decisions worth calling out:
   `storageRepository`.
 - **One hook for every modal surface.** The bag, quick view, filters and mobile menu share
   `useModalDialog` for scroll lock, focus trapping, Escape to close and focus return.
-- **Checkout is ready for a real payment provider.** Setting `REACT_APP_CHECKOUT_URL` makes the
+- **Checkout is ready for a real payment provider.** Setting `NEXT_PUBLIC_CHECKOUT_URL` makes the
   last step post product ids and quantities to a server endpoint that creates a hosted payment
   session; the server, not the browser, decides prices.
 
 ## Getting started
 
-Requires Node.js 18 or newer.
+Requires Node.js 20.9 or newer.
 
 ```bash
 npm install
-npm start            # http://localhost:3000
+npm run dev          # http://localhost:3000
 ```
 
 | Script                 | What it does                   |
 | ---------------------- | ------------------------------ |
-| `npm start`            | Development server             |
-| `npm run build`        | Production build in `build/`   |
+| `npm run dev`          | Development server             |
+| `npm run build`        | Production build               |
+| `npm start`            | Serve the production build     |
 | `npm run test:ci`      | Run the test suite once        |
 | `npm run lint`         | ESLint, failing on any warning |
 | `npm run format:check` | Verify Prettier formatting     |
@@ -97,14 +109,13 @@ Optional environment variables are listed in [`.env.example`](.env.example).
 ## Testing
 
 Unit tests cover the domain rules (pricing, cart state, variant selection, routine and shade
-logic). Integration tests render the real routes and walk through checkout to the confirmation
-page, URL-driven filters and the not-found routes. CI runs formatting, lint, tests and a
-production build on every push and pull request.
+logic). Integration tests walk through checkout to the confirmation page, URL-driven filters,
+and the route handlers' not-found and metadata behaviour, with `next/navigation` replaced by an
+in-memory stand-in (`src/test/navigation.js`). CI runs formatting, lint, tests and a production
+build on every push and pull request.
 
 ## Roadmap
 
-- Migrate from Create React App to the Next.js App Router (in progress on
-  `refactor/phase-2-nextjs`).
 - Convert the codebase to TypeScript, starting with the domain layer.
 
 The full plan is in [`docs/refactor-roadmap.md`](docs/refactor-roadmap.md).
