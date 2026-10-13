@@ -6,11 +6,11 @@
   border: 0;
 }
 .ritualPrinciples span {
-  font: 24px var(--serif);
+  font: var(--text-2xl) var(--serif);
   color: var(--rose);
 }
 .ritualPrinciples h2 {
-  font: 32px var(--serif);
+  font: var(--text-4xl) var(--serif);
   font-weight: 400;
 }
 .builderPage > p,
@@ -41,7 +41,7 @@
 .builderProgress span {
   display: block;
   height: 100%;
-  background: var(--plum);
+  background: var(--bordeaux);
   transition: width 0.3s;
 }
 .questionPage section {
@@ -54,24 +54,24 @@
   margin-top: 45px;
 }
 .choiceGrid button {
-  background: var(--cream);
+  background: var(--ivory);
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
 }
 .choiceGrid button:focus-visible,
 .choiceGrid button:hover {
-  border-color: var(--plum);
-  background: #efe3de;
+  border-color: var(--bordeaux);
+  background: var(--blush);
 }
 .choiceGrid strong {
-  font: 25px var(--serif);
+  font: var(--text-2xl) var(--serif);
   font-weight: 400;
 }
 .choiceGrid span {
   grid-row: 2;
   color: var(--muted);
-  font-size: 10px;
+  font-size: var(--text-caption);
 }
 .choiceGrid svg {
   grid-column: 2;
@@ -89,7 +89,7 @@
   border-bottom: 1px solid var(--line);
 }
 .resultOrder li > span {
-  font: 25px var(--serif);
+  font: var(--text-2xl) var(--serif);
   color: var(--rose);
 }
 .resultOrder div {
@@ -98,13 +98,13 @@
   gap: 5px;
 }
 .resultOrder strong {
-  font: 22px var(--serif);
+  font: var(--text-xl) var(--serif);
   font-weight: 400;
 }
 .resultOrder small {
   color: var(--muted);
-  font-size: 14px;
-  color: #715a5e;
+  font-size: var(--text-md);
+  color: var(--muted);
 }
 @media (max-width: 700px) {
   .ritualPrinciples {
@@ -129,7 +129,7 @@
   }
 }
 .ritualsPage {
-  background: var(--paper);
+  background: var(--porcelain);
 }
 .ritualsHero {
   min-height: clamp(500px, 62vh, 650px);
@@ -158,10 +158,10 @@
 }
 .questionTopline .backLink svg,
 .ritualPrinciples article > div > span {
-  font-size: 15px;
+  font-size: var(--text-md);
 }
 .ritualPrinciples article svg {
-  font-size: 17px;
+  font-size: var(--text-base);
   stroke-width: 1;
 }
 .ritualPrinciples p {
@@ -203,7 +203,7 @@
   transition: background-color 0.2s;
 }
 .questionPage .builderProgress > span.active {
-  background: var(--plum);
+  background: var(--bordeaux);
 }
 .questionPage .choiceGrid {
   grid-template-columns: 1fr 1fr;
@@ -214,7 +214,7 @@
   position: relative;
   min-height: 112px;
   padding: 23px 22px;
-  background: var(--paper);
+  background: var(--porcelain);
   border: 1px solid var(--line);
   display: flex;
   align-items: center;
@@ -227,15 +227,15 @@
     color 0.18s;
 }
 .questionPage .choiceGrid button:hover {
-  border-color: #b9938b;
-  background: #fbf5f1;
+  border-color: var(--rose-gold);
+  background: var(--porcelain);
 }
 .questionPage .choiceGrid button.selected {
-  border-color: var(--plum);
-  background: #efe1dc;
+  border-color: var(--bordeaux);
+  background: var(--blush);
 }
 .questionPage .choiceGrid button:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--bordeaux);
   outline-offset: 3px;
 }
 .choiceCopy {
@@ -246,28 +246,28 @@
   text-align: left;
 }
 .choiceGrid .choiceCopy strong {
-  font-size: 24px;
+  font-size: var(--text-2xl);
 }
 .choiceGrid .choiceCopy > span {
   color: var(--muted);
-  font-size: 10px;
+  font-size: var(--text-caption);
 }
 .choiceIndicator {
   border: 1px solid var(--line);
   color: var(--muted);
 }
 .saveRitualButton svg {
-  font-size: 14px;
+  font-size: var(--text-md);
 }
 .choiceGrid button.selected .choiceIndicator {
-  background: var(--plum);
+  background: var(--bordeaux);
 }
 .questionActions .button:disabled {
-  background: #b9afaa;
-  color: #f8f4f0;
+  background: var(--line-strong);
+  color: var(--porcelain);
 }
 .routineResultPage {
-  background: var(--cream);
+  background: var(--ivory);
 }
 .routineResultLayout {
   margin: 0 auto;
@@ -295,10 +295,10 @@
 }
 .routineResultIntro .resultOrder li > span,
 .routineResultIntro .resultOrder strong {
-  font-size: 18px;
+  font-size: var(--text-lg);
 }
 .routineResultIntro .resultOrder small {
-  font-size: 10px;
+  font-size: var(--text-caption);
   color: var(--muted);
 }
 .routinePrimaryActions {
@@ -321,8 +321,8 @@
 }
 .saveRitualButton.saved {
   border-color: var(--rose);
-  color: var(--plum);
-  background: #eadbd6;
+  color: var(--bordeaux);
+  background: var(--blush);
 }
 .saveRitualStatus {
   min-height: 20px;
@@ -342,23 +342,13 @@
   display: grid;
   grid-template-columns: 210px 1fr;
   border-bottom: 1px solid var(--line);
-  background: var(--paper);
+  background: var(--porcelain);
 }
 .routineProductVisual {
   position: relative;
   display: grid;
   place-items: center;
   overflow: hidden;
-  background: var(--blush);
-}
-.routineProductVisual.ivory {
-  background: #ede8df;
-}
-.routineProductVisual.blush {
-  background: #e5cbc7;
-}
-.routineProductVisual.plum {
-  background: #9e7b80;
 }
 .routineProductVisual .productArt {
   width: 100%;
@@ -375,7 +365,7 @@
   align-items: flex-start;
 }
 .routineStep {
-  font-size: 8px;
+  font-size: var(--text-caption);
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -391,7 +381,7 @@
   text-decoration: none;
 }
 .routineProductTitle h2 {
-  font: 400 25px/1.1 var(--serif);
+  font: 400 var(--text-2xl) / 1.1 var(--serif);
   margin: 0;
 }
 .routineProductTitle > strong {
@@ -415,7 +405,7 @@
   cursor: pointer;
 }
 .routineAddButton svg {
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 .routineReplace {
   width: 100%;
@@ -429,15 +419,15 @@
 .routineReplace select {
   width: 100%;
   border: 1px solid var(--line);
-  background: var(--paper);
+  background: var(--porcelain);
   padding: 0 9px;
   color: var(--ink);
   min-height: 42px;
-  font-size: 14px;
+  font-size: var(--text-md);
 }
 .routineAddButton:focus-visible,
 .saveRitualButton:focus-visible {
-  outline: 2px solid var(--plum);
+  outline: 2px solid var(--bordeaux);
   outline-offset: 3px;
 }
 @media (max-width: 1000px) {
@@ -462,10 +452,10 @@
     padding: 60px 22px;
   }
   .ritualsHero h1 {
-    font-size: 56px;
+    font-size: var(--text-7xl);
   }
   .ritualsHero p {
-    font-size: 12px;
+    font-size: var(--text-xs);
   }
   .ritualPrinciples {
     grid-template-columns: 1fr;
@@ -479,7 +469,7 @@
     border-bottom: 0;
   }
   .ritualPrinciples h2 {
-    font-size: 25px;
+    font-size: var(--text-2xl);
     margin: 10px 0 5px;
   }
   .ritualPrinciples p {
@@ -498,7 +488,7 @@
     min-height: 0;
   }
   .questionPage h1 {
-    font-size: 43px;
+    font-size: var(--text-5xl);
     margin: 12px 0 28px;
   }
   .questionPage .choiceGrid {
@@ -510,7 +500,7 @@
   }
   .choiceGrid .choiceCopy strong,
   .routineProductTitle h2 {
-    font-size: 21px;
+    font-size: var(--text-xl);
   }
   .questionActions {
     margin-top: 20px;
@@ -526,7 +516,7 @@
     gap: 40px;
   }
   .routineResultIntro h1 {
-    font-size: 49px;
+    font-size: var(--text-6xl);
   }
   .routinePrimaryActions {
     display: grid;
@@ -558,7 +548,7 @@
     margin-top: 6px;
   }
   .routineProductCopy > p {
-    font-size: 9px;
+    font-size: var(--text-caption);
     margin-bottom: 13px;
   }
 }
@@ -570,7 +560,7 @@
     padding-inline: 14px;
   }
   .routineProductTitle h2 {
-    font-size: 19px;
+    font-size: var(--text-lg);
   }
 }
 .ritualsPage {
@@ -587,15 +577,15 @@
 }
 .ritualsHero p {
   max-width: 680px;
-  font-size: 17px;
+  font-size: var(--text-base);
   line-height: 1.7;
-  color: #654e51;
+  color: var(--muted);
 }
 .ritualsHero .button {
   min-height: 54px;
   margin-top: 22px;
   padding: 0 26px;
-  font-size: 15px;
+  font-size: var(--text-md);
 }
 .ritualPrinciples {
   margin-top: 0;
@@ -604,20 +594,20 @@
 .ritualPrinciples article {
   min-height: 190px;
   padding: 30px;
-  border-color: #d8c5c0;
+  border-color: var(--blush-strong);
 }
 .ritualPrinciples article > div svg {
-  font-size: 28px;
+  font-size: var(--text-3xl);
   color: var(--burgundy);
 }
 .ritualPrinciples h2 {
-  font-size: 28px;
+  font-size: var(--text-3xl);
   margin: 24px 0 10px;
 }
 .ritualPrinciples p {
-  font-size: 15px;
+  font-size: var(--text-md);
   line-height: 1.65;
-  color: #695356;
+  color: var(--muted);
 }
 .questionPage {
   min-height: 0;
@@ -632,10 +622,10 @@
   margin-bottom: 18px;
 }
 .stepCount {
-  font-size: 14px;
+  font-size: var(--text-md);
   font-weight: 700;
   letter-spacing: 0.08em;
-  color: #684a50;
+  color: var(--muted);
 }
 .questionPage section {
   min-height: 0;
@@ -663,9 +653,9 @@
   align-items: center;
   gap: 10px;
   padding-right: 16px;
-  font-size: 14px;
+  font-size: var(--text-md);
   font-weight: 700;
-  color: #9a8588;
+  color: var(--subtle);
 }
 .routineProgress li:not(:last-child)::after {
   content: "";
@@ -674,7 +664,7 @@
   right: 8px;
   top: 16px;
   height: 2px;
-  background: #dfd5d2;
+  background: var(--line);
   z-index: 0;
 }
 .routineProgress li.complete:not(:last-child)::after {
@@ -688,13 +678,13 @@
   width: 32px;
   height: 32px;
   flex: 0 0 32px;
-  border: 1px solid #cbb9b5;
+  border: 1px solid var(--line-strong);
   border-radius: 50%;
-  background: #fffaf4;
-  font-size: 13px;
+  background: var(--porcelain);
+  font-size: var(--text-sm);
 }
 .progressMark svg {
-  font-size: 18px;
+  font-size: var(--text-lg);
 }
 .routineProgress .complete,
 .routineProgress .current {
@@ -704,11 +694,11 @@
 .routineProgress .complete .progressMark {
   background: var(--burgundy);
   border-color: var(--burgundy);
-  color: #fff;
+  color: var(--white);
 }
 .routineProgress .current .progressMark {
   border: 2px solid var(--burgundy);
-  background: #f7e8e5;
+  background: var(--blush);
   color: var(--burgundy);
 }
 .choiceGrid {
@@ -724,35 +714,35 @@
   min-height: 142px;
   padding: 24px;
   text-align: left;
-  border: 1px solid #cdbab6;
-  background: #fffaf5;
+  border: 1px solid var(--line-strong);
+  background: var(--porcelain);
   transition:
     border-color 0.18s ease,
     background 0.18s ease,
     transform 0.18s ease;
 }
 .choiceGrid button:hover {
-  border-color: #86505a;
-  background: #fff;
+  border-color: var(--rose);
+  background: var(--white);
 }
 .choiceGrid button:focus-visible {
-  outline: 3px solid rgba(102, 32, 48, 0.28);
+  outline: 3px solid color-mix(in srgb, var(--bordeaux) 28%, transparent);
   outline-offset: 3px;
 }
 .choiceGrid button.selected {
   border: 2px solid var(--burgundy);
-  background: #f7e5e4;
+  background: var(--blush);
 }
 .choiceCopy strong {
-  font-size: 22px;
-  color: #3f252c;
+  font-size: var(--text-xl);
+  color: var(--bordeaux-deep);
 }
 .choiceCopy > span {
   display: block;
   margin-top: 9px;
-  font-size: 15px;
+  font-size: var(--text-md);
   line-height: 1.55;
-  color: #665054;
+  color: var(--muted);
 }
 .choiceIndicator {
   display: grid;
@@ -760,16 +750,16 @@
   width: 30px;
   height: 30px;
   flex: 0 0 30px;
-  border: 1px solid #b7999d;
+  border: 1px solid var(--subtle);
   border-radius: 50%;
 }
 .choiceIndicator svg {
-  font-size: 19px;
+  font-size: var(--text-lg);
 }
 .choiceGuidance {
   margin: 14px 0 0;
-  font-size: 14px;
-  color: #735d61;
+  font-size: var(--text-md);
+  color: var(--muted);
 }
 .questionActions {
   display: flex;
@@ -781,7 +771,7 @@
 .questionActions .button {
   min-width: 154px;
   min-height: 52px;
-  font-size: 15px;
+  font-size: var(--text-md);
 }
 .questionActions .button:disabled {
   opacity: 0.46;
@@ -797,9 +787,9 @@
   align-items: center;
   margin-top: 18px;
   padding: 16px 18px;
-  border: 1px solid #a75560;
-  background: #fff2f1;
-  color: #6d2432;
+  border: 1px solid var(--rose);
+  background: var(--porcelain);
+  color: var(--bordeaux);
 }
 .routineError p {
   margin: 0;
@@ -828,15 +818,15 @@
   margin: 14px 0 22px;
 }
 .routineResultIntro > p {
-  font-size: 16px;
+  font-size: var(--text-base);
   line-height: 1.7;
-  color: #634c50;
+  color: var(--muted);
 }
 .routinePreferences {
   margin: 28px 0;
   padding: 22px;
-  border: 1px solid #d7c6c2;
-  background: #fffaf5;
+  border: 1px solid var(--blush-strong);
+  background: var(--porcelain);
 }
 .routinePreferencesTitle {
   display: flex;
@@ -847,12 +837,12 @@
 .routinePreferencesTitle h2 {
   margin: 0;
   font-family: var(--font-serif);
-  font-size: 23px;
+  font-size: var(--text-2xl);
   font-weight: 500;
 }
 .routinePreferencesTitle button {
   color: var(--burgundy);
-  font-size: 14px;
+  font-size: var(--text-md);
   text-underline-offset: 4px;
 }
 .routinePreferences dl {
@@ -861,20 +851,20 @@
   gap: 10px;
 }
 .routinePreferences dl div {
-  border-top: 1px solid #eadedb;
+  border-top: 1px solid var(--blush);
   padding-top: 10px;
 }
 .routinePreferences dt {
-  font-size: 13px;
+  font-size: var(--text-sm);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #836b70;
+  color: var(--muted);
 }
 .routinePreferences dd {
   margin: 0;
-  font-size: 14px;
+  font-size: var(--text-md);
   font-weight: 700;
-  color: #432931;
+  color: var(--bordeaux-deep);
 }
 .resultOrder {
   margin: 26px 0;
@@ -883,7 +873,7 @@
   padding: 12px 0;
 }
 .resultOrder strong {
-  font-size: 14px;
+  font-size: var(--text-md);
 }
 .routinePrimaryActions {
   display: grid;
@@ -893,27 +883,27 @@
 .routinePrimaryActions .button.dark {
   grid-column: 1/-1;
   min-height: 54px;
-  font-size: 15px;
+  font-size: var(--text-md);
 }
 .routineEditButton,
 .saveRitualButton {
   min-height: 48px;
-  font-size: 14px;
+  font-size: var(--text-md);
 }
 .resetNotice,
 .routineAvailabilityNote,
 .saveRitualStatus {
-  font-size: 13px;
+  font-size: var(--text-sm);
   line-height: 1.55;
 }
 .routineAvailabilityNote {
-  color: #8e2437;
+  color: var(--error);
 }
 .routineSecondaryActions {
   margin-top: 18px;
 }
 .routineSecondaryActions .textLink {
-  font-size: 14px;
+  font-size: var(--text-md);
 }
 .routineRecommendations {
   gap: 18px;
@@ -938,34 +928,34 @@
   gap: 18px;
 }
 .routineProductTitle h2 {
-  font-size: 27px;
+  font-size: var(--text-3xl);
   line-height: 1.1;
 }
 .routineProductTitle > strong {
-  font-size: 16px;
+  font-size: var(--text-base);
   white-space: nowrap;
 }
 .routineProductCopy > p {
-  font-size: 14px;
+  font-size: var(--text-md);
   line-height: 1.55;
 }
 .routineMeta {
   font-weight: 700;
-  color: #725a5e;
+  color: var(--muted);
 }
 .routineMeta.unavailable {
-  color: #962e40;
+  color: var(--error);
 }
 .routineReplace {
   margin-top: 8px;
 }
 .routineReplace span {
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 .routineAddButton {
   min-height: 46px;
   padding: 0 20px;
-  font-size: 14px;
+  font-size: var(--text-md);
 }
 .routineAddButton:disabled {
   opacity: 0.5;
@@ -992,10 +982,10 @@
     padding: 52px 20px 36px;
   }
   .ritualsHero h1 {
-    font-size: 48px;
+    font-size: var(--text-6xl);
   }
   .ritualsHero p {
-    font-size: 16px;
+    font-size: var(--text-base);
   }
   .ritualsHero .button {
     width: 100%;
@@ -1028,7 +1018,7 @@
   .routineProgress li {
     padding-right: 6px;
     gap: 6px;
-    font-size: 12px;
+    font-size: var(--text-xs);
   }
   .routineProgress li:not(:last-child)::after {
     left: 32px;
@@ -1041,7 +1031,7 @@
     flex-basis: 28px;
   }
   .questionPage h1 {
-    font-size: 42px;
+    font-size: var(--text-5xl);
     margin-bottom: 26px;
   }
   .choiceGrid,
@@ -1055,10 +1045,10 @@
     padding: 20px;
   }
   .choiceCopy strong {
-    font-size: 20px;
+    font-size: var(--text-xl);
   }
   .choiceCopy > span {
-    font-size: 14px;
+    font-size: var(--text-md);
   }
   .questionActions {
     margin-top: 22px;
@@ -1072,7 +1062,7 @@
     padding: 54px 18px 78px;
   }
   .routineResultIntro h1 {
-    font-size: 48px;
+    font-size: var(--text-6xl);
   }
   .routinePrimaryActions {
     grid-template-columns: 1fr;
@@ -1094,14 +1084,14 @@
     display: block;
   }
   .routineProductTitle h2 {
-    font-size: 22px;
+    font-size: var(--text-xl);
   }
   .routineProductTitle > strong {
     display: block;
     margin-top: 8px;
   }
   .routineProductCopy > p {
-    font-size: 13px;
+    font-size: var(--text-sm);
   }
   .routineReplace select {
     width: 100%;
@@ -1109,7 +1099,7 @@
 }
 @media (max-width: 430px) {
   .routineProgress li > span:last-child {
-    font-size: 11px;
+    font-size: var(--text-caption);
   }
   .routineProduct {
     grid-template-columns: 1fr;

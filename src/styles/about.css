@@ -1,9 +1,9 @@
 .storyFinal {
-  background: var(--paper);
+  background: var(--porcelain);
   overflow: clip;
 }
 .storyEyebrow {
-  font-size: 9px;
+  font-size: var(--text-caption);
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -13,8 +13,8 @@
   height: clamp(620px, 76vh, 780px);
   position: relative;
   overflow: hidden;
-  background: var(--plum);
-  color: #fff;
+  background: var(--bordeaux);
+  color: var(--white);
 }
 .storyFinalHero > .productScene,
 .storyFinalPhilosophyImage .productScene {
@@ -29,9 +29,9 @@
   inset: 0;
   background: linear-gradient(
     90deg,
-    rgba(37, 18, 22, 0.72),
-    rgba(37, 18, 22, 0.34) 43%,
-    rgba(37, 18, 22, 0.02) 74%
+    color-mix(in srgb, var(--ink) 72%, transparent),
+    color-mix(in srgb, var(--ink) 34%, transparent) 43%,
+    color-mix(in srgb, var(--ink) 2%, transparent) 74%
   );
 }
 .storyFinalHeroCopy {
@@ -43,7 +43,7 @@
   max-width: 680px;
 }
 .storyFinalHeroCopy .storyEyebrow {
-  color: #f0c9c0;
+  color: var(--blush-strong);
 }
 .storyFinalHeroCopy h1 {
   font: 400 clamp(59px, 6.4vw, 94px) / 0.94 var(--serif);
@@ -52,19 +52,19 @@
 }
 .storyFinalHeroCopy h1 em {
   font-weight: 400;
-  color: #e8b7ad;
+  color: var(--blush-strong);
 }
 .storyFinalHeroCopy p {
   max-width: 475px;
   margin: 0;
-  color: #f0e5e0;
-  font-size: 15px;
+  color: var(--blush);
+  font-size: var(--text-md);
   line-height: 1.75;
 }
 .storyEditImage > span,
 .storyFinalHeroNote {
   position: absolute;
-  font-size: 8px;
+  font-size: var(--text-caption);
   text-transform: uppercase;
 }
 .storyFinalHeroNote {
@@ -72,7 +72,7 @@
   bottom: 27px;
   z-index: 1;
   letter-spacing: 0.16em;
-  color: rgba(255, 255, 255, 0.72);
+  color: color-mix(in srgb, var(--white) 72%, transparent);
 }
 .storyFinalPhilosophy {
   width: min(100%, var(--page-max));
@@ -86,7 +86,7 @@
 .storyFinalPhilosophyImage {
   height: clamp(520px, 57vw, 700px);
   overflow: hidden;
-  background: var(--cream);
+  background: var(--ivory);
 }
 .storyFinalPhilosophyImage .productScene {
   object-position: center 42%;
@@ -105,7 +105,7 @@
   color: var(--rose);
 }
 .storyFinalPhilosophyCopy p {
-  font-size: 14px;
+  font-size: var(--text-md);
   line-height: 1.88;
   color: var(--muted);
   margin: 0 0 17px;
@@ -125,9 +125,9 @@
   .storyFinalHeroShade {
     background: linear-gradient(
       0deg,
-      rgba(37, 18, 22, 0.8),
-      rgba(37, 18, 22, 0.25) 65%,
-      rgba(37, 18, 22, 0.04)
+      color-mix(in srgb, var(--ink) 80%, transparent),
+      color-mix(in srgb, var(--ink) 25%, transparent) 65%,
+      color-mix(in srgb, var(--ink) 4%, transparent)
     );
   }
   .storyFinalHeroCopy {
@@ -142,7 +142,7 @@
     margin: 13px 0 19px;
   }
   .storyFinalHeroCopy p {
-    font-size: 13px;
+    font-size: var(--text-sm);
     max-width: 345px;
   }
   .storyFinalHeroNote {
@@ -158,11 +158,11 @@
     aspect-ratio: 4/5;
   }
   .storyFinalPhilosophyCopy h2 {
-    font-size: 42px;
+    font-size: var(--text-5xl);
     margin: 13px 0 22px;
   }
   .storyFinalPhilosophyCopy p {
-    font-size: 13px;
+    font-size: var(--text-sm);
   }
 }
 .storyCriteria > div,
@@ -196,15 +196,15 @@
 .storyEditCopy p {
   max-width: 500px;
   margin: 0;
-  color: #665a55;
-  font-size: 14px;
+  color: var(--muted);
+  font-size: var(--text-md);
   line-height: 1.85;
 }
 .storyEditImage {
   min-height: 620px;
   position: relative;
   overflow: hidden;
-  background: #c7a398;
+  background: var(--line-strong);
 }
 .storyEditImage .productScene,
 .storyShelfImage .productScene {
@@ -219,7 +219,7 @@
 .storyEditImage > span {
   right: 22px;
   bottom: 22px;
-  background: rgba(255, 253, 249, 0.92);
+  background: color-mix(in srgb, var(--porcelain) 92%, transparent);
   padding: 12px 15px;
   font-weight: 600;
   letter-spacing: 0.13em;
@@ -259,26 +259,26 @@
   padding-right: 0;
 }
 .storyCriteria article > span {
-  font: 24px var(--serif);
+  font: var(--text-2xl) var(--serif);
   color: var(--rose);
 }
 .storyCriteria h3 {
-  font: 400 25px var(--serif);
+  font: 400 var(--text-2xl) var(--serif);
   margin: 1px 0 9px;
 }
 .storyCriteria p {
   max-width: 280px;
   margin: 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: var(--text-caption);
   line-height: 1.72;
 }
 .storyShelf {
   display: grid;
   grid-template-columns: 55% 45%;
   min-height: 610px;
-  background: var(--plum);
-  color: #fff;
+  background: var(--bordeaux);
+  color: var(--white);
 }
 .storyShelfImage {
   min-height: 610px;
@@ -295,15 +295,15 @@
   align-items: flex-start;
 }
 .storyShelfCopy .storyEyebrow {
-  color: #d9bdb4;
+  color: var(--blush-strong);
 }
 .storyShelfCopy h2 {
   margin-bottom: 22px;
 }
 .storyShelfCopy p {
   max-width: 445px;
-  color: #d8c9c5;
-  font-size: 14px;
+  color: var(--blush-strong);
+  font-size: var(--text-md);
   line-height: 1.8;
   margin: 0 0 29px;
 }
@@ -342,12 +342,12 @@
   }
   .storyEditCopy h2,
   .storyShelfCopy h2 {
-    font-size: 42px;
+    font-size: var(--text-5xl);
     margin: 13px 0 20px;
   }
   .storyEditCopy p,
   .storyShelfCopy p {
-    font-size: 13px;
+    font-size: var(--text-sm);
   }
   .storyCriteria {
     padding: 61px var(--page-gutter);
@@ -357,7 +357,7 @@
     margin-bottom: 27px;
   }
   .storyCriteria h2 {
-    font-size: 40px;
+    font-size: var(--text-5xl);
   }
   .storyCriteria > div,
   .storyCriteria > header {
@@ -373,7 +373,7 @@
     border-bottom: 0;
   }
   .storyCriteria h3 {
-    font-size: 23px;
+    font-size: var(--text-2xl);
   }
   .storyShelf {
     grid-template-columns: 1fr;
@@ -392,7 +392,7 @@
   }
 }
 .storyCriteriaClosing {
-  background: var(--cream);
+  background: var(--ivory);
   width: 100%;
   max-width: none;
 }

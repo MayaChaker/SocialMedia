@@ -14,31 +14,16 @@
   justify-content: center;
   overflow: hidden;
   text-decoration: none;
-  background: #eee6de;
 }
-.productImage.rose {
-  background: #ddc2b6;
-}
-.productImage.ivory {
-  background: #ede8df;
-}
-.productImage.sand {
-  background: #d7c2a6;
-}
-.productImage.plum {
-  background: #9e7b80;
-}
-.productImage.espresso {
-  background: #8b766a;
-}
-.productImage.blush {
-  background: #e5cbc7;
-}
-.productImage.sage {
-  background: #c8d0c0;
-}
-.productImage.clay {
-  background: #c99d86;
+/* Every product-art container takes its ground from the product's tone class (tokens.css). */
+.productImage,
+.previewVisual,
+.cartThumb,
+.miniVisual,
+.detailVisual,
+.routineProductVisual,
+.savedRoutineThumb {
+  background: var(--tone, var(--stone));
 }
 .productBadge,
 .quickView {
@@ -48,9 +33,9 @@
 .productBadge {
   top: 14px;
   left: 14px;
-  background: rgba(255, 253, 249, 0.88);
+  background: color-mix(in srgb, var(--porcelain) 88%, transparent);
   padding: 6px 8px;
-  font-size: 8px;
+  font-size: var(--text-caption);
   letter-spacing: 0.08em;
   z-index: 2;
 }
@@ -58,8 +43,8 @@
   left: 12px;
   right: 12px;
   height: 40px;
-  background: rgba(35, 28, 25, 0.92);
-  color: #fff;
+  background: color-mix(in srgb, var(--ink) 92%, transparent);
+  color: var(--white);
   display: grid;
   place-items: center;
   letter-spacing: 0.1em;
@@ -79,7 +64,7 @@
   text-decoration: none;
 }
 .productInfo h3 {
-  font: 400 18px var(--serif);
+  font: 400 var(--text-lg) var(--serif);
   margin: 0 0 5px;
 }
 .productInfo p {
@@ -87,7 +72,7 @@
   margin: 0 0 6px;
 }
 .productInfo small {
-  color: #948985;
+  color: var(--subtle);
 }
 .price {
   display: flex;
@@ -97,7 +82,7 @@
   white-space: nowrap;
 }
 .price del {
-  color: #988d88;
+  color: var(--subtle);
 }
 .addButton {
   width: 100%;
@@ -107,10 +92,10 @@
 }
 .addButton:hover {
   background: var(--ink);
-  color: #fff;
+  color: var(--white);
 }
 .rating {
-  font-size: 11px;
+  font-size: var(--text-caption);
   letter-spacing: 0.08em;
   margin: 12px 0;
   color: var(--rose);
@@ -138,10 +123,10 @@
     min-height: 96px;
   }
   .productInfo h3 {
-    font-size: 15px;
+    font-size: var(--text-md);
   }
   .productInfo p {
-    font-size: 9px;
+    font-size: var(--text-caption);
   }
   .price {
     align-items: flex-start;
@@ -177,13 +162,13 @@
   z-index: 3;
   border-radius: 50%;
   border: 0;
-  background: rgba(255, 253, 249, 0.86);
+  background: color-mix(in srgb, var(--porcelain) 86%, transparent);
   color: var(--ink);
   display: grid;
   place-items: center;
 }
 .wishlistButton.active {
-  color: var(--plum);
+  color: var(--bordeaux);
 }
 .productMeta {
   font-weight: 600;
@@ -199,7 +184,7 @@
 .previewOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(36, 29, 26, 0.46);
+  background: color-mix(in srgb, var(--ink) 46%, transparent);
   z-index: 80;
   display: grid;
   place-items: center;
@@ -207,11 +192,11 @@
 }
 .quickPreview {
   width: min(850px, 100%);
-  background: var(--paper);
+  background: var(--porcelain);
   display: grid;
   grid-template-columns: 1fr 1fr;
   position: relative;
-  box-shadow: 0 30px 90px rgba(30, 20, 17, 0.2);
+  box-shadow: 0 30px 90px color-mix(in srgb, var(--ink) 20%, transparent);
 }
 .previewClose {
   position: absolute;
@@ -222,7 +207,7 @@
   height: 38px;
   border: 0;
   border-radius: 50%;
-  background: rgba(255, 253, 249, 0.9);
+  background: color-mix(in srgb, var(--porcelain) 90%, transparent);
 }
 .previewVisual {
   min-height: 520px;
@@ -237,7 +222,7 @@
   justify-content: center;
 }
 .quickPreview h2 {
-  font: 45px/1 var(--serif);
+  font: var(--text-6xl) / 1 var(--serif);
   font-weight: 400;
   margin: 14px 0;
 }
@@ -253,7 +238,7 @@
   align-items: center;
 }
 .rating svg {
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 @media (max-width: 700px) {
   .quickPreview {
@@ -273,7 +258,7 @@
   flex-direction: column;
 }
 .productImage {
-  border: 1px solid rgba(74, 39, 48, 0.035);
+  border: 1px solid color-mix(in srgb, var(--bordeaux-deep) 3.5%, transparent);
 }
 .productMeta {
   min-height: 29px;
@@ -333,7 +318,7 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 2px solid var(--paper);
+  border: 2px solid var(--porcelain);
   box-shadow: 0 0 0 1px var(--line);
 }
 .addButton {
@@ -341,14 +326,14 @@
   gap: 6px;
 }
 .addButton svg {
-  font-size: 14px;
+  font-size: var(--text-md);
 }
 .soldOut .productImage > a {
   opacity: 0.55;
 }
 @media (max-width: 700px) {
   .productInfo h3 {
-    font-size: 16px;
+    font-size: var(--text-base);
   }
   .productInfo small {
     display: none;
@@ -371,7 +356,7 @@
   gap: 3px;
 }
 .cardRating svg {
-  font-size: 11px;
+  font-size: var(--text-caption);
   color: var(--rose);
 }
 .visualLink {
@@ -390,7 +375,7 @@
   height: 14px;
   border-radius: 50%;
   background: var(--swatch);
-  box-shadow: 0 0 0 1px rgba(36, 29, 26, 0.16);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 16%, transparent);
 }
 .cardSwatches button:hover span {
   transform: scale(1.08);
@@ -408,7 +393,7 @@
 }
 .previewShade {
   margin: 12px 0 4px !important;
-  font-size: 11px !important;
+  font-size: var(--text-caption) !important;
   color: var(--muted);
 }
 .quickPreview .cardSwatches {
@@ -416,10 +401,10 @@
 }
 @media (max-width: 700px) {
   .productMeta {
-    font-size: 7px;
+    font-size: var(--text-caption);
   }
   .productInfo h3 {
-    font-size: 15px;
+    font-size: var(--text-md);
   }
   .productInfo p {
     display: none;
@@ -439,22 +424,22 @@
   }
 }
 .addButton {
-  font-size: 14px;
+  font-size: var(--text-md);
   letter-spacing: 0.045em;
 }
 .productInfo p {
-  font-size: 14px;
+  font-size: var(--text-md);
   line-height: 1.55;
 }
 .cardRating,
 .price,
 .productInfo small,
 .productMeta {
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 .productInfo h3,
 .wishlistButton svg {
-  font-size: 21px;
+  font-size: var(--text-xl);
 }
 .cardSwatches {
   min-height: 34px;
@@ -474,28 +459,28 @@
 }
 .cardSwatches button.selected {
   box-shadow:
-    0 0 0 2px var(--paper),
-    0 0 0 4px var(--plum);
+    0 0 0 2px var(--porcelain),
+    0 0 0 4px var(--bordeaux);
 }
 .quickView {
   opacity: 0.94;
-  font-size: 14px;
+  font-size: var(--text-md);
 }
 .addButton:disabled {
   opacity: 0.58;
   cursor: not-allowed;
 }
 .addButton:focus-visible {
-  outline: 3px solid #9b6257;
+  outline: 3px solid var(--rose);
   outline-offset: 3px;
 }
 @media (max-width: 700px) {
   .productInfo h3 {
-    font-size: 18px;
+    font-size: var(--text-lg);
   }
   .productInfo p {
     display: block;
-    font-size: 13px;
+    font-size: var(--text-sm);
   }
 }
 .productNameLink {
@@ -514,12 +499,12 @@
   font-family: var(--sans);
 }
 .cardPrice strong {
-  font-size: 16px;
+  font-size: var(--text-base);
   font-weight: 600;
 }
 .cardPrice del,
 .cardVariantInfo {
-  font-size: 13px;
+  font-size: var(--text-sm);
   color: var(--muted);
 }
 .cardVariantInfo {
@@ -537,14 +522,14 @@
   height: 24px;
   border-radius: 50%;
   background: var(--swatch);
-  box-shadow: inset 0 0 0 1px rgba(36, 29, 26, 0.16);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 16%, transparent);
 }
 .cardSwatches button > svg {
   position: absolute;
   width: 15px;
   height: 15px;
-  color: #fff;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.7));
+  color: var(--white);
+  filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--ink) 70%, transparent));
 }
 .cardSwatches button:disabled {
   opacity: 0.35;
@@ -552,22 +537,22 @@
 }
 .addButton {
   min-height: 46px;
-  border-color: var(--plum);
-  background: var(--plum);
-  color: #fff;
+  border-color: var(--bordeaux);
+  background: var(--bordeaux);
+  color: var(--white);
   font-weight: 600;
 }
 .addButton:hover:not(:disabled) {
-  background: #321b22;
-  border-color: #321b22;
+  background: var(--bordeaux-deep);
+  border-color: var(--bordeaux-deep);
 }
 .addButton.added {
-  background: #6b463f;
-  border-color: #6b463f;
+  background: var(--rose);
+  border-color: var(--rose);
 }
 .addButton:disabled {
-  background: var(--cream);
-  color: #766b67;
+  background: var(--ivory);
+  color: var(--muted);
   border-color: var(--line);
 }
 .wishlistButton {
@@ -575,8 +560,8 @@
   height: 44px;
 }
 .wishlistButton.active {
-  background: var(--plum);
-  color: #fff;
+  background: var(--bordeaux);
+  color: var(--white);
 }
 .quickView {
   min-height: 44px;
