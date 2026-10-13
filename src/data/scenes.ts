@@ -1,9 +1,31 @@
 // Art direction for the illustrated still lifes used across the site.
 // Each item references a product by slug; x/scale place it on a 600 × 400 stage.
 
-const BURGUNDY_STUDIO = { wall: "#57283a", arch: "#663243", plinth: "#d8c2b4" };
-const WARM_STONE = { wall: "#dcc6b6", arch: "#eadbd0", plinth: "#c6a998" };
-const BLUSH_ROOM = { wall: "#e8d3ca", arch: "#f4e7e0", plinth: "#d6bdb1" };
+export interface SceneItem {
+  slug: string;
+  /** Horizontal centre on the 600-wide stage. */
+  x: number;
+  scale: number;
+  /** Overrides the product's own colour, e.g. a lipstick shade. */
+  tint?: string;
+}
+
+interface SceneRoom {
+  wall: string;
+  arch: string;
+  plinth: string;
+}
+
+export interface Scene extends SceneRoom {
+  items: SceneItem[];
+  /** Moves the whole still life sideways, to leave room for overlaid text. */
+  shift?: number;
+  plinthWidth?: number;
+}
+
+const BURGUNDY_STUDIO: SceneRoom = { wall: "#57283a", arch: "#663243", plinth: "#d8c2b4" };
+const WARM_STONE: SceneRoom = { wall: "#dcc6b6", arch: "#eadbd0", plinth: "#c6a998" };
+const BLUSH_ROOM: SceneRoom = { wall: "#e8d3ca", arch: "#f4e7e0", plinth: "#d6bdb1" };
 
 export const SCENES = {
   hero: {
@@ -86,4 +108,6 @@ export const SCENES = {
       { slug: "luminous-veil-serum", x: 300, scale: 1.04 },
     ],
   },
-};
+} satisfies Record<string, Scene>;
+
+export type SceneName = keyof typeof SCENES;

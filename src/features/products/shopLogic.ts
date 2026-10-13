@@ -1,13 +1,27 @@
 import { OUT_OF_STOCK_IDS } from "../../data/merchandising";
+import type { Product } from "../../types/commerce";
 
 /** URL segments accepted by /shop/[category]. */
 export const CATEGORIES = ["skincare", "makeup", "sets"];
 
-export const isProductAvailable = (product) =>
+export type SortOption = "featured" | "price-low" | "price-high" | "newest";
+
+/** Shop filters as read from the URL. Unknown sort values fall back to "featured". */
+export interface ShopFilters {
+  category?: string;
+  collection: string;
+  query: string;
+  concern: string;
+  underFifty: boolean;
+  inStock: boolean;
+  sort: SortOption | (string & {});
+}
+
+export const isProductAvailable = (product: Product): boolean =>
   !OUT_OF_STOCK_IDS.includes(product.id) &&
   (!product.variants || product.variants.some((variant) => (variant.stock ?? 0) > 0));
 
-export const searchableProductText = (product) =>
+export const searchableProductText = (product: Product): string =>
   [
     product.name,
     product.brand,
@@ -25,9 +39,9 @@ export const searchableProductText = (product) =>
     .toLowerCase();
 
 export function filterAndSortProducts(
-  products,
-  { category, collection, query, concern, underFifty, inStock, sort },
-) {
+  products: Product[],
+  { category, collection, query, concern, underFifty, inStock, sort }: ShopFilters,
+): Product[] {
   const normalizedQuery = query.trim().toLowerCase();
   const filtered = products
     .filter((product) => !category || product.category.toLowerCase() === category.toLowerCase())
