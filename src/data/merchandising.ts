@@ -1,6 +1,8 @@
-export const BESTSELLER_IDS = [2, 3, 8, 14];
+import type { ProductId } from "../types/commerce";
 
-export const OUT_OF_STOCK_IDS = [];
+export const BESTSELLER_IDS: ProductId[] = [2, 3, 8, 14];
+
+export const OUT_OF_STOCK_IDS: ProductId[] = [];
 
 // The evening routine promoted on the homepage, in application order.
 export const EVENING_ROUTINE = [

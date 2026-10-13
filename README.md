@@ -36,7 +36,7 @@ and a foundation shade finder.
 
 ## Tech stack
 
-Next.js 16 (App Router) · React 19 · Framer Motion · MUI icons · Jest and React Testing
+Next.js 16 (App Router) · React 19 · TypeScript (domain and data layers) · Framer Motion · MUI icons · Jest and React Testing
 Library · ESLint · Prettier · GitHub Actions · Vercel
 
 ## How it is built
@@ -116,7 +116,7 @@ build on every push and pull request.
 
 ## Roadmap
 
-- Convert the codebase to TypeScript, starting with the domain layer.
+- Continue the TypeScript migration: hooks and services next, then components and routes.
 
 The full plan is in [`docs/refactor-roadmap.md`](docs/refactor-roadmap.md).
 

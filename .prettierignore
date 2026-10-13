@@ -3,6 +3,8 @@ build
 coverage
 node_modules
 next-env.d.ts
+# Next.js rewrites this file on build
+tsconfig.json
 # npm owns the formatting of these files
 package.json
 package-lock.json
