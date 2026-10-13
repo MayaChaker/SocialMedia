@@ -1,16 +1,26 @@
 "use client";
 
-import { useId } from "react";
+import { useId, type ComponentType, type CSSProperties, type ReactElement } from "react";
+import type { ProductType } from "../../types/commerce";
 import { shade } from "./color";
+import type { PackagingColors } from "./packaging";
 
 // Fonts come from next/font CSS variables (see src/app/layout.jsx).
-const SERIF = { fontFamily: "var(--serif)" };
-const SANS = { fontFamily: "var(--sans)" };
+const SERIF: CSSProperties = { fontFamily: "var(--serif)" };
+const SANS: CSSProperties = { fontFamily: "var(--sans)" };
+
+export interface ShapeProps {
+  pack: PackagingColors;
+  /** Formula colour (lipstick bullet, blush pan, foundation liquid). */
+  tint?: string;
+  /** Range name printed under the wordmark, e.g. "SKIN". */
+  line?: string;
+}
 
 // Every shape is drawn in a 200 × 260 box, standing on a baseline at y = 242.
 // Gradients run left to right so each piece reads as a lit cylinder.
 
-function Cylinder({ id, color }) {
+function Cylinder({ id, color }: { id: string; color: string }) {
   return (
     <linearGradient id={id} x1="0" x2="1" y1="0" y2="0">
       <stop offset="0" stopColor={shade(color, -0.2)} />
@@ -21,7 +31,12 @@ function Cylinder({ id, color }) {
   );
 }
 
-function useGradients(pack, tint) {
+type GradientFills = Record<"body" | "cap" | "tint", string>;
+
+function useGradients(
+  pack: PackagingColors,
+  tint?: string,
+): { defs: ReactElement; fill: GradientFills } {
   const id = useId().replace(/:/g, "");
   const ids = { body: `${id}b`, cap: `${id}c`, tint: `${id}t` };
   const defs = (
@@ -31,21 +46,30 @@ function useGradients(pack, tint) {
       {tint && <Cylinder id={ids.tint} color={tint} />}
     </defs>
   );
-  const fill = Object.fromEntries(
-    Object.entries(ids).map(([key, value]) => [key, `url(#${value})`]),
-  );
+  const fill = {
+    body: `url(#${ids.body})`,
+    cap: `url(#${ids.cap})`,
+    tint: `url(#${ids.tint})`,
+  };
   return { defs, fill };
 }
 
-const Shadow = ({ width }) => (
+const Shadow = ({ width }: { width: number }) => (
   <ellipse cx="100" cy="244" rx={width / 2} ry="6" fill="#2a1712" opacity="0.16" />
 );
 
-const Highlight = ({ x, y, height }) => (
+const Highlight = ({ x, y, height }: { x: number; y: number; height: number }) => (
   <rect x={x} y={y} width="5" height={height} rx="2.5" fill="#fff" opacity="0.32" />
 );
 
-function Wordmark({ y, color, size = 8.5, line }) {
+interface WordmarkProps {
+  y: number;
+  color: string;
+  size?: number;
+  line?: string;
+}
+
+function Wordmark({ y, color, size = 8.5, line }: WordmarkProps) {
   return (
     <g fill={color} textAnchor="middle" style={SERIF}>
       <text x="100" y={y} fontSize={size} letterSpacing={size * 0.24}>
@@ -60,7 +84,7 @@ function Wordmark({ y, color, size = 8.5, line }) {
   );
 }
 
-export function Serum({ pack, line }) {
+export function Serum({ pack, line }: ShapeProps) {
   const { defs, fill } = useGradients(pack);
   return (
     <g>
@@ -76,7 +100,7 @@ export function Serum({ pack, line }) {
   );
 }
 
-export function Bottle({ pack, line }) {
+export function Bottle({ pack, line }: ShapeProps) {
   const { defs, fill } = useGradients(pack);
   return (
     <g>
@@ -91,7 +115,7 @@ export function Bottle({ pack, line }) {
   );
 }
 
-export function Pump({ pack, tint = "#d8ad8e", line }) {
+export function Pump({ pack, tint = "#d8ad8e", line }: ShapeProps) {
   const { defs, fill } = useGradients(pack, tint);
   return (
     <g>
@@ -111,7 +135,7 @@ export function Pump({ pack, tint = "#d8ad8e", line }) {
   );
 }
 
-export function Wand({ pack, tint = "#d3a481" }) {
+export function Wand({ pack, tint = "#d3a481" }: ShapeProps) {
   const { defs, fill } = useGradients(pack, tint);
   return (
     <g>
@@ -129,7 +153,7 @@ export function Wand({ pack, tint = "#d3a481" }) {
   );
 }
 
-export function Gloss({ pack, tint = "#c97a82" }) {
+export function Gloss({ pack, tint = "#c97a82" }: ShapeProps) {
   const { defs, fill } = useGradients(pack, tint);
   return (
     <g>
@@ -144,7 +168,7 @@ export function Gloss({ pack, tint = "#c97a82" }) {
   );
 }
 
-export function Mascara({ pack }) {
+export function Mascara({ pack }: ShapeProps) {
   const { defs, fill } = useGradients(pack);
   return (
     <g>
@@ -170,7 +194,7 @@ export function Mascara({ pack }) {
   );
 }
 
-export function Tube({ pack, line }) {
+export function Tube({ pack, line }: ShapeProps) {
   const { defs, fill } = useGradients(pack);
   return (
     <g>
@@ -199,7 +223,7 @@ export function Tube({ pack, line }) {
   );
 }
 
-export function Jar({ pack, line }) {
+export function Jar({ pack, line }: ShapeProps) {
   const { defs, fill } = useGradients(pack);
   return (
     <g>
@@ -225,7 +249,7 @@ export function Jar({ pack, line }) {
   );
 }
 
-export function Lipstick({ pack, tint = "#8f4f58" }) {
+export function Lipstick({ pack, tint = "#8f4f58" }: ShapeProps) {
   const { defs, fill } = useGradients(pack, tint);
   return (
     <g>
@@ -252,7 +276,7 @@ export function Lipstick({ pack, tint = "#8f4f58" }) {
   );
 }
 
-export function Compact({ pack, tint = "#cf8991" }) {
+export function Compact({ pack, tint = "#cf8991" }: ShapeProps) {
   const { defs, fill } = useGradients(pack, tint);
   return (
     <g>
@@ -272,7 +296,7 @@ export function Compact({ pack, tint = "#cf8991" }) {
 
 const PALETTE_PANS = ["#ecc7b4", "#d79f89", "#b97a6c", "#f2dcc6"];
 
-export function Palette({ pack }) {
+export function Palette({ pack }: ShapeProps) {
   const { defs, fill } = useGradients(pack);
   return (
     <g>
@@ -291,7 +315,7 @@ export function Palette({ pack }) {
   );
 }
 
-export const SHAPES = {
+const SHAPES: Readonly<Record<Exclude<ProductType, "set">, ComponentType<ShapeProps>>> = {
   serum: Serum,
   bottle: Bottle,
   pump: Pump,
@@ -304,3 +328,12 @@ export const SHAPES = {
   compact: Compact,
   palette: Palette,
 };
+
+/**
+ * Draws the packaging for a product type. Sets have no shape of their own
+ * (ProductArt composes their contents), so they fall back to a bottle.
+ */
+export function ProductShape({ type, ...props }: ShapeProps & { type: ProductType }) {
+  const Shape = SHAPES[type === "set" ? "bottle" : type];
+  return <Shape {...props} />;
+}
