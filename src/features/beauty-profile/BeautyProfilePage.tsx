@@ -3,9 +3,12 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { Check } from "@mui/icons-material";
+import { resolveProductSelection } from "../../domain/product/productSelection";
 import { productRepository } from "../../repositories/productRepository";
 import { useCustomer } from "../../hooks/useCustomer";
 import ProductArt from "../../components/product-art/ProductArt";
+import type { Product } from "../../types/commerce";
+import type { BeautyProfile } from "../../types/customer";
 
 const catalogue = productRepository.getAll();
 
@@ -20,14 +23,18 @@ export default function BeautyProfilePage() {
   const { profile, saveProfile, routineResults } = useCustomer();
   const [draft, setDraft] = useState(profile);
   const [saved, setSaved] = useState(false);
-  const toggle = (key, value) =>
-    setDraft((current) => ({
-      ...current,
-      [key]: (current[key] || []).includes(value)
-        ? current[key].filter((item) => item !== value)
-        : [...(current[key] || []), value],
-    }));
+  const toggle = (key: "skinGoals" | "preferences", value: string) =>
+    setDraft((current: BeautyProfile) => {
+      const values = current[key] || [];
+      return {
+        ...current,
+        [key]: values.includes(value)
+          ? values.filter((item) => item !== value)
+          : [...values, value],
+      };
+    });
   const routineProducts = useMemo(() => {
+    // Older saves are a bare list of ids or product names.
     const saved = Array.isArray(routineResults) ? routineResults : routineResults?.productIds || [];
     return saved
       .map((item) =>
@@ -35,10 +42,11 @@ export default function BeautyProfilePage() {
           ? productRepository.getById(item)
           : catalogue.find((product) => product.name === item),
       )
-      .filter(Boolean);
+      .filter((product): product is Product => Boolean(product));
   }, [routineResults]);
   const tint = productRepository.getBySlug("petal-skin-tint");
   const shade = tint?.variants?.find((item) => item.id === profile.shadeVariantId);
+  const shadeProduct = tint && shade ? resolveProductSelection(tint, shade.id) : null;
   const save = () => {
     saveProfile(draft);
     setSaved(true);
@@ -96,17 +104,18 @@ export default function BeautyProfilePage() {
         <aside className="profileSaved">
           <article className="savedProfileCard">
             <span className="kicker">Saved shade</span>
-            {shade ? (
+            {shade && shadeProduct ? (
               <div className="savedShadeContent">
                 <div className="savedShadeVisual">
-                  <ProductArt
-                    product={{ ...tint, ...shade, name: tint.name, selectedVariant: shade.name }}
-                  />
+                  <ProductArt product={shadeProduct} />
                 </div>
                 <div>
                   <h2>{shade.name}</h2>
-                  <p>{tint.name}</p>
-                  <Link className="textLink" href={`/product/${tint.slug}?variant=${shade.id}`}>
+                  <p>{shadeProduct.name}</p>
+                  <Link
+                    className="textLink"
+                    href={`/product/${shadeProduct.slug}?variant=${shade.id}`}
+                  >
                     View shade
                   </Link>
                   <Link className="textLink" href="/shade-match">
@@ -160,7 +169,14 @@ export default function BeautyProfilePage() {
     </main>
   );
 }
-function ChoiceGroup({ legend, values, selected, onToggle }) {
+interface ChoiceGroupProps {
+  legend: string;
+  values: string[];
+  selected: string[];
+  onToggle: (value: string) => void;
+}
+
+function ChoiceGroup({ legend, values, selected, onToggle }: ChoiceGroupProps) {
   return (
     <fieldset>
       <legend>{legend}</legend>

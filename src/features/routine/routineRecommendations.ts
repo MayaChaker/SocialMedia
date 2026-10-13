@@ -5,11 +5,12 @@ export type RoutineGoal = "Dehydration" | "Dullness" | "Fine lines" | "Sensitive
 export type RoutinePace = "Essential" | "Balanced" | "Immersive";
 export type RoutineTexture = "Weightless" | "Cushioning" | "Rich";
 
-export interface RoutineAnswers {
+// A type alias rather than an interface, so it can be stored as a plain Record<string, string>.
+export type RoutineAnswers = {
   goal: RoutineGoal;
   time: RoutinePace;
   texture: RoutineTexture;
-}
+};
 
 export interface RoutineStep {
   product: Product;

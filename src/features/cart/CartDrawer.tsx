@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
@@ -20,7 +20,12 @@ import { MOTION } from "../../theme/tokens";
 
 const catalogue = productRepository.getAll();
 
-export default function CartDrawer({ open, close }) {
+interface CartDrawerProps {
+  open: boolean;
+  close: () => void;
+}
+
+export default function CartDrawer({ open, close }: CartDrawerProps) {
   const {
     cart,
     totals,
@@ -32,8 +37,8 @@ export default function CartDrawer({ open, close }) {
     removePromoCode,
   } = useCommerce();
   const router = useRouter();
-  const drawerRef = useRef(null);
-  const closeRef = useRef(null);
+  const drawerRef = useRef<HTMLElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const [promoInput, setPromoInput] = useState("");
   const [promoError, setPromoError] = useState("");
   const [promoOpen, setPromoOpen] = useState(false);
@@ -41,7 +46,7 @@ export default function CartDrawer({ open, close }) {
     (product) => !product.variants && !cart.some((item) => item.productId === product.id),
   );
   useModalDialog(open, drawerRef, close, closeRef);
-  const applyPromo = (event) => {
+  const applyPromo = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const valid = applyPromoCode(promoInput);
     setPromoError(valid ? "" : "That code is not valid.");

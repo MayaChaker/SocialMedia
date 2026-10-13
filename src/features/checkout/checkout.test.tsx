@@ -1,11 +1,13 @@
+import type { ReactElement } from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import AppProviders from "../../providers/AppProviders";
 import { router } from "../../test/navigation";
 import CheckoutPage from "./CheckoutPage";
 import OrderConfirmationPage from "./OrderConfirmationPage";
 
-const withProviders = (ui) => render(<AppProviders>{ui}</AppProviders>);
-const type = (label, value) =>
+const withProviders = (ui: ReactElement) => render(<AppProviders>{ui}</AppProviders>);
+const stored = (key: string) => JSON.parse(window.localStorage.getItem(key) ?? "null");
+const type = (label: string, value: string) =>
   fireEvent.change(screen.getByLabelText(label, { exact: false }), { target: { value } });
 const seedBag = () =>
   window.localStorage.setItem(
@@ -32,11 +34,11 @@ test("a shopper can check out and the confirmation renders from saved orders", a
   fireEvent.click(screen.getByRole("button", { name: /place demo order/i }));
 
   await waitFor(() => expect(router.replace).toHaveBeenCalled());
-  const [order] = JSON.parse(window.localStorage.getItem("velouraBeauty.orders.v1"));
+  const [order] = stored("velouraBeauty.orders.v1");
   expect(router.replace).toHaveBeenCalledWith(`/checkout/confirmation/${order.id}`);
   expect(router.replace).not.toHaveBeenCalledWith("/shop");
   expect(order.total).toBe(69.2);
-  expect(JSON.parse(window.localStorage.getItem("velouraBeauty.cart.v2"))).toEqual([]);
+  expect(stored("velouraBeauty.cart.v2")).toEqual([]);
 
   unmount();
   withProviders(<OrderConfirmationPage orderId={order.id} />);
@@ -51,6 +53,7 @@ test("contact details are validated by the browser before continuing", async () 
   type("First name", "Maya");
   type("Last name", "Chaker");
   const form = screen.getByLabelText("Email").closest("form");
+  if (!form) throw new Error("The email field should be inside a form");
   // jsdom does not block submission, so assert the validation contract directly.
   expect(form.checkValidity()).toBe(false);
   type("Email", "maya@example.com");

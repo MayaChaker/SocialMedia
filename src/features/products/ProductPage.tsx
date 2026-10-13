@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Check, Star } from "@mui/icons-material";
 import { money } from "../../lib/money";
@@ -11,12 +11,13 @@ import { useCommerce } from "../../hooks/useCommerce";
 import { useCustomer } from "../../hooks/useCustomer";
 import ProductArt from "../../components/product-art/ProductArt";
 import NotFoundPage from "../../views/NotFoundPage";
+import type { Product } from "../../types/commerce";
 import ProductCard from "./ProductCard";
 import WishlistButton from "../wishlist/WishlistButton";
 
 const catalogue = productRepository.getAll();
 
-export default function ProductPage({ slug }) {
+export default function ProductPage({ slug }: { slug: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -26,7 +27,7 @@ export default function ProductPage({ slug }) {
   const selected =
     product?.variants?.find((variant) => variant.id === params.get("variant")) ||
     product?.variants?.[0];
-  const selectShade = (variantId) =>
+  const selectShade = (variantId: string) =>
     router.replace(`${pathname}?variant=${encodeURIComponent(variantId)}`, { scroll: false });
   const { addToCart } = useCommerce();
   const { addRecentlyViewed, recentlyViewed, profile } = useCustomer();
@@ -34,22 +35,17 @@ export default function ProductPage({ slug }) {
   useEffect(() => {
     if (productId) addRecentlyViewed(productId);
   }, [productId, addRecentlyViewed]);
-  const display = product && resolveProductSelection(product, selected?.id);
-  const related = useMemo(
-    () =>
-      product
-        ? catalogue
-            .filter(
-              (item) =>
-                item.id !== product.id &&
-                (item.category === product.category ||
-                  product.matches.some((match) => item.matches.includes(match))),
-            )
-            .slice(0, 3)
-        : [],
-    [product],
-  );
   if (!product) return <NotFoundPage />;
+  // Memoised by the React Compiler; the catalogue is small enough to filter on every render.
+  const related = catalogue
+    .filter(
+      (item) =>
+        item.id !== product.id &&
+        (item.category === product.category ||
+          product.matches.some((match) => item.matches.includes(match))),
+    )
+    .slice(0, 3);
+  const display = resolveProductSelection(product, selected?.id) ?? product;
   const recent = productRepository
     .getManyByIds(recentlyViewed.filter((id) => id !== product.id))
     .slice(0, 3);
@@ -99,7 +95,7 @@ export default function ProductPage({ slug }) {
           {product.variants && (
             <div className="detailVariants">
               <span>
-                Shade: <strong>{selected.name}</strong>
+                Shade: <strong>{selected?.name}</strong>
               </span>
               <div
                 className="cardSwatches"
@@ -180,7 +176,16 @@ export default function ProductPage({ slug }) {
   );
 }
 
-function ProductShelf({ title, eyebrow, products, openCart, shelf }) {
+interface ProductShelfProps {
+  title: string;
+  eyebrow: string;
+  products: Product[];
+  openCart: () => void;
+  /** Modifier for the section's class name, e.g. "related" → "relatedShelf". */
+  shelf: string;
+}
+
+function ProductShelf({ title, eyebrow, products, openCart, shelf }: ProductShelfProps) {
   return (
     <section className={`recommendations ${shelf}Shelf`}>
       <div className="sectionHeader">
