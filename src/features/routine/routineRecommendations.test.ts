@@ -1,9 +1,23 @@
 import { productRepository } from "../../repositories/productRepository";
-import { buildRoutineRecommendations } from "./routineRecommendations";
+import {
+  buildRoutineRecommendations,
+  type RoutineAnswers,
+  type RoutineGoal,
+  type RoutinePace,
+  type RoutineTexture,
+} from "./routineRecommendations";
 
 const PRODUCTS = productRepository.getAll();
 
-const answers = (goal, time, texture) => ({ goal, time, texture });
+const answers = (
+  goal: RoutineGoal,
+  time: RoutinePace,
+  texture: RoutineTexture,
+): RoutineAnswers => ({
+  goal,
+  time,
+  texture,
+});
 
 test("routine length follows the selected pace", () => {
   expect(

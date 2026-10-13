@@ -1,7 +1,30 @@
 import { productRepository } from "../../repositories/productRepository";
+import type { Product } from "../../types/commerce";
+
+export type RoutineGoal = "Dehydration" | "Dullness" | "Fine lines" | "Sensitive skin";
+export type RoutinePace = "Essential" | "Balanced" | "Immersive";
+export type RoutineTexture = "Weightless" | "Cushioning" | "Rich";
+
+export interface RoutineAnswers {
+  goal: RoutineGoal;
+  time: RoutinePace;
+  texture: RoutineTexture;
+}
+
+export interface RoutineStep {
+  product: Product;
+  step: string;
+  reason: string;
+}
 
 const catalogue = productRepository.getAll();
-const bySlug = (slug) => productRepository.getBySlug(slug);
+
+/** Routine products are fixed slugs; a missing one is a catalogue bug, so fail loudly. */
+const bySlug = (slug: string): Product => {
+  const product = productRepository.getBySlug(slug);
+  if (!product) throw new Error(`Routine product "${slug}" is missing from the catalogue`);
+  return product;
+};
 
 const ESSENCE = "petal-water-essence";
 const CLEANSER = "cloud-melt-cleanser";
@@ -10,37 +33,45 @@ const SERUM = "luminous-veil-serum";
 const NIGHT_CREAM = "restorative-night-cream";
 const SPF = "daily-silk-spf-50";
 
-const treatmentByGoal = {
+const treatmentByGoal: Record<RoutineGoal, string> = {
   Dehydration: ESSENCE,
   Dullness: SERUM,
   "Fine lines": SERUM,
   "Sensitive skin": ESSENCE,
 };
 
-const treatmentReasons = {
+const treatmentReasons: Record<RoutineGoal, string> = {
   Dehydration: "Floods skin with light, lasting hydration.",
   Dullness: "Restores a fresh, rested-looking glow.",
   "Fine lines": "Supports resilient skin with peptides and hydration.",
   "Sensitive skin": "Comforts tight-feeling skin with a gentle milky layer.",
 };
 
-const finishByTexture = {
+const finishByTexture: Record<RoutineTexture, string> = {
   Weightless: SPF,
   Cushioning: SPF,
   Rich: NIGHT_CREAM,
 };
 
-const cleanserFor = (goal, texture) =>
+const cleanserFor = (goal: RoutineGoal, texture: RoutineTexture) =>
   texture === "Rich" || goal === "Sensitive skin" ? BALM : CLEANSER;
 
-const recommendation = (slug, step, reason) => ({ product: bySlug(slug), step, reason });
+const recommendation = (slug: string, step: string, reason: string): RoutineStep => ({
+  product: bySlug(slug),
+  step,
+  reason,
+});
 
 /**
  * Builds a routine from the quiz answers:
  * cleanse → treat → finish, trimmed to two steps for "Essential"
  * and extended with a second hydrating layer for "Immersive".
  */
-export function buildRoutineRecommendations({ goal, time, texture }) {
+export function buildRoutineRecommendations({
+  goal,
+  time,
+  texture,
+}: RoutineAnswers): RoutineStep[] {
   const cleanser = cleanserFor(goal, texture);
   const treatment = treatmentByGoal[goal] || SERUM;
   const finish = finishByTexture[texture] || SPF;
@@ -81,12 +112,12 @@ export function buildRoutineRecommendations({ goal, time, texture }) {
   return routine;
 }
 
-export function routineTitle({ goal, time }) {
+export function routineTitle({ goal, time }: Pick<RoutineAnswers, "goal" | "time">): string {
   const pace = time === "Essential" ? "Essential" : time === "Immersive" ? "Layered" : "Balanced";
   return `${pace} care for ${goal.toLowerCase()}.`;
 }
 
-export function routineAlternatives(product, recommendations) {
+export function routineAlternatives(product: Product, recommendations: RoutineStep[]): Product[] {
   const selected = new Set(recommendations.map((item) => item.product.id));
   return catalogue
     .filter(
