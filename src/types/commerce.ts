@@ -115,3 +115,42 @@ export interface Totals {
   freeShippingRemaining: number;
   promotion: Promotion | null;
 }
+
+export interface ContactDetails {
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+}
+
+export interface ShippingAddress {
+  address: string;
+  apartment: string;
+  city: string;
+  country: string;
+  postalCode: string;
+}
+
+/** What checkout collects before an order is placed. */
+export interface OrderRequest {
+  cart: CartLine[];
+  contact: ContactDetails;
+  shipping: ShippingAddress;
+  promoCode: string;
+  total: number;
+}
+
+/** An order recorded in the browser (demo mode). */
+export interface Order extends Omit<OrderRequest, "cart"> {
+  id: string;
+  /** ISO 8601 timestamp. */
+  placedAt: string;
+  status: "Confirmed";
+  items: CartLine[];
+  payment: string;
+}
+
+/** Returned by the hosted checkout endpoint: the shopper continues on the payment page. */
+export interface HostedCheckoutSession {
+  redirectUrl: string;
+}

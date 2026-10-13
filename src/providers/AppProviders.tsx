@@ -1,16 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { MotionConfig } from "framer-motion";
 import CartDrawer from "../features/cart/CartDrawer";
-import { CartDrawerContext } from "../hooks/useCartDrawer";
+import { CartDrawerContext, type CartDrawerControls } from "../hooks/useCartDrawer";
 import { CommerceProvider } from "../hooks/useCommerce";
 import { CustomerProvider } from "../hooks/useCustomer";
 
 // Client-side state shared by every page: bag, wishlist, orders, profile and the bag drawer.
-export default function AppProviders({ children }) {
+export default function AppProviders({ children }: { children: ReactNode }) {
   const [cartOpen, setCartOpen] = useState(false);
-  const drawer = useMemo(
+  const drawer = useMemo<CartDrawerControls>(
     () => ({ openCart: () => setCartOpen(true), closeCart: () => setCartOpen(false) }),
     [],
   );

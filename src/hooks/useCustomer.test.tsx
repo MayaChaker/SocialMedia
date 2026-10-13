@@ -15,6 +15,8 @@ function CustomerActions() {
   );
 }
 
+const stored = (key: string): unknown => JSON.parse(window.localStorage.getItem(key) ?? "null");
+
 beforeEach(() => window.localStorage.clear());
 
 test("profile and routine actions preserve persisted value shapes and keys", () => {
@@ -25,12 +27,12 @@ test("profile and routine actions preserve persisted value shapes and keys", () 
   );
   fireEvent.click(screen.getByRole("button", { name: "Save profile" }));
   fireEvent.click(screen.getByRole("button", { name: "Save routine" }));
-  expect(JSON.parse(window.localStorage.getItem("velouraBeauty.beautyProfile.v1"))).toEqual({
+  expect(stored("velouraBeauty.beautyProfile.v1")).toEqual({
     skinType: "Dry",
     skinGoals: [],
     preferences: [],
   });
-  expect(JSON.parse(window.localStorage.getItem("velouraBeauty.routineResults.v1"))).toEqual({
+  expect(stored("velouraBeauty.routineResults.v1")).toEqual({
     productIds: [2, 3],
     answers: { goal: "Dullness" },
   });
