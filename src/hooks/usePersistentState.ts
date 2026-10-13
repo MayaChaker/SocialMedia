@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { storageRepository } from "../repositories/storageRepository";
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import { storageRepository, type StorageKey } from "../repositories/storageRepository";
 
 /**
  * useState backed by localStorage.
@@ -8,7 +8,10 @@ import { storageRepository } from "../repositories/storageRepository";
  * the stored value is read after mount. `hydrated` tells callers when it is safe to
  * act on the stored value (e.g. before redirecting away from an "empty" checkout).
  */
-export function usePersistentState(key, initialValue) {
+export function usePersistentState<T>(
+  key: StorageKey,
+  initialValue: T,
+): [value: T, setValue: Dispatch<SetStateAction<T>>, hydrated: boolean] {
   const initialRef = useRef(initialValue);
   const [value, setValue] = useState(initialValue);
   const [hydrated, setHydrated] = useState(false);
