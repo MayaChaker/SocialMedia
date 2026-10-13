@@ -1,4 +1,12 @@
 import type { ProductId } from "../types/commerce";
+import type { SceneName } from "./scenes";
+
+interface HomeCategory {
+  title: string;
+  copy: string;
+  href: string;
+  scene: SceneName;
+}
 
 export const BESTSELLER_IDS: ProductId[] = [2, 3, 8, 14];
 
@@ -11,7 +19,7 @@ export const EVENING_ROUTINE = [
   { slug: "restorative-night-cream", step: "Replenish" },
 ];
 
-export const HOME_CATEGORIES = [
+export const HOME_CATEGORIES: HomeCategory[] = [
   {
     title: "Skincare",
     copy: "Barrier-minded essentials",

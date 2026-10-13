@@ -1,3 +1,4 @@
+import type { Metadata, Viewport } from "next";
 import { DM_Sans, Italiana } from "next/font/google";
 import AppProviders from "../providers/AppProviders";
 import "../styles/index.css";
@@ -13,7 +14,7 @@ const sans = DM_Sans({
 const DESCRIPTION =
   "Veloura Beauty creates considered skincare, makeup, and rituals with effective formulas and sensorial textures.";
 
-export const metadata = {
+export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   title: { default: "Veloura Beauty — Beauty, considered.", template: "%s | Veloura Beauty" },
   description: DESCRIPTION,
@@ -28,9 +29,9 @@ export const metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-export const viewport = { themeColor: "#4a2730" };
+export const viewport: Viewport = { themeColor: "#4a2730" };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${serif.variable} ${sans.variable}`}>
       <body>

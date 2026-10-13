@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProductPage from "../../../../features/products/ProductPage";
 import { productRepository } from "../../../../repositories/productRepository";
@@ -10,7 +11,9 @@ export function generateStaticParams() {
   return productRepository.getAll().map((product) => ({ slug: product.slug }));
 }
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({
+  params,
+}: PageProps<"/product/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const product = productRepository.getBySlug(slug);
   if (!product) return {};
@@ -26,7 +29,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function Page({ params }) {
+export default async function Page({ params }: PageProps<"/product/[slug]">) {
   const { slug } = await params;
   if (!productRepository.getBySlug(slug)) notFound();
   return (

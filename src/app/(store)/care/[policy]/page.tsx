@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PolicyPage, { POLICIES } from "../../../../views/PolicyPage";
 
@@ -7,13 +8,13 @@ export function generateStaticParams() {
   return Object.keys(POLICIES).map((policy) => ({ policy }));
 }
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params }: PageProps<"/care/[policy]">): Promise<Metadata> {
   const { policy } = await params;
   const content = POLICIES[policy];
   return content ? { title: content.title, description: content.intro } : {};
 }
 
-export default async function Page({ params }) {
+export default async function Page({ params }: PageProps<"/care/[policy]">) {
   const { policy } = await params;
   const content = POLICIES[policy];
   if (!content) notFound();

@@ -36,7 +36,7 @@ and a foundation shade finder.
 
 ## Tech stack
 
-Next.js 16 (App Router) · React 19 · TypeScript (domain, data, state and services) · Framer Motion · MUI icons · Jest and React Testing
+Next.js 16 (App Router) · React 19 · TypeScript (strict) · Framer Motion · MUI icons · Jest and React Testing
 Library · ESLint · Prettier · GitHub Actions · Vercel
 
 ## How it is built
@@ -102,6 +102,7 @@ npm run dev          # http://localhost:3000
 | `npm start`            | Serve the production build     |
 | `npm run test:ci`      | Run the test suite once        |
 | `npm run lint`         | ESLint, failing on any warning |
+| `npm run typecheck`    | TypeScript, strict mode        |
 | `npm run format:check` | Verify Prettier formatting     |
 
 Optional environment variables are listed in [`.env.example`](.env.example).
@@ -111,12 +112,13 @@ Optional environment variables are listed in [`.env.example`](.env.example).
 Unit tests cover the domain rules (pricing, cart state, variant selection, routine and shade
 logic). Integration tests walk through checkout to the confirmation page, URL-driven filters,
 and the route handlers' not-found and metadata behaviour, with `next/navigation` replaced by an
-in-memory stand-in (`src/test/navigation.js`). CI runs formatting, lint, tests and a production
-build on every push and pull request.
+in-memory stand-in (`src/test/navigation.ts`). CI runs formatting, lint, the type check, tests and a
+production build on every push and pull request.
 
 ## Roadmap
 
-- Finish the TypeScript migration: components and routes are the remaining JavaScript.
+- Design system (Phase 4): turn the existing colours, type, spacing and motion into documented
+  tokens and shared primitives.
 
 The full plan is in [`docs/refactor-roadmap.md`](docs/refactor-roadmap.md).
 

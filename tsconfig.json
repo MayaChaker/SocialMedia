@@ -6,10 +6,6 @@
       "dom.iterable",
       "esnext"
     ],
-    // The migration is incremental: JavaScript files still compile, but only
-    // .ts/.tsx files are type-checked.
-    "allowJs": true,
-    "checkJs": false,
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noEmit": true,
@@ -30,7 +26,8 @@
       {
         "name": "next"
       }
-    ]
+    ],
+    "allowJs": false
   },
   "include": [
     "next-env.d.ts",
