@@ -1,23 +1,15 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Close, Tune } from "@mui/icons-material";
+import { useState } from "react";
 import { productRepository } from "../../repositories/productRepository";
 import { useCartDrawer } from "../../hooks/useCartDrawer";
-import { useModalDialog } from "../../hooks/useModalDialog";
+import ActiveFilters from "./ActiveFilters";
+import FilterDrawer from "./FilterDrawer";
 import ProductCard from "./ProductCard";
-import { CATEGORIES, filterAndSortProducts } from "./shopLogic";
+import ShopToolbar from "./ShopToolbar";
+import { filterAndSortProducts } from "./shopLogic";
+import { useShopFilters } from "./useShopFilters";
 
-const concerns = [
-  "Dehydration",
-  "Dullness",
-  "Sensitive skin",
-  "Natural coverage",
-  "Travel",
-  "Gifting",
-];
-const FILTER_KEYS = ["concern", "price", "stock"];
 const catalogue = productRepository.getAll();
 
 interface ShopPageProps {
@@ -26,208 +18,27 @@ interface ShopPageProps {
 }
 
 export default function ShopPage({ category }: ShopPageProps) {
-  const router = useRouter();
-  const pathname = usePathname();
   const { openCart } = useCartDrawer();
-  const drawerRef = useRef<HTMLElement>(null);
+  const shop = useShopFilters(category);
   const [filtersOpen, setFiltersOpen] = useState(false);
-  // Every filter lives in the URL, so results survive a refresh and can be shared.
-  const params = useSearchParams();
-  const query = params.get("search") || "";
-  const collection = params.get("collection") || "";
-  const concern = params.get("concern") || "";
-  const underFifty = params.get("price") === "under-50";
-  const inStock = params.get("stock") === "in";
-  const sort = params.get("sort") || "featured";
-
-  const withQuery = (path: string, next: URLSearchParams) => {
-    const search = next.toString();
-    return search ? `${path}?${search}` : path;
-  };
-  const updateParams = (change: (next: URLSearchParams) => void) => {
-    const next = new URLSearchParams(params);
-    change(next);
-    router.replace(withQuery(pathname, next), { scroll: false });
-  };
-  const setParam = (key: string, value: string) =>
-    updateParams((next) => (value ? next.set(key, value) : next.delete(key)));
-  const setConcern = (value: string) => setParam("concern", value);
-  const setUnderFifty = (enabled: boolean) => setParam("price", enabled ? "under-50" : "");
-  const setInStock = (enabled: boolean) => setParam("stock", enabled ? "in" : "");
-  const setSort = (value: string) => setParam("sort", value === "featured" ? "" : value);
-
-  /** Switches category while keeping the shopper's filters and search. */
-  const goToCategory = (value: string) => {
-    const next = new URLSearchParams(params);
-    next.delete("collection");
-    if (value === "new") next.set("collection", "new");
-    const path = CATEGORIES.includes(value) ? `/shop/${value}` : "/shop";
-    router.push(withQuery(path, next));
-  };
-
-  const products = useMemo(
-    () =>
-      filterAndSortProducts(catalogue, {
-        category,
-        collection,
-        query,
-        concern,
-        underFifty,
-        inStock,
-        sort,
-      }),
-    [category, collection, query, concern, underFifty, inStock, sort],
-  );
-  const filterCount = Number(Boolean(concern)) + Number(underFifty) + Number(inStock);
-  const activeCategory = collection === "new" ? "new" : category || "all";
-
-  useModalDialog(filtersOpen, drawerRef, () => setFiltersOpen(false));
-
-  const clearFilters = () => updateParams((next) => FILTER_KEYS.forEach((key) => next.delete(key)));
-  const clearSearch = () => setParam("search", "");
-  const clearCategory = () => goToCategory("all");
-  const clearAll = () => router.push("/shop");
+  const products = filterAndSortProducts(catalogue, shop.filters);
+  const { query } = shop.filters;
 
   return (
     <main className="shopPage">
-      <section className="shopToolbar" aria-label="Shop controls">
-        <div className="shopCount" aria-live="polite">
-          <strong>{products.length}</strong> {products.length === 1 ? "product" : "products"}
-          {query && <span> for “{query}”</span>}
-        </div>
-        <div className="shopControls">
-          <label className="toolbarSelect">
-            <span>Category</span>
-            <select value={activeCategory} onChange={(event) => goToCategory(event.target.value)}>
-              <option value="all">All products</option>
-              <option value="skincare">Skincare</option>
-              <option value="makeup">Makeup</option>
-              <option value="sets">Sets</option>
-              <option value="new">New arrivals</option>
-            </select>
-          </label>
-          <button
-            onClick={() => setFiltersOpen(true)}
-            aria-expanded={filtersOpen}
-            aria-controls="shopFilters"
-          >
-            <Tune /> Filter{filterCount ? ` (${filterCount})` : ""}
-          </button>
-          <label className="toolbarSelect">
-            <span>Sort</span>
-            <select value={sort} onChange={(event) => setSort(event.target.value)}>
-              <option value="featured">Featured</option>
-              <option value="newest">Newest</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-            </select>
-          </label>
-        </div>
-      </section>
-      {(activeCategory !== "all" || filterCount > 0 || query) && (
-        <div className="activeFilters" aria-label="Active filters">
-          {activeCategory !== "all" && (
-            <button onClick={clearCategory}>
-              {activeCategory === "new" ? "New arrivals" : activeCategory}
-              <Close aria-hidden="true" />
-            </button>
-          )}
-          {query && (
-            <button onClick={clearSearch}>
-              Search: “{query}”<Close aria-hidden="true" />
-            </button>
-          )}
-          {concern && (
-            <button onClick={() => setConcern("")}>
-              {concern}
-              <Close aria-hidden="true" />
-            </button>
-          )}
-          {underFifty && (
-            <button onClick={() => setUnderFifty(false)}>
-              Under $50
-              <Close aria-hidden="true" />
-            </button>
-          )}
-          {inStock && (
-            <button onClick={() => setInStock(false)}>
-              In stock
-              <Close aria-hidden="true" />
-            </button>
-          )}
-          <button className="clearFilter" onClick={clearAll}>
-            Clear all
-          </button>
-        </div>
-      )}
-      <button
-        className={`filterOverlay ${filtersOpen ? "open" : ""}`}
-        onClick={() => setFiltersOpen(false)}
-        aria-label="Close filters"
-        tabIndex={filtersOpen ? 0 : -1}
+      <ShopToolbar
+        shop={shop}
+        resultCount={products.length}
+        filtersOpen={filtersOpen}
+        onOpenFilters={() => setFiltersOpen(true)}
       />
-      <aside
-        ref={drawerRef}
-        id="shopFilters"
-        className={`filterDrawer ${filtersOpen ? "open" : ""}`}
-        aria-hidden={!filtersOpen}
-        aria-modal="true"
-        role="dialog"
-        aria-labelledby="filter-title"
-      >
-        <header>
-          <div>
-            <span className="kicker">Refine</span>
-            <h2 id="filter-title">Filters</h2>
-          </div>
-          <button aria-label="Close filters" onClick={() => setFiltersOpen(false)}>
-            <Close />
-          </button>
-        </header>
-        <div className="filterDrawerBody">
-          <fieldset>
-            <legend>Shop by concern</legend>
-            {concerns.map((item) => (
-              <label key={item}>
-                <input
-                  type="radio"
-                  name="concern"
-                  checked={concern === item}
-                  onChange={() => setConcern(item)}
-                />
-                <span>{item}</span>
-              </label>
-            ))}
-          </fieldset>
-          <fieldset>
-            <legend>Price and availability</legend>
-            <label>
-              <input
-                type="checkbox"
-                checked={underFifty}
-                onChange={(event) => setUnderFifty(event.target.checked)}
-              />
-              <span>Under $50</span>
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={inStock}
-                onChange={(event) => setInStock(event.target.checked)}
-              />
-              <span>In stock</span>
-            </label>
-          </fieldset>
-        </div>
-        <footer>
-          <button className="textLink" onClick={clearFilters}>
-            Clear
-          </button>
-          <button className="button dark" onClick={() => setFiltersOpen(false)}>
-            Show {products.length} {products.length === 1 ? "product" : "products"}
-          </button>
-        </footer>
-      </aside>
+      <ActiveFilters shop={shop} />
+      <FilterDrawer
+        shop={shop}
+        open={filtersOpen}
+        resultCount={products.length}
+        onClose={() => setFiltersOpen(false)}
+      />
       {products.length ? (
         <div className="productGrid shopGrid">
           {products.map((product) => (
@@ -239,7 +50,7 @@ export default function ShopPage({ category }: ShopPageProps) {
           <span className="kicker">Nothing here yet</span>
           <h2>{query ? `No products found for “${query}”` : "No products match"}</h2>
           <p>Try another category, search, or remove the active filters.</p>
-          <button className="button dark" onClick={clearAll}>
+          <button className="button dark" onClick={shop.clearAll}>
             View all products
           </button>
         </div>

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { CATEGORIES } from "../features/products/shopLogic";
 import { productRepository } from "../repositories/productRepository";
-import { POLICIES } from "../views/PolicyPage";
+import { POLICIES } from "../data/policies";
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 

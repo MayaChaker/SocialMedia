@@ -1,5 +1,8 @@
 import type { HostedCheckoutSession, Order, OrderRequest } from "../types/commerce";
 
+/** True when orders go to a hosted payment provider instead of the browser-only demo. */
+export const isHostedCheckout = Boolean(process.env.NEXT_PUBLIC_CHECKOUT_URL);
+
 export const orderService = {
   /**
    * With NEXT_PUBLIC_CHECKOUT_URL set, hands the basket to a server that creates a hosted
