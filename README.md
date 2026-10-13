@@ -4,7 +4,7 @@ A beauty e-commerce storefront for a fictional brand, built with React. It cover
 journey (catalogue, product variants, bag, checkout) plus two guided tools: a routine builder
 and a foundation shade finder.
 
-**Live demo:** https://social-media-weld-gamma.vercel.app
+**Live demo:** https://veloura-beauty-store.vercel.app
 
 > Veloura is not a real company. No real orders or payments are processed; checkout runs in demo
 > mode and everything a shopper saves stays in their own browser.
