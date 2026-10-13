@@ -9,7 +9,7 @@ export interface BeautyProfile {
   /** Set by the shade finder. */
   shade?: string;
   shadeVariantId?: string;
-  shadeAnswers?: Record<string, string>;
+  shadeAnswers?: Partial<Record<string, string>>;
 }
 
 export interface SavedRoutine {

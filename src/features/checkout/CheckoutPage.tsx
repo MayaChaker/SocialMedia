@@ -1,6 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+  type ChangeEvent,
+  type Dispatch,
+  type FormEvent,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type SetStateAction,
+} from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight, LockOutlined } from "@mui/icons-material";
@@ -8,10 +17,17 @@ import { FREE_SHIPPING_THRESHOLD } from "../../domain/commerce/commerceConfig";
 import { money } from "../../lib/money";
 import { useCommerce } from "../../hooks/useCommerce";
 import { orderService } from "../../services/orderService";
+import type { CartLine, ContactDetails, ShippingAddress, Totals } from "../../types/commerce";
 
 const STEPS = ["Contact", "Shipping", "Review"];
-const emptyContact = { email: "", firstName: "", lastName: "", phone: "" };
-const emptyShipping = { address: "", apartment: "", city: "", country: "Lebanon", postalCode: "" };
+const emptyContact: ContactDetails = { email: "", firstName: "", lastName: "", phone: "" };
+const emptyShipping: ShippingAddress = {
+  address: "",
+  apartment: "",
+  city: "",
+  country: "Lebanon",
+  postalCode: "",
+};
 const hostedCheckout = Boolean(process.env.NEXT_PUBLIC_CHECKOUT_URL);
 
 export default function CheckoutPage() {
@@ -32,18 +48,24 @@ export default function CheckoutPage() {
 
   if (!hydrated || !cart.length) return null;
 
-  const bind = (setter, values, key) => ({
+  /** Wires an input to one string field of a form state object. */
+  const bind = <K extends string, T extends Record<K, string>>(
+    setter: Dispatch<SetStateAction<T>>,
+    values: T,
+    key: K,
+  ) => ({
     name: key,
     value: values[key],
-    onChange: (event) => setter((current) => ({ ...current, [key]: event.target.value })),
+    onChange: (event: ChangeEvent<HTMLInputElement>) =>
+      setter((current) => ({ ...current, [key]: event.target.value })),
   });
   // Each step is a real <form>, so the browser validates required fields and email format.
-  const goTo = (nextStep) => (event) => {
+  const goTo = (nextStep: number) => (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setStep(nextStep);
   };
 
-  const placeOrder = async (event) => {
+  const placeOrder = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setPlacing(true);
     setCheckoutError("");
@@ -55,7 +77,7 @@ export default function CheckoutPage() {
         promoCode,
         total: totals.total,
       });
-      if (order.redirectUrl) {
+      if ("redirectUrl" in order) {
         window.location.assign(order.redirectUrl);
         return;
       }
@@ -64,7 +86,9 @@ export default function CheckoutPage() {
       router.replace(`/checkout/confirmation/${order.id}`);
       clearCart();
     } catch (error) {
-      setCheckoutError(error.message || "Checkout could not be started.");
+      setCheckoutError(
+        (error instanceof Error && error.message) || "Checkout could not be started.",
+      );
       setPlacing(false);
     }
   };
@@ -248,7 +272,14 @@ export default function CheckoutPage() {
   );
 }
 
-function CheckoutSection({ title, copy, onSubmit, children }) {
+interface CheckoutSectionProps {
+  title: string;
+  copy: string;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  children: ReactNode;
+}
+
+function CheckoutSection({ title, copy, onSubmit, children }: CheckoutSectionProps) {
   return (
     <form className="checkoutSection" onSubmit={onSubmit}>
       <span className="kicker">Step details</span>
@@ -259,7 +290,14 @@ function CheckoutSection({ title, copy, onSubmit, children }) {
   );
 }
 
-function Field({ label, wide, optional = false, ...props }) {
+interface FieldProps extends InputHTMLAttributes<HTMLInputElement> {
+  label: string;
+  /** Spans both grid columns. */
+  wide?: boolean;
+  optional?: boolean;
+}
+
+function Field({ label, wide, optional = false, ...props }: FieldProps) {
   return (
     <label className={wide ? "wide" : ""}>
       <span>
@@ -271,7 +309,13 @@ function Field({ label, wide, optional = false, ...props }) {
   );
 }
 
-function OrderSummary({ cart, totals, promoCode }) {
+interface OrderSummaryProps {
+  cart: CartLine[];
+  totals: Totals;
+  promoCode: string;
+}
+
+function OrderSummary({ cart, totals, promoCode }: OrderSummaryProps) {
   return (
     <aside className="checkoutSummary">
       <h2>Order summary</h2>

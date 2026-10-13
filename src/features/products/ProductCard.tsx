@@ -10,20 +10,29 @@ import { resolveProductSelection } from "../../domain/product/productSelection";
 import { useCommerce } from "../../hooks/useCommerce";
 import { useModalDialog } from "../../hooks/useModalDialog";
 import ProductArt from "../../components/product-art/ProductArt";
+import type { Product } from "../../types/commerce";
 import WishlistButton from "../wishlist/WishlistButton";
 
-export default function ProductCard({ product, onAdded, shopLayout = false }) {
+interface ProductCardProps {
+  product: Product;
+  /** Called after the product is added to the bag, e.g. to open the bag drawer. */
+  onAdded?: () => void;
+  /** The denser layout used on the shop grid. */
+  shopLayout?: boolean;
+}
+
+export default function ProductCard({ product, onAdded, shopLayout = false }: ProductCardProps) {
   const { addToCart } = useCommerce();
   const [preview, setPreview] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [justAdded, setJustAdded] = useState(false);
-  const previewRef = useRef(null);
-  const resetTimerRef = useRef(null);
+  const previewRef = useRef<HTMLElement>(null);
+  const resetTimerRef = useRef<number | undefined>(undefined);
   const selected = useMemo(
     () => product.variants?.find((variant) => variant.id === selectedId),
     [product.variants, selectedId],
   );
-  const display = resolveProductSelection(product, selected?.id);
+  const display = resolveProductSelection(product, selected?.id) ?? product;
   const outOfStock = OUT_OF_STOCK_IDS.includes(product.id) || selected?.stock === 0;
   const needsShade = Boolean(product.variants && !selected);
   const productHref = `/product/${product.slug}${selected ? `?variant=${selected.id}` : ""}`;

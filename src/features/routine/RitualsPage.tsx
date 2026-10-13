@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import {
   ArrowBack,
@@ -9,6 +9,7 @@ import {
   Check,
   Loop,
   Tune,
+  type SvgIconComponent,
 } from "@mui/icons-material";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { money } from "../../lib/money";
@@ -16,13 +17,28 @@ import { useCartDrawer } from "../../hooks/useCartDrawer";
 import { useCommerce } from "../../hooks/useCommerce";
 import { useCustomer } from "../../hooks/useCustomer";
 import ProductArt from "../../components/product-art/ProductArt";
+import type { Product, ProductId } from "../../types/commerce";
 import {
   buildRoutineRecommendations,
   routineAlternatives,
   routineTitle,
+  type RoutineAnswers,
+  type RoutinePace,
+  type RoutineStep,
 } from "./routineRecommendations";
 
-const questions = [
+interface Question {
+  key: keyof RoutineAnswers;
+  label: string;
+  eyebrow: string;
+  title: string;
+  /** [value, description] pairs. */
+  options: Array<[string, string]>;
+}
+
+type Answers = Partial<RoutineAnswers>;
+
+const questions: Question[] = [
   {
     key: "goal",
     label: "Concern",
@@ -59,35 +75,45 @@ const questions = [
   },
 ];
 
-const principles = [
+const questionAt = (step: number): Question => {
+  const question = questions[step];
+  if (!question) throw new Error(`Routine builder has no question ${step + 1}`);
+  return question;
+};
+
+const isComplete = (answers: Answers): answers is RoutineAnswers =>
+  Boolean(answers.goal && answers.texture && answers.time);
+
+const principles: Array<[SvgIconComponent, string, string]> = [
   [AutoAwesomeOutlined, "Personal", "Selected around your skin concerns."],
   [Tune, "Concise", "Only the steps your skin needs."],
   [Loop, "Flexible", "Easy to adjust as your routine changes."],
 ];
 
-const timeLabel = {
+const timeLabel: Record<RoutinePace, string> = {
   Essential: "2-step routine",
   Balanced: "3-step routine",
   Immersive: "4-step routine",
 };
-const isAvailable = (product) => Boolean(product) && product.stock !== 0;
+const isAvailable = (product: Product) => product.stock !== 0;
 
 export default function RitualsPage() {
   const { openCart } = useCartDrawer();
   const { addToCart } = useCommerce();
   const { saveRoutine: persistRoutine } = useCustomer();
   const reduceMotion = useReducedMotion();
-  const headingRef = useRef(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [result, setResult] = useState(null);
+  const [answers, setAnswers] = useState<Answers>({});
+  const [result, setResult] = useState<RoutineAnswers | null>(null);
   const [generationError, setGenerationError] = useState("");
   const [saved, setSaved] = useState(false);
   const [saveStatus, setSaveStatus] = useState("");
-  const [addStatus, setAddStatus] = useState({});
-  const [fullStatus, setFullStatus] = useState("idle");
-  const [replacements, setReplacements] = useState({});
+  const [addStatus, setAddStatus] = useState<Record<ProductId, "added">>({});
+  const [fullStatus, setFullStatus] = useState<"idle" | "added">("idle");
+  // Shopper-chosen alternatives, keyed by step index.
+  const [replacements, setReplacements] = useState<Record<number, Product>>({});
   const [confirmReset, setConfirmReset] = useState(false);
 
   // Move focus to each new heading so screen-reader users hear the step change.
@@ -96,19 +122,18 @@ export default function RitualsPage() {
   }, [started, step, result]);
 
   const recommendations = useMemo(
-    () =>
+    (): RoutineStep[] =>
       result
-        ? buildRoutineRecommendations(result)
-            .map((item, index) =>
-              replacements[index]
-                ? {
-                    ...item,
-                    product: replacements[index],
-                    reason: `A suitable alternative for the same ${item.step.toLowerCase()} step, selected by you.`,
-                  }
-                : item,
-            )
-            .filter((item) => item.product)
+        ? buildRoutineRecommendations(result).map((item, index) => {
+            const replacement = replacements[index];
+            return replacement
+              ? {
+                  ...item,
+                  product: replacement,
+                  reason: `A suitable alternative for the same ${item.step.toLowerCase()} step, selected by you.`,
+                }
+              : item;
+          })
         : [],
     [result, replacements],
   );
@@ -121,14 +146,20 @@ export default function RitualsPage() {
     [availableRecommendations],
   );
 
-  const selectAnswer = (value) => {
-    setAnswers((current) => ({ ...current, [questions[step].key]: value }));
+  const selectAnswer = (value: string) => {
+    // Values come from the current question's own options.
+    setAnswers((current) => ({ ...current, [questionAt(step).key]: value }) as Answers);
     setSaved(false);
   };
 
   const finishQuiz = () => {
-    const next = buildRoutineRecommendations(answers);
-    if (!next.length || next.some(({ product }) => !product)) {
+    let next: RoutineStep[] = [];
+    try {
+      if (isComplete(answers)) next = buildRoutineRecommendations(answers);
+    } catch {
+      // A routine product missing from the catalogue: show the retry message below.
+    }
+    if (!next.length || !isComplete(answers)) {
       setGenerationError("No complete routine is available for these answers.");
       return;
     }
@@ -137,7 +168,7 @@ export default function RitualsPage() {
   };
 
   const continueQuestion = () => {
-    if (!answers[questions[step].key]) return;
+    if (!answers[questionAt(step).key]) return;
     if (step === questions.length - 1) finishQuiz();
     else setStep((current) => current + 1);
   };
@@ -167,7 +198,7 @@ export default function RitualsPage() {
     resetRoutine();
   };
 
-  const addProduct = (product) => {
+  const addProduct = (product: Product) => {
     if (!isAvailable(product)) return;
     addToCart(product);
     setAddStatus((current) => ({ ...current, [product.id]: "added" }));
@@ -185,6 +216,7 @@ export default function RitualsPage() {
   };
 
   const saveRoutine = () => {
+    if (!result) return;
     persistRoutine({
       productIds: recommendations.map(({ product }) => product.id),
       answers: result,
@@ -239,7 +271,7 @@ export default function RitualsPage() {
         <div className="routineResultLayout">
           <section className="routineResultIntro">
             <span className="kicker">Your routine</span>
-            <h1 ref={headingRef} tabIndex="-1">
+            <h1 ref={headingRef} tabIndex={-1}>
               {routineTitle(result)}
             </h1>
             <p>
@@ -401,17 +433,17 @@ export default function RitualsPage() {
       </main>
     );
 
-  const question = questions[step];
+  const question = questionAt(step);
   const selected = answers[question.key];
-  const handleChoiceKeys = (event) => {
+  const handleChoiceKeys = (event: KeyboardEvent<HTMLDivElement>) => {
     if (!["ArrowRight", "ArrowDown", "ArrowLeft", "ArrowUp"].includes(event.key)) return;
     event.preventDefault();
-    const controls = [...event.currentTarget.querySelectorAll('[role="radio"]')];
-    const current = Math.max(0, controls.indexOf(document.activeElement));
+    const controls = [...event.currentTarget.querySelectorAll<HTMLElement>('[role="radio"]')];
+    const current = Math.max(0, controls.indexOf(document.activeElement as HTMLElement));
     const direction = ["ArrowRight", "ArrowDown"].includes(event.key) ? 1 : -1;
     const next = controls[(current + direction + controls.length) % controls.length];
-    next.focus();
-    next.click();
+    next?.focus();
+    next?.click();
   };
 
   return (
@@ -445,7 +477,7 @@ export default function RitualsPage() {
             transition={{ duration: reduceMotion ? 0 : 0.2 }}
           >
             <span className="kicker">{question.eyebrow}</span>
-            <h1 ref={headingRef} tabIndex="-1">
+            <h1 ref={headingRef} tabIndex={-1}>
               {question.title}
             </h1>
             <div

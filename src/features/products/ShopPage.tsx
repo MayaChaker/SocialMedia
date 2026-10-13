@@ -20,11 +20,16 @@ const concerns = [
 const FILTER_KEYS = ["concern", "price", "stock"];
 const catalogue = productRepository.getAll();
 
-export default function ShopPage({ category }) {
+interface ShopPageProps {
+  /** Category segment from /shop/[category]; absent on /shop. */
+  category?: string;
+}
+
+export default function ShopPage({ category }: ShopPageProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { openCart } = useCartDrawer();
-  const drawerRef = useRef(null);
+  const drawerRef = useRef<HTMLElement>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
   // Every filter lives in the URL, so results survive a refresh and can be shared.
   const params = useSearchParams();
@@ -35,24 +40,24 @@ export default function ShopPage({ category }) {
   const inStock = params.get("stock") === "in";
   const sort = params.get("sort") || "featured";
 
-  const withQuery = (path, next) => {
+  const withQuery = (path: string, next: URLSearchParams) => {
     const search = next.toString();
     return search ? `${path}?${search}` : path;
   };
-  const updateParams = (change) => {
+  const updateParams = (change: (next: URLSearchParams) => void) => {
     const next = new URLSearchParams(params);
     change(next);
     router.replace(withQuery(pathname, next), { scroll: false });
   };
-  const setParam = (key, value) =>
+  const setParam = (key: string, value: string) =>
     updateParams((next) => (value ? next.set(key, value) : next.delete(key)));
-  const setConcern = (value) => setParam("concern", value);
-  const setUnderFifty = (enabled) => setParam("price", enabled ? "under-50" : "");
-  const setInStock = (enabled) => setParam("stock", enabled ? "in" : "");
-  const setSort = (value) => setParam("sort", value === "featured" ? "" : value);
+  const setConcern = (value: string) => setParam("concern", value);
+  const setUnderFifty = (enabled: boolean) => setParam("price", enabled ? "under-50" : "");
+  const setInStock = (enabled: boolean) => setParam("stock", enabled ? "in" : "");
+  const setSort = (value: string) => setParam("sort", value === "featured" ? "" : value);
 
   /** Switches category while keeping the shopper's filters and search. */
-  const goToCategory = (value) => {
+  const goToCategory = (value: string) => {
     const next = new URLSearchParams(params);
     next.delete("collection");
     if (value === "new") next.set("collection", "new");

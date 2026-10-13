@@ -5,11 +5,23 @@ import Link from "next/link";
 import { ArrowBack, ArrowForward, Check } from "@mui/icons-material";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCustomer } from "../../hooks/useCustomer";
-import { matchShade, matchedProductUrl, SHADE_PROFILES } from "./shadeMatchLogic";
+import {
+  matchShade,
+  matchedProductUrl,
+  SHADE_PROFILES,
+  type ShadeAnswers,
+  type ShadeProfile,
+} from "./shadeMatchLogic";
 import { productRepository } from "../../repositories/productRepository";
 import ProductArt from "../../components/product-art/ProductArt";
 
-const steps = [
+interface ShadeStep {
+  title: string;
+  key: "depth" | "tone" | "finish";
+  options: string[];
+}
+
+const steps: ShadeStep[] = [
   {
     title: "How does your skin read in daylight?",
     key: "depth",
@@ -27,8 +39,16 @@ const steps = [
   },
 ];
 
-const depthColors = Object.fromEntries(SHADE_PROFILES.map((shade) => [shade.depth, shade.swatch]));
-const optionGuidance = {
+const stepAt = (step: number): ShadeStep => {
+  const current = steps[step];
+  if (!current) throw new Error(`Shade match has no step ${step + 1}`);
+  return current;
+};
+
+const depthColors: Record<string, string> = Object.fromEntries(
+  SHADE_PROFILES.map((shade) => [shade.depth, shade.swatch]),
+);
+const optionGuidance: Record<string, string> = {
   "Fresh and sheer": "Light coverage that lets natural skin show through.",
   "Soft satin": "Balanced radiance without looking dewy or flat.",
   "Polished glow": "A more luminous, light-reflecting finish.",
@@ -41,15 +61,15 @@ export default function ShadeMatchPage() {
   const { profile, saveProfile } = useCustomer();
   const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState<ShadeAnswers>({});
   const [completed, setCompleted] = useState(false);
   const [saved, setSaved] = useState(false);
 
-  const selectAnswer = (value) =>
-    setAnswers((current) => ({ ...current, [steps[step].key]: value }));
+  const selectAnswer = (value: string) =>
+    setAnswers((current) => ({ ...current, [stepAt(step).key]: value }));
 
   const continueQuiz = () => {
-    if (!answers[steps[step].key]) return;
+    if (!answers[stepAt(step).key]) return;
     if (step === steps.length - 1) setCompleted(true);
     else setStep((current) => current + 1);
   };
@@ -103,10 +123,11 @@ export default function ShadeMatchPage() {
 
   if (completed) {
     const result = matchShade(answers);
-    const product = productRepository.getBySlug(result.productSlug);
+    const product = result && productRepository.getBySlug(result.productSlug);
+    if (!result || !product) return null;
     const resultIndex = SHADE_PROFILES.findIndex((item) => item.variantId === result.variantId);
     const nearby = [SHADE_PROFILES[resultIndex - 1], SHADE_PROFILES[resultIndex + 1]].filter(
-      Boolean,
+      (shade): shade is ShadeProfile => Boolean(shade),
     );
     const saveShade = () => {
       saveProfile({
@@ -188,7 +209,7 @@ export default function ShadeMatchPage() {
     );
   }
 
-  const current = steps[step];
+  const current = stepAt(step);
   const selected = answers[current.key];
   return (
     <main className="builderPage questionPage shadeQuestion">
@@ -205,7 +226,7 @@ export default function ShadeMatchPage() {
           className="builderProgress"
           role="progressbar"
           aria-label={`Shade Match step ${step + 1} of ${steps.length}`}
-          aria-valuemin="1"
+          aria-valuemin={1}
           aria-valuemax={steps.length}
           aria-valuenow={step + 1}
         >
@@ -226,7 +247,7 @@ export default function ShadeMatchPage() {
             <div className="shadeChoices" role="radiogroup" aria-label={current.title}>
               {current.options.map((value) => {
                 const isSelected = selected === value;
-                const swatchColor = current.key === "depth" ? depthColors[value] : null;
+                const swatchColor = current.key === "depth" ? depthColors[value] : undefined;
                 return (
                   <button
                     type="button"
