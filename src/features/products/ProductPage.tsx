@@ -11,9 +11,10 @@ import { useCommerce } from "../../hooks/useCommerce";
 import { useCustomer } from "../../hooks/useCustomer";
 import ProductArt from "../../components/product-art/ProductArt";
 import NotFoundPage from "../../views/NotFoundPage";
-import type { Product } from "../../types/commerce";
-import ProductCard from "./ProductCard";
 import WishlistButton from "../wishlist/WishlistButton";
+import ProductFacts from "./ProductFacts";
+import ProductShelf from "./ProductShelf";
+import ShadeSwatches from "./ShadeSwatches";
 
 const catalogue = productRepository.getAll();
 
@@ -97,25 +98,13 @@ export default function ProductPage({ slug }: { slug: string }) {
               <span>
                 Shade: <strong>{selected?.name}</strong>
               </span>
-              <div
-                className="cardSwatches"
-                role="group"
-                aria-label={`Choose a shade for ${product.name}`}
-              >
-                {product.variants.map((variant) => (
-                  <button
-                    type="button"
-                    key={variant.id}
-                    className={selected?.id === variant.id ? "selected" : ""}
-                    style={{ "--swatch": variant.swatch }}
-                    onClick={() => selectShade(variant.id)}
-                    aria-label={`Select ${variant.name} shade`}
-                    aria-pressed={selected?.id === variant.id}
-                  >
-                    <span />
-                  </button>
-                ))}
-              </div>
+              <ShadeSwatches
+                productName={product.name}
+                variants={product.variants}
+                selectedId={selected?.id}
+                onSelect={selectShade}
+                showCheck={false}
+              />
             </div>
           )}
           <button className="button dark full ripple" onClick={add}>
@@ -132,28 +121,7 @@ export default function ProductPage({ slug }: { slug: string }) {
               </p>
             </div>
           </div>
-          <div className="detailFacts">
-            <div>
-              <span>Benefits</span>
-              <ul>
-                {product.benefits.map((benefit) => (
-                  <li key={benefit}>{benefit}</li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <span>Key ingredients</span>
-              <p>{product.ingredients}</p>
-            </div>
-            <div>
-              <span>How to use</span>
-              <p>{product.ritual}</p>
-            </div>
-            <div>
-              <span>Usage order</span>
-              <p>{product.order}</p>
-            </div>
-          </div>
+          <ProductFacts product={product} />
         </div>
       </section>
       <ProductShelf
@@ -173,32 +141,5 @@ export default function ProductPage({ slug }: { slug: string }) {
         />
       )}
     </main>
-  );
-}
-
-interface ProductShelfProps {
-  title: string;
-  eyebrow: string;
-  products: Product[];
-  openCart: () => void;
-  /** Modifier for the section's class name, e.g. "related" → "relatedShelf". */
-  shelf: string;
-}
-
-function ProductShelf({ title, eyebrow, products, openCart, shelf }: ProductShelfProps) {
-  return (
-    <section className={`recommendations ${shelf}Shelf`}>
-      <div className="sectionHeader">
-        <div>
-          <span className="kicker">{eyebrow}</span>
-          <h2>{title}</h2>
-        </div>
-      </div>
-      <div className="productGrid">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} onAdded={openCart} />
-        ))}
-      </div>
-    </section>
   );
 }

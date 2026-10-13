@@ -1,76 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { ArrowBack, ArrowForward, Check } from "@mui/icons-material";
-import { AnimatePresence, motion } from "framer-motion";
-import { useCustomer } from "../../hooks/useCustomer";
-import {
-  matchShade,
-  matchedProductUrl,
-  SHADE_PROFILES,
-  type ShadeAnswers,
-  type ShadeProfile,
-} from "./shadeMatchLogic";
-import { productRepository } from "../../repositories/productRepository";
-import ProductArt from "../../components/product-art/ProductArt";
+import type { ShadeAnswers } from "./shadeMatchLogic";
+import { SHADE_QUESTIONS, shadeQuestionAt } from "./shadeQuestions";
+import ShadeIntro from "./ShadeIntro";
+import ShadeQuiz from "./ShadeQuiz";
+import ShadeResult from "./ShadeResult";
 
-interface ShadeStep {
-  title: string;
-  key: "depth" | "tone" | "finish";
-  options: string[];
-}
-
-const steps: ShadeStep[] = [
-  {
-    title: "How does your skin read in daylight?",
-    key: "depth",
-    options: ["Fair", "Light", "Medium", "Tan", "Deep"],
-  },
-  {
-    title: "Which jewellery feels most harmonious?",
-    key: "tone",
-    options: ["Silver · cool", "Both · neutral", "Gold · warm"],
-  },
-  {
-    title: "What finish feels most like you?",
-    key: "finish",
-    options: ["Fresh and sheer", "Soft satin", "Polished glow"],
-  },
-];
-
-const stepAt = (step: number): ShadeStep => {
-  const current = steps[step];
-  if (!current) throw new Error(`Shade match has no step ${step + 1}`);
-  return current;
-};
-
-const depthColors: Record<string, string> = Object.fromEntries(
-  SHADE_PROFILES.map((shade) => [shade.depth, shade.swatch]),
-);
-const optionGuidance: Record<string, string> = {
-  "Fresh and sheer": "Light coverage that lets natural skin show through.",
-  "Soft satin": "Balanced radiance without looking dewy or flat.",
-  "Polished glow": "A more luminous, light-reflecting finish.",
-  "Silver · cool": "Blue, pink, or rosy tones tend to feel harmonious.",
-  "Both · neutral": "Warm and cool tones tend to feel equally balanced.",
-  "Gold · warm": "Golden, peach, or olive tones tend to feel harmonious.",
-};
-
+/** Shade finder: an intro, three questions, then a suggested Petal Skin Tint shade. */
 export default function ShadeMatchPage() {
-  const { profile, saveProfile } = useCustomer();
   const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<ShadeAnswers>({});
   const [completed, setCompleted] = useState(false);
-  const [saved, setSaved] = useState(false);
 
   const selectAnswer = (value: string) =>
-    setAnswers((current) => ({ ...current, [stepAt(step).key]: value }));
+    setAnswers((current) => ({ ...current, [shadeQuestionAt(step).key]: value }));
 
   const continueQuiz = () => {
-    if (!answers[stepAt(step).key]) return;
-    if (step === steps.length - 1) setCompleted(true);
+    if (!answers[shadeQuestionAt(step).key]) return;
+    if (step === SHADE_QUESTIONS.length - 1) setCompleted(true);
     else setStep((current) => current + 1);
   };
 
@@ -83,204 +32,17 @@ export default function ShadeMatchPage() {
     setStep(0);
     setAnswers({});
     setCompleted(false);
-    setSaved(false);
   };
 
-  if (!started)
-    return (
-      <main className="shadePage shadeLanding">
-        <section>
-          <span className="kicker">Petal Skin Tint</span>
-          <h1>
-            Meet your
-            <br />
-            <em>closest shade.</em>
-          </h1>
-          <p>
-            A guided starting point based on depth, undertone, and the finish you love. No camera or
-            personal image required.
-          </p>
-          <button className="button dark" onClick={() => setStarted(true)}>
-            Find my shade <ArrowForward />
-          </button>
-        </section>
-        <div className="shadeFan">
-          <span className="shadeFamilyLabel">5 complexion families</span>
-          <div className="shadeSamples" aria-hidden="true">
-            {SHADE_PROFILES.map((shade, index) => (
-              <motion.i
-                key={shade.variantId}
-                style={{ "--shade": shade.swatch, "--index": index }}
-                initial={{ rotate: 0, y: 8 }}
-                animate={{ rotate: (index - 2) * 7, y: 0 }}
-                transition={{ duration: 0.45, delay: index * 0.035 }}
-              />
-            ))}
-          </div>
-        </div>
-      </main>
-    );
-
-  if (completed) {
-    const result = matchShade(answers);
-    const product = result && productRepository.getBySlug(result.productSlug);
-    if (!result || !product) return null;
-    const resultIndex = SHADE_PROFILES.findIndex((item) => item.variantId === result.variantId);
-    const nearby = [SHADE_PROFILES[resultIndex - 1], SHADE_PROFILES[resultIndex + 1]].filter(
-      (shade): shade is ShadeProfile => Boolean(shade),
-    );
-    const saveShade = () => {
-      saveProfile({
-        ...profile,
-        shade: result.name,
-        shadeVariantId: result.variantId,
-        shadeAnswers: answers,
-      });
-      setSaved(true);
-    };
-    return (
-      <main className="shadeResultPage">
-        <div className="shadeResultLayout">
-          <section className="shadeResultVisual" aria-label={`${result.name} shade sample`}>
-            <ProductArt
-              product={{ ...product, swatch: result.swatch, selectedVariant: result.name }}
-            />
-            <div className="matchedShadeSample" style={{ "--shade": result.swatch }}>
-              <span>{result.name}</span>
-            </div>
-          </section>
-          <section className="shadeResultCopy">
-            <span className="kicker">Your suggested match</span>
-            <h1>{result.name}</h1>
-            <p className="shadeProfile">
-              {result.depth} depth <i /> {result.undertone} undertone
-            </p>
-            <p className="shadeExplanation">
-              {result.description} This is a suggested starting point; compare it in natural light
-              for your best match.
-            </p>
-            <dl className="shadeFacts">
-              <div>
-                <dt>Depth</dt>
-                <dd>{result.depth}</dd>
-              </div>
-              <div>
-                <dt>Undertone</dt>
-                <dd>{result.undertone}</dd>
-              </div>
-              <div>
-                <dt>Preferred finish</dt>
-                <dd>{answers.finish}</dd>
-              </div>
-            </dl>
-            {nearby.length > 0 && (
-              <div className="nearbyShades">
-                <span>Compare nearby shades</span>
-                {nearby.map((shade) => (
-                  <Link key={shade.variantId} href={matchedProductUrl(shade)}>
-                    <i style={{ "--shade": shade.swatch }} />
-                    {shade.name}
-                  </Link>
-                ))}
-              </div>
-            )}
-            <div className="shadeResultActions">
-              <Link className="button dark" href={matchedProductUrl(result)}>
-                Shop {result.name}
-              </Link>
-              <button
-                className={`saveShadeButton ${saved ? "saved" : ""}`}
-                onClick={saveShade}
-                aria-pressed={saved}
-              >
-                {saved && <Check />}
-                {saved ? "Shade saved" : "Save my shade"}
-              </button>
-            </div>
-            <p className="shadeSaveStatus" role="status" aria-live="polite">
-              {saved ? `We'll keep ${result.name} for you.` : "Save your shade to revisit anytime."}
-            </p>
-            <button className="textLink shadeRestart" onClick={startAgain}>
-              Start again
-            </button>
-          </section>
-        </div>
-      </main>
-    );
-  }
-
-  const current = stepAt(step);
-  const selected = answers[current.key];
+  if (!started) return <ShadeIntro onStart={() => setStarted(true)} />;
+  if (completed) return <ShadeResult answers={answers} onStartAgain={startAgain} />;
   return (
-    <main className="builderPage questionPage shadeQuestion">
-      <div className="shadeQuestionShell">
-        <div className="questionTopline">
-          <button className="backLink" onClick={goBack}>
-            <ArrowBack /> Back
-          </button>
-          <span className="stepCount">
-            Step {step + 1} of {steps.length}
-          </span>
-        </div>
-        <div
-          className="builderProgress"
-          role="progressbar"
-          aria-label={`Shade Match step ${step + 1} of ${steps.length}`}
-          aria-valuemin={1}
-          aria-valuemax={steps.length}
-          aria-valuenow={step + 1}
-        >
-          {steps.map((item, index) => (
-            <span key={item.key} className={index <= step ? "active" : ""} />
-          ))}
-        </div>
-        <AnimatePresence mode="wait">
-          <motion.section
-            key={current.key}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
-            transition={{ duration: 0.2 }}
-          >
-            <span className="kicker">Shade match</span>
-            <h1>{current.title}</h1>
-            <div className="shadeChoices" role="radiogroup" aria-label={current.title}>
-              {current.options.map((value) => {
-                const isSelected = selected === value;
-                const swatchColor = current.key === "depth" ? depthColors[value] : undefined;
-                return (
-                  <button
-                    type="button"
-                    role="radio"
-                    aria-checked={isSelected}
-                    className={`${isSelected ? "selected" : ""} ${swatchColor ? "hasSwatch" : ""}`}
-                    onClick={() => selectAnswer(value)}
-                    key={value}
-                  >
-                    {swatchColor && <i style={{ "--shade": swatchColor }} aria-hidden="true" />}
-                    <span className="shadeChoiceCopy">
-                      <strong>{value}</strong>
-                      {optionGuidance[value] && <small>{optionGuidance[value]}</small>}
-                    </span>
-                    <span className="shadeChoiceIndicator" aria-hidden="true">
-                      {isSelected ? <Check /> : <ArrowForward />}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            <p className="selectionHelp" aria-live="polite">
-              {selected ? `${selected} selected.` : "Choose one option to continue."}
-            </p>
-            <div className="questionActions">
-              <button className="button dark" disabled={!selected} onClick={continueQuiz}>
-                {step === steps.length - 1 ? "See my shade" : "Continue"}
-                <ArrowForward />
-              </button>
-            </div>
-          </motion.section>
-        </AnimatePresence>
-      </div>
-    </main>
+    <ShadeQuiz
+      step={step}
+      answers={answers}
+      onSelect={selectAnswer}
+      onContinue={continueQuiz}
+      onBack={goBack}
+    />
   );
 }
