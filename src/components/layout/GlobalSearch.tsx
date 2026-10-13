@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search } from "@mui/icons-material";
@@ -8,10 +8,16 @@ import { productRepository } from "../../repositories/productRepository";
 
 const productSuggestions = productRepository.getAll();
 
-export default function GlobalSearch({ open, onSearch }) {
+interface GlobalSearchProps {
+  open: boolean;
+  /** Called after a search is submitted, e.g. to close the panel. */
+  onSearch?: () => void;
+}
+
+export default function GlobalSearch({ open, onSearch }: GlobalSearchProps) {
   const [query, setQuery] = useState("");
   const router = useRouter();
-  const submit = (event) => {
+  const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (query.trim()) {
       router.push(`/shop?search=${encodeURIComponent(query.trim())}`);

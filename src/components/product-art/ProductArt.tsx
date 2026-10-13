@@ -1,27 +1,42 @@
 import { productRepository } from "../../repositories/productRepository";
+import type { Category, Product, ProductSet } from "../../types/commerce";
 import { getPackaging } from "./packaging";
-import { SHAPES } from "./shapes";
+import { ProductShape } from "./shapes";
 
-const LINES = { Skincare: "SKIN", Makeup: "COLOUR", Sets: "RITUALS" };
+/** A catalogue product, optionally with a chosen shade (a ProductSelection fits). */
+export type ArtProduct = Product & { selectedVariant?: string; swatch?: string };
+
+interface SetLayout {
+  scale: number;
+  centres: number[];
+}
+
+const LINES: Record<Category, string> = { Skincare: "SKIN", Makeup: "COLOUR", Sets: "RITUALS" };
 
 // Where each item of a set sits (centre x) and how much it is scaled down.
-const SET_LAYOUTS = {
+const THREE_PIECE: SetLayout = { scale: 0.6, centres: [52, 148, 100] };
+const SET_LAYOUTS: Record<number, SetLayout> = {
   2: { scale: 0.66, centres: [72, 128] },
-  3: { scale: 0.6, centres: [52, 148, 100] },
+  3: THREE_PIECE,
   4: { scale: 0.5, centres: [38, 162, 79, 121] },
 };
 
-function Piece({ product, tint }) {
-  const Shape = SHAPES[product.type] || SHAPES.bottle;
+function Piece({ product, tint }: { product: Product; tint?: string }) {
   const swatch = tint || product.variants?.[0]?.swatch;
+  const packaging = product.type === "set" ? undefined : product.packaging;
   return (
-    <Shape pack={getPackaging(product.packaging)} tint={swatch} line={LINES[product.category]} />
+    <ProductShape
+      type={product.type}
+      pack={getPackaging(packaging)}
+      tint={swatch}
+      line={LINES[product.category]}
+    />
   );
 }
 
-function SetPieces({ product }) {
+function SetPieces({ product }: { product: ProductSet }) {
   const items = productRepository.getManyByIds(product.includes);
-  const layout = SET_LAYOUTS[items.length] || SET_LAYOUTS[3];
+  const layout = SET_LAYOUTS[items.length] ?? THREE_PIECE;
   return (
     <g>
       <rect x="12" y="226" width="176" height="18" rx="4" fill="#000" opacity="0.07" />
@@ -39,11 +54,22 @@ function SetPieces({ product }) {
   );
 }
 
+interface ProductArtProps {
+  product?: ArtProduct | null;
+  className?: string;
+  /** Hide from assistive tech when a visible name already sits next to the art. */
+  decorative?: boolean;
+}
+
 /**
  * Vector illustration of a Veloura product. Shade variants recolour the formula
  * (bullet, pan or liquid), so new shades need no new artwork.
  */
-export default function ProductArt({ product, className = "productArt", decorative = false }) {
+export default function ProductArt({
+  product,
+  className = "productArt",
+  decorative = false,
+}: ProductArtProps) {
   if (!product) return null;
   const label = `${product.name}${product.selectedVariant ? ` in ${product.selectedVariant}` : ""}`;
   return (

@@ -76,7 +76,7 @@ Some decisions worth calling out:
 - **Product art is generated from data.** Instead of a photo per product and per shade, each
   product declares its packaging type and colours, and `ProductArt` draws it as SVG. A new shade
   is one line of data. Campaign images on the homepage and About page are composed the same way
-  (`ProductScene` + `src/data/scenes.js`).
+  (`ProductScene` + `src/data/scenes.ts`).
 - **State that should be shareable is in the URL** (shop filters, selected shade, order
   confirmation); state that belongs to the shopper is in `localStorage` behind
   `storageRepository`.

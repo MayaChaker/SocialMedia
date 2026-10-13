@@ -21,9 +21,10 @@ const navItems = [
   ["Routine builder", "/rituals"],
   ["Shade match", "/shade-match"],
   ["Our story", "/about"],
-];
+] as const;
 
-const isActive = (pathname, href) => pathname === href || pathname.startsWith(`${href}/`);
+const isActive = (pathname: string, href: string) =>
+  pathname === href || pathname.startsWith(`${href}/`);
 
 export default function Header() {
   const { cart, wishlist } = useCommerce();
@@ -31,13 +32,13 @@ export default function Header() {
   const pathname = usePathname();
   // Panels remember the page they were opened on, so navigating closes them
   // without an effect.
-  const [menuPath, setMenuPath] = useState(null);
-  const [searchPath, setSearchPath] = useState(null);
+  const [menuPath, setMenuPath] = useState<string | null>(null);
+  const [searchPath, setSearchPath] = useState<string | null>(null);
   const menuOpen = menuPath === pathname;
   const searchOpen = searchPath === pathname;
-  const setMenuOpen = (open) => setMenuPath(open ? pathname : null);
-  const setSearchOpen = (open) => setSearchPath(open ? pathname : null);
-  const navRef = useRef(null);
+  const setMenuOpen = (open: boolean) => setMenuPath(open ? pathname : null);
+  const setSearchOpen = (open: boolean) => setSearchPath(open ? pathname : null);
+  const navRef = useRef<HTMLElement>(null);
   const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
 
   useModalDialog(menuOpen, navRef, () => setMenuOpen(false));
