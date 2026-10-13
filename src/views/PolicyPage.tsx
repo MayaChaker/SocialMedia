@@ -1,6 +1,13 @@
 import Link from "next/link";
 
-export const POLICIES = {
+export interface Policy {
+  title: string;
+  intro: string;
+  /** [heading, body] pairs. */
+  sections: Array<[string, string]>;
+}
+
+export const POLICIES: Record<string, Policy> = {
   shipping: {
     title: "Shipping & returns",
     intro: "Clear delivery expectations and a simple, considered return experience.",
@@ -130,7 +137,7 @@ export const POLICIES = {
 };
 
 /** Server-rendered customer-care page; the route resolves content from POLICIES. */
-export default function PolicyPage({ content }) {
+export default function PolicyPage({ content }: { content: Policy }) {
   const contact = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "care@velourabeauty.com";
   return (
     <main className="policyPage">

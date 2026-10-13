@@ -1,6 +1,10 @@
 // In-memory stand-in for `next/navigation`, installed for every test in jest.setup.js.
 // Tests set the current URL with `setLocation` and assert on `router` calls.
-const location = { pathname: "/", search: "", params: {} };
+const location: { pathname: string; search: string; params: Record<string, string> } = {
+  pathname: "/",
+  search: "",
+  params: {},
+};
 
 export const router = {
   push: jest.fn(),
@@ -11,8 +15,8 @@ export const router = {
   prefetch: jest.fn(),
 };
 
-export function setLocation(url, params = {}) {
-  const [pathname, search = ""] = url.split("?");
+export function setLocation(url: string, params: Record<string, string> = {}) {
+  const [pathname = "/", search = ""] = url.split("?");
   location.pathname = pathname;
   location.search = search;
   location.params = params;
@@ -31,7 +35,7 @@ export const navigationMock = {
   notFound: () => {
     throw new Error("NEXT_NOT_FOUND");
   },
-  redirect: (url) => {
+  redirect: (url: string) => {
     throw new Error(`NEXT_REDIRECT ${url}`);
   },
 };

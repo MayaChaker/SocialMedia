@@ -7,7 +7,10 @@ import ProductRoute, {
   generateStaticParams as productParams,
 } from "./(store)/product/[slug]/page";
 
-const params = (value) => ({ params: Promise.resolve(value) });
+const params = <T extends Record<string, string>>(value: T) => ({
+  params: Promise.resolve(value),
+  searchParams: Promise.resolve({}),
+});
 
 test.each([
   ["product", () => ProductRoute(params({ slug: "missing" }))],

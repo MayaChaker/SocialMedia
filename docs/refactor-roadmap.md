@@ -8,7 +8,7 @@
 | 1 — Architecture foundation    | Done                                                                                |
 | Production cleanup             | Done: formatting, stylesheet split, SVG product art, checkout and routing fixes, CI |
 | 2 — Next.js migration          | Done: full App Router cutover, CRA and React Router removed                         |
-| 3 — TypeScript migration       | In progress: types, data, repositories, domain, hooks and services converted        |
+| 3 — TypeScript migration       | Done: all source in strict TypeScript, `allowJs` removed, type check in CI          |
 | 4–10                           | Not started (parts of 7, 8 and 9 were delivered with the cleanup and migration)     |
 
 ## Phase 0 — Repository Audit & Cleanup

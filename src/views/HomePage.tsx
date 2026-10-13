@@ -23,10 +23,10 @@ export default function HomePage() {
   const { openCart } = useCartDrawer();
   const { addToCart } = useCommerce();
   const bestsellers = productRepository.getManyByIds(BESTSELLER_IDS);
-  const routine = EVENING_ROUTINE.map(({ slug, step }) => ({
-    ...productRepository.getBySlug(slug),
-    step,
-  }));
+  const routine = EVENING_ROUTINE.flatMap(({ slug, step }) => {
+    const product = productRepository.getBySlug(slug);
+    return product ? [{ ...product, step }] : [];
+  });
   const routineTotal = routine.reduce((sum, product) => sum + product.price, 0);
   const addRoutine = () => {
     routine.forEach((product) => addToCart(product));
@@ -167,7 +167,18 @@ export default function HomePage() {
   );
 }
 
-function SectionHeading({ eyebrow, title, copy, href, link, external }) {
+interface SectionHeadingProps {
+  eyebrow?: string;
+  title: string;
+  copy?: string;
+  href?: string;
+  /** Link text, shown when `href` is set. */
+  link?: string;
+  /** Opens `href` in a new tab instead of client-side navigation. */
+  external?: boolean;
+}
+
+function SectionHeading({ eyebrow, title, copy, href, link, external }: SectionHeadingProps) {
   return (
     <div className="homeSectionHeader">
       <div>
