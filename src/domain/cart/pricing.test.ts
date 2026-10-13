@@ -1,6 +1,6 @@
 import { calculateTotals, findPromotion } from "./pricing";
 
-const line = (price, quantity = 1) => ({ price, quantity });
+const line = (price: number, quantity = 1) => ({ price, quantity });
 
 test("charges standard delivery below the free-shipping threshold", () => {
   expect(calculateTotals([line(42)])).toMatchObject({

@@ -11,7 +11,7 @@ test("canonicalizes persisted product data while preserving quantity", () => {
     cartId: "11",
   });
   // Stale fields from older saved carts must not leak through.
-  expect(item.image).toBeUndefined();
+  expect(item).not.toHaveProperty("image");
 });
 
 test("preserves variant identity when canonicalizing cart lines", () => {
@@ -29,5 +29,5 @@ test("preserves variant identity when canonicalizing cart lines", () => {
 
 test("drops missing catalogue entries and normalizes invalid quantities", () => {
   expect(resolveCart([{ productId: 999, quantity: 2 }])).toEqual([]);
-  expect(resolveCart([{ productId: 11, quantity: 0 }])[0].quantity).toBe(1);
+  expect(resolveCart([{ productId: 11, quantity: 0 }])[0]?.quantity).toBe(1);
 });

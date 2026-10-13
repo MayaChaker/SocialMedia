@@ -1,6 +1,14 @@
-const shade = (id, name, swatch, price, stock = 24) => ({ id, name, swatch, price, stock });
+import type { Product, Variant } from "../types/commerce";
 
-export const PRODUCTS = [
+const shade = (id: string, name: string, swatch: string, price: number, stock = 24): Variant => ({
+  id,
+  name,
+  swatch,
+  price,
+  stock,
+});
+
+export const PRODUCTS: Product[] = [
   {
     id: 1,
     slug: "petal-water-essence",
