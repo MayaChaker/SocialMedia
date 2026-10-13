@@ -1,0 +1,127 @@
+/*
+ * Veloura design tokens ("Maison" direction).
+ * Every colour, font size, radius, shadow and duration in the other stylesheets
+ * comes from here. Product shade colours are data (src/data/products.ts), not tokens.
+ */
+:root {
+  /* Grounds, from lightest to deepest */
+  --white: #ffffff;
+  --porcelain: #faf8f5; /* page background */
+  --ivory: #f3eee7; /* quiet sections */
+  --stone: #e9e3da; /* travertine: image grounds, hero */
+  --stone-strong: #d9cfc3;
+
+  /* Text */
+  --ink: #1b1715; /* espresso: headings, body, primary buttons */
+  --ink-soft: #3a322e;
+  --muted: #6a5f57; /* secondary text, 5.9:1 on porcelain */
+  --subtle: #8c8077; /* icons and large text only */
+
+  /* Accents */
+  --bordeaux: #5c2a35; /* night range, hover on dark buttons */
+  --bordeaux-deep: #3e1c24;
+  --rose: #8f5650; /* links, eyebrows, focus ring */
+  --rose-gold: #a98670; /* caps and fine rules, never text */
+  --blush: #efe1dc;
+  --blush-strong: #e3cbc4;
+
+  /* Lines */
+  --line: #e2dbd2;
+  --line-strong: #c9bcae;
+
+  /* Feedback */
+  --success: #2f5d50;
+  --error: #9b2c2c;
+
+  /* Product tones: the ground behind each product's art, set by its `color` field */
+  --tone-ivory: #ede8df;
+  --tone-blush: #e5cbc7;
+  --tone-rose: #ddc2b6;
+  --tone-sand: #d7c2a6;
+  --tone-clay: #c99d86;
+  --tone-sage: #c8d0c0;
+  --tone-plum: #9e7b80;
+  --tone-espresso: #8b766a;
+
+  /* Typography. --font-serif and --font-sans come from next/font in src/app/layout.tsx. */
+  --serif: var(--font-serif), "Didot", "Bodoni 72", Georgia, serif;
+  --sans: var(--font-sans), "Helvetica Neue", Arial, sans-serif;
+  --text-caption: 11px; /* uppercase labels */
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-md: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 28px;
+  --text-4xl: 32px;
+  --text-5xl: 40px;
+  --text-6xl: 48px;
+  --text-7xl: 56px;
+  --text-8xl: 64px;
+  --text-9xl: 80px;
+  --tracking-label: 0.16em;
+
+  /* Space (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+
+  /* Shape and depth */
+  --radius-sm: 2px;
+  --radius-pill: 999px;
+  --shadow-soft: 0 12px 32px color-mix(in srgb, var(--ink) 8%, transparent);
+  --shadow-overlay: 0 24px 60px color-mix(in srgb, var(--ink) 18%, transparent);
+  --scrim: color-mix(in srgb, var(--ink) 40%, transparent);
+
+  /* Page layout */
+  --page-max: 1400px;
+  --page-gutter: clamp(24px, 4.2vw, 64px);
+  --section-space: clamp(64px, 6vw, 88px);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration: 300ms;
+  --duration-slow: 600ms;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --page-gutter: 22px;
+    --section-space: 52px;
+  }
+}
+
+/* Tone classes come from product data (product.color); any product-art container uses var(--tone). */
+.ivory {
+  --tone: var(--tone-ivory);
+}
+.blush {
+  --tone: var(--tone-blush);
+}
+.rose {
+  --tone: var(--tone-rose);
+}
+.sand {
+  --tone: var(--tone-sand);
+}
+.clay {
+  --tone: var(--tone-clay);
+}
+.sage {
+  --tone: var(--tone-sage);
+}
+.plum {
+  --tone: var(--tone-plum);
+}
+.espresso {
+  --tone: var(--tone-espresso);
+}

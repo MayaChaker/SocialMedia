@@ -1,34 +1,10 @@
-.detailVisual.rose {
-  background: #ddc2b6;
-}
-.detailVisual.ivory {
-  background: #ede8df;
-}
-.detailVisual.sand {
-  background: #d7c2a6;
-}
-.detailVisual.plum {
-  background: #9e7b80;
-}
-.detailVisual.espresso {
-  background: #8b766a;
-}
-.detailVisual.blush {
-  background: #e5cbc7;
-}
-.detailVisual.sage {
-  background: #c8d0c0;
-}
-.detailVisual.clay {
-  background: #c99d86;
-}
 .detailBadge {
   position: absolute;
   top: 14px;
   left: 14px;
-  background: rgba(255, 253, 249, 0.88);
+  background: color-mix(in srgb, var(--porcelain) 88%, transparent);
   padding: 6px 8px;
-  font-size: 8px;
+  font-size: var(--text-caption);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   z-index: 2;
@@ -40,7 +16,7 @@
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   min-height: 720px;
-  background: var(--cream);
+  background: var(--ivory);
 }
 .detailCopy,
 .detailVisual {
@@ -63,20 +39,20 @@
 }
 .detailNote {
   color: var(--muted);
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 .detailPrice {
-  font-size: 15px;
+  font-size: var(--text-md);
   margin: 15px 0;
 }
 .detailPrice small {
-  font-size: 10px;
+  font-size: var(--text-caption);
   color: var(--muted);
   margin-left: 9px;
 }
 .description {
   line-height: 1.8;
-  color: #635854;
+  color: var(--muted);
   margin: 8px 0 25px;
 }
 .detailFacts {
@@ -90,7 +66,7 @@
 }
 .detailFacts span,
 .galleryDetails span {
-  font-size: 9px;
+  font-size: var(--text-caption);
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--rose);
@@ -132,7 +108,7 @@
     padding: 40px 24px;
   }
   .detailCopy h1 {
-    font-size: 44px;
+    font-size: var(--text-5xl);
   }
   .recommendations {
     padding-top: 70px;
@@ -160,7 +136,7 @@
 .galleryDetails {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background: var(--paper);
+  background: var(--porcelain);
 }
 .galleryDetails > div {
   padding: 17px 22px;
@@ -170,38 +146,38 @@
   gap: 5px;
 }
 .galleryDetails span {
-  font-size: 8px;
+  font-size: var(--text-caption);
 }
 .galleryDetails strong {
-  font: 15px var(--serif);
+  font: var(--text-md) var(--serif);
   font-weight: 400;
 }
 .detailFacts ul {
   padding-left: 18px;
   margin: 8px 0 0;
-  font-size: 11px;
+  font-size: var(--text-caption);
   line-height: 1.8;
 }
 .matchPanel {
   display: flex;
   gap: 10px;
-  background: #efe5df;
+  background: var(--blush);
   padding: 14px;
   width: 100%;
   margin-top: 18px;
 }
 .matchPanel svg {
-  font-size: 18px;
+  font-size: var(--text-lg);
   color: var(--rose);
 }
 .detailVariants > span,
 .matchPanel strong {
-  font-size: 10px;
+  font-size: var(--text-caption);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 .matchPanel p {
-  font-size: 10px;
+  font-size: var(--text-caption);
   margin: 4px 0 0;
 }
 /* The gallery stretches with the copy column; keep the illustration at a natural size
@@ -216,11 +192,11 @@
   padding: 8%;
 }
 .description {
-  font-size: 13px;
+  font-size: var(--text-sm);
 }
 .detailFacts li,
 .detailFacts p {
-  font-size: 12px;
+  font-size: var(--text-xs);
 }
 .detailVariants {
   margin: 0 0 20px;
@@ -281,6 +257,6 @@
   }
 }
 .detailCopy .description {
-  font-size: 14px;
+  font-size: var(--text-md);
   line-height: 1.55;
 }
