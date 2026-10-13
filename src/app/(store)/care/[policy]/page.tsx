@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import PolicyPage, { POLICIES } from "../../../../views/PolicyPage";
+import { POLICIES } from "../../../../data/policies";
+import PolicyPage from "../../../../views/PolicyPage";
 
 export const dynamicParams = false;
 
