@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { money } from "../../lib/money";
 import { EVENING_ROUTINE } from "../../data/merchandising";
-import { SCENES } from "../../data/scenes";
 import { productRepository } from "../../repositories/productRepository";
 import { useCartDrawer } from "../../hooks/useCartDrawer";
 import { useCommerce } from "../../hooks/useCommerce";
-import ProductScene from "../../components/product-art/ProductScene";
+import EditorialImage from "../../components/EditorialImage";
 
 /** The promoted three-step evening routine, addable to the bag in one click. */
 export default function EveningEdit() {
@@ -24,9 +23,10 @@ export default function EveningEdit() {
   return (
     <section className="routineCommerce">
       <div className="routineImage">
-        <ProductScene
-          scene={SCENES.eveningEdit}
-          label="Illustration of the Veloura evening routine: cleanser, serum and night cream"
+        <EditorialImage
+          name="evening-routine"
+          alt="A woman pressing serum into her cheek"
+          sizes="(max-width: 900px) 100vw, 53vw"
         />
       </div>
       <div className="routineCopy">
@@ -45,7 +45,9 @@ export default function EveningEdit() {
               <li key={product.id}>
                 <span>0{index + 1}</span>
                 <div>
-                  <small>{product.step}</small>
+                  <small>
+                    {product.step} · {product.brand}
+                  </small>
                   <Link href={`/product/${product.slug}`}>{product.name}</Link>
                 </div>
                 <b>{money(product.price)}</b>

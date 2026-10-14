@@ -1,45 +1,40 @@
 import Link from "next/link";
-import { ArrowForward, LockOutlined } from "@mui/icons-material";
-import { motion } from "framer-motion";
-import { SCENES } from "../../data/scenes";
-import ProductScene from "../../components/product-art/ProductScene";
+import { ArrowForward } from "@mui/icons-material";
+import EditorialImage from "../../components/EditorialImage";
 
-export default function HomeHero() {
+interface HomeHeroProps {
+  brandCount: number;
+}
+
+export default function HomeHero({ brandCount }: HomeHeroProps) {
   return (
-    <section className="hero homeHero">
-      <motion.div
-        className="heroCopy"
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35 }}
-      >
-        <span className="kicker">Beauty, considered.</span>
+    <section className="homeHero">
+      <div className="homeHeroCopy">
+        <span className="kicker">{brandCount} beauty houses, one bag</span>
         <h1>
-          Quiet luxury
+          Every icon,
           <br />
-          for your skin.
+          <em>in one place.</em>
         </h1>
         <p>
-          Explore Veloura skincare, makeup, and coordinated sets, with guided tools that narrow the
-          collection around your routine and shade preferences.
+          Chanel, Dior, NARS, The Ordinary and more, across makeup, skincare, fragrance and hair.
+          Find your foundation shade or build a skincare routine in a few taps.
         </p>
-        <div className="heroActions">
-          <Link className="button dark" href="/shop">
-            Shop the collection <ArrowForward />
+        <div className="homeHeroActions">
+          <Link className="button dark" href="/shop?collection=bestsellers">
+            Shop bestsellers <ArrowForward />
           </Link>
-          <Link className="textLink" href="/shop?collection=bestsellers">
-            Shop bestsellers
+          <Link className="textLink" href="/shop?collection=new">
+            New arrivals
           </Link>
         </div>
-        <p className="heroReassurance">
-          <LockOutlined /> Complimentary delivery on $75+ · Checkout is clearly marked when in demo
-          mode
-        </p>
-      </motion.div>
-      <div className="heroImage">
-        <ProductScene
-          scene={SCENES.hero}
-          label="Illustration of Veloura serum, night cream and lipstick on a stone plinth"
+      </div>
+      <div className="homeHeroImage">
+        <EditorialImage
+          name="hero"
+          alt="Portrait of a woman with luminous skin against a warm background"
+          sizes="(max-width: 700px) 100vw, 55vw"
+          priority
         />
       </div>
     </section>
