@@ -9,13 +9,13 @@ test("getAll returns the catalogue in stable order without exposing the source a
 });
 
 test("getById accepts catalogue ID input and returns undefined when missing", () => {
-  expect(productRepository.getById(7)?.slug).toBe("petal-skin-tint");
-  expect(productRepository.getById("7")?.slug).toBe("petal-skin-tint");
+  expect(productRepository.getById(10)?.slug).toBe("estee-lauder-double-wear");
+  expect(productRepository.getById("10")?.slug).toBe("estee-lauder-double-wear");
   expect(productRepository.getById("missing")).toBeUndefined();
 });
 
 test("getBySlug returns the matching product and undefined when missing", () => {
-  expect(productRepository.getBySlug("luminous-veil-serum")?.id).toBe(3);
+  expect(productRepository.getBySlug("the-ordinary-hyaluronic-acid-2-b5")?.id).toBe(3);
   expect(productRepository.getBySlug("missing-product")).toBeUndefined();
 });
 

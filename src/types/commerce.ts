@@ -2,7 +2,7 @@
 
 export type ProductId = number;
 
-export type Category = "Skincare" | "Makeup" | "Sets";
+export type Category = "Makeup" | "Skincare" | "Fragrance" | "Hair" | "Sets";
 
 /** Packaging shape drawn by ProductArt. */
 export type ProductType =
@@ -32,6 +32,8 @@ export interface Variant {
   swatch: string;
   price: number;
   stock: number;
+  /** Photograph of this shade, under /public. */
+  image?: string;
 }
 
 interface ProductBase {
@@ -60,6 +62,8 @@ interface ProductBase {
   color: Tone;
   variants?: Variant[];
   stock?: number;
+  /** Photograph under /public; the SVG art is drawn when it is missing. */
+  image?: string;
 }
 
 /** A single item: drawn from its packaging type and material. */

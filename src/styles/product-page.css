@@ -191,6 +191,17 @@
   max-height: 600px;
   padding: 8%;
 }
+/* A photograph brings its own ground, so the container drops the SVG's tone and height. */
+.productDetail .detailVisual:has(.productPhoto) {
+  min-height: 0;
+  background: var(--porcelain);
+}
+.detailVisual .productPhoto {
+  position: sticky;
+  top: 106px;
+  height: auto;
+  aspect-ratio: 1;
+}
 .description {
   font-size: var(--text-sm);
 }

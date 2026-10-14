@@ -2,12 +2,12 @@ import Link from "next/link";
 import { resolveProductSelection } from "../../domain/product/productSelection";
 import { productRepository } from "../../repositories/productRepository";
 import { useCustomer } from "../../hooks/useCustomer";
-import ProductArt from "../../components/product-art/ProductArt";
+import ProductVisual from "../../components/product-art/ProductVisual";
 
 /** The shade saved from Shade Match, or a prompt to find one. */
 export default function SavedShadeCard() {
   const { profile } = useCustomer();
-  const tint = productRepository.getBySlug("petal-skin-tint");
+  const tint = productRepository.getBySlug("estee-lauder-double-wear");
   const shade = tint?.variants?.find((item) => item.id === profile.shadeVariantId);
   const shadeProduct = tint && shade ? resolveProductSelection(tint, shade.id) : null;
 
@@ -17,7 +17,7 @@ export default function SavedShadeCard() {
       {shade && shadeProduct ? (
         <div className="savedShadeContent">
           <div className="savedShadeVisual">
-            <ProductArt product={shadeProduct} />
+            <ProductVisual product={shadeProduct} sizes="200px" />
           </div>
           <div>
             <h2>{shade.name}</h2>
@@ -33,7 +33,7 @@ export default function SavedShadeCard() {
       ) : (
         <div className="profileEmpty">
           <h2>No saved shade yet</h2>
-          <p>Shade Match offers a suggested starting point for Petal Skin Tint.</p>
+          <p>Shade Match offers a suggested starting point for Estée Lauder Double Wear.</p>
           <Link className="button outline" href="/shade-match">
             Find my shade
           </Link>

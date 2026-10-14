@@ -2,27 +2,27 @@ import { resolveCart } from "./cart";
 
 test("canonicalizes persisted product data while preserving quantity", () => {
   const [item] = resolveCart([
-    { productId: 11, cartId: "11", quantity: 3, name: "Old name", image: "/wrong.webp", price: 1 },
+    { productId: 22, cartId: "22", quantity: 3, name: "Old name", image: "/wrong.webp", price: 1 },
   ]);
   expect(item).toMatchObject({
-    name: "Soft Light Palette",
-    price: 62,
+    name: "The City Mini Eyeshadow Palette",
+    price: 10,
     quantity: 3,
-    cartId: "11",
+    cartId: "22",
   });
-  // Stale fields from older saved carts must not leak through.
-  expect(item).not.toHaveProperty("image");
+  // Stale fields from older saved carts must not leak through: the image comes from the catalogue.
+  expect(item?.image).toBe("/images/products/maybelline-the-city-mini-palette.webp");
 });
 
 test("preserves variant identity when canonicalizing cart lines", () => {
   const [item] = resolveCart([
-    { productId: 7, variantId: "light", cartId: "7:light", quantity: 2 },
+    { productId: 10, variantId: "light", cartId: "10:light", quantity: 2 },
   ]);
   expect(item).toMatchObject({
-    productId: 7,
+    productId: 10,
     variantId: "light",
-    selectedVariant: "Linen 03",
-    cartId: "7:light",
+    selectedVariant: "2W1 Dawn",
+    cartId: "10:light",
     quantity: 2,
   });
 });

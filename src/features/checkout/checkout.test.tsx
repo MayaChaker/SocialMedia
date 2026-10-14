@@ -12,7 +12,7 @@ const type = (label: string, value: string) =>
 const seedBag = () =>
   window.localStorage.setItem(
     "velouraBeauty.cart.v2",
-    JSON.stringify([{ productId: 3, cartId: "3", quantity: 1 }]),
+    JSON.stringify([{ productId: 14, cartId: "14", quantity: 1 }]),
   );
 
 test("a shopper can check out and the confirmation renders from saved orders", async () => {
@@ -20,9 +20,9 @@ test("a shopper can check out and the confirmation renders from saved orders", a
   window.localStorage.setItem("velouraBeauty.promoCode.v1", JSON.stringify("VELOURA10"));
   const { unmount } = withProviders(<CheckoutPage />);
 
-  // $68 serum - 10% = $61.20, plus $8 delivery.
+  // $69 foundation - 10% = $62.10, plus $8 delivery.
   expect(await screen.findByText("Promotion (VELOURA10)")).toBeInTheDocument();
-  expect(screen.getAllByText("$69.20").length).toBeGreaterThan(0);
+  expect(screen.getAllByText("$70.10").length).toBeGreaterThan(0);
 
   type("Email", "maya@example.com");
   type("First name", "Maya");
@@ -37,7 +37,7 @@ test("a shopper can check out and the confirmation renders from saved orders", a
   const [order] = stored("velouraBeauty.orders.v1");
   expect(router.replace).toHaveBeenCalledWith(`/checkout/confirmation/${order.id}`);
   expect(router.replace).not.toHaveBeenCalledWith("/shop");
-  expect(order.total).toBe(69.2);
+  expect(order.total).toBe(70.1);
   expect(stored("velouraBeauty.cart.v2")).toEqual([]);
 
   unmount();

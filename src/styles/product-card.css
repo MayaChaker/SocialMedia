@@ -15,6 +15,17 @@
   overflow: hidden;
   text-decoration: none;
 }
+/* Product photographs fill their container; the SVG art keeps its own sizing rules. */
+.productPhoto {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-slow) var(--ease-out);
+}
+.productImage:hover .productPhoto {
+  transform: scale(1.03);
+}
 /* Every product-art container takes its ground from the product's tone class (tokens.css). */
 .productImage,
 .previewVisual,
@@ -214,6 +225,10 @@
   display: grid;
   place-items: center;
 }
+.previewVisual:has(.productPhoto) {
+  min-height: 0;
+  place-items: stretch;
+}
 .quickPreview > div:last-child {
   padding: 60px;
   display: flex;
@@ -283,11 +298,9 @@
   display: block;
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
-/* Still-life scenes fill their frame like a photograph would. */
-.productScene {
-  width: 100%;
-  height: 100%;
-  display: block;
+/* Campaign photographs (next/image with `fill`) cover their positioned frame. */
+.editorialImage {
+  object-fit: cover;
 }
 .productImage:hover .productArt {
   transform: scale(1.025);

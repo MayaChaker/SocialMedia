@@ -9,7 +9,7 @@ import { productRepository } from "../../repositories/productRepository";
 import { useCartDrawer } from "../../hooks/useCartDrawer";
 import { useCommerce } from "../../hooks/useCommerce";
 import { useCustomer } from "../../hooks/useCustomer";
-import ProductArt from "../../components/product-art/ProductArt";
+import ProductVisual from "../../components/product-art/ProductVisual";
 import NotFoundPage from "../../views/NotFoundPage";
 import WishlistButton from "../wishlist/WishlistButton";
 import ProductFacts from "./ProductFacts";
@@ -58,14 +58,14 @@ export default function ProductPage({ slug }: { slug: string }) {
     openCart();
   };
   return (
-    <main className={`productPage ${product.slug === "petal-skin-tint" ? "shadeProductPage" : ""}`}>
+    <main className={`productPage ${product.variants?.length ? "shadeProductPage" : ""}`}>
       <button className="backLink" onClick={() => router.back()}>
         ← Back to collection
       </button>
       <section className="productDetail">
         <div className="productGallery">
           <div className={`detailVisual ${product.color}`}>
-            <ProductArt product={display} />
+            <ProductVisual product={display} sizes="(max-width: 900px) 100vw, 55vw" priority />
             {product.badge && <span className="detailBadge">{product.badge}</span>}
           </div>
           <div className="galleryDetails">

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Check } from "@mui/icons-material";
 import { money } from "../../lib/money";
-import ProductArt from "../../components/product-art/ProductArt";
+import ProductVisual from "../../components/product-art/ProductVisual";
 import type { Product } from "../../types/commerce";
 import type { RoutineStep } from "./routineRecommendations";
 import { isAvailable } from "./useRoutineBuilder";
@@ -34,7 +34,7 @@ export default function RoutineProductCard({
         href={`/product/${product.slug}`}
         aria-label={`View ${product.name}`}
       >
-        <ProductArt product={product} />
+        <ProductVisual product={product} sizes="(max-width: 700px) 100vw, 240px" />
       </Link>
       <div className="routineProductCopy">
         <span className="routineStep">

@@ -9,7 +9,7 @@ import { OUT_OF_STOCK_IDS } from "../../data/merchandising";
 import { resolveProductSelection } from "../../domain/product/productSelection";
 import { useCommerce } from "../../hooks/useCommerce";
 import { useModalDialog } from "../../hooks/useModalDialog";
-import ProductArt from "../../components/product-art/ProductArt";
+import ProductVisual from "../../components/product-art/ProductVisual";
 import type { Product } from "../../types/commerce";
 import WishlistButton from "../wishlist/WishlistButton";
 import ProductCardDetails from "./ProductCardDetails";
@@ -89,7 +89,7 @@ export default function ProductCard({ product, onAdded, shopLayout = false }: Pr
             className="visualLink"
             aria-label={`View ${product.name}${shadeLabel}`}
           >
-            <ProductArt product={display} />
+            <ProductVisual product={display} sizes="(max-width: 700px) 50vw, 25vw" />
           </Link>
           <button className="quickView" onClick={() => setPreview(true)}>
             Quick view

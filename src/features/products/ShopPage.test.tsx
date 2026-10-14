@@ -10,8 +10,8 @@ test("filters are read from the URL so filtered links can be shared", () => {
       <ShopPage category="skincare" />
     </AppProviders>,
   );
-  // Essence ($48), cleanser ($42) and balm ($46) are sensitive-skin skincare under $50.
-  expect(screen.getByText("3")).toBeInTheDocument();
+  // Cleanser, serum, balm, day cream and SPF are the sensitive-skin skincare under $50.
+  expect(screen.getByText("5")).toBeInTheDocument();
   expect(screen.getByRole("button", { name: /sensitive skin/i })).toBeInTheDocument();
 
   // Removing a filter rewrites the URL in place instead of adding a history entry.

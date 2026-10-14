@@ -13,9 +13,9 @@ const expectMatch = (answers: ShadeAnswers): ShadeProfile => {
   return shade;
 };
 
-test("every shade profile maps to a real Petal Skin Tint variant", () => {
+test("every shade profile maps to a real Double Wear variant", () => {
   const variantIds = new Set(
-    productRepository.getBySlug("petal-skin-tint")?.variants?.map((variant) => variant.id),
+    productRepository.getBySlug("estee-lauder-double-wear")?.variants?.map((variant) => variant.id),
   );
   expect(SHADE_PROFILES).toHaveLength(5);
   SHADE_PROFILES.forEach((shade) => expect(variantIds.has(shade.variantId)).toBe(true));
@@ -28,8 +28,8 @@ test("different depth and undertone combinations return different shades", () =>
   expect(new Set([fair.variantId, medium.variantId, deep.variantId]).size).toBe(3);
 });
 
-test("the medium neutral path returns Honey 05 and a selected-variant URL", () => {
+test("the medium neutral path returns 3W1 Tawny and a selected-variant URL", () => {
   const shade = expectMatch({ depth: "Medium", tone: "Both · neutral", finish: "Soft satin" });
-  expect(shade.name).toBe("Honey 05");
-  expect(matchedProductUrl(shade)).toBe("/product/petal-skin-tint?variant=medium");
+  expect(shade.name).toBe("3W1 Tawny");
+  expect(matchedProductUrl(shade)).toBe("/product/estee-lauder-double-wear?variant=medium");
 });

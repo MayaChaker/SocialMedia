@@ -2,8 +2,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { Check } from "@mui/icons-material";
 import { useCustomer } from "../../hooks/useCustomer";
+import { resolveProductSelection } from "../../domain/product/productSelection";
 import { productRepository } from "../../repositories/productRepository";
-import ProductArt from "../../components/product-art/ProductArt";
+import ProductVisual from "../../components/product-art/ProductVisual";
 import {
   matchShade,
   matchedProductUrl,
@@ -23,7 +24,9 @@ export default function ShadeResult({ answers, onStartAgain }: ShadeResultProps)
   const [saved, setSaved] = useState(false);
   const result = matchShade(answers);
   const product = result && productRepository.getBySlug(result.productSlug);
-  if (!result || !product) return null;
+  // The matched shade's own photograph and colour, not the product's default shade.
+  const shadeProduct = product && resolveProductSelection(product, result?.variantId);
+  if (!result || !product || !shadeProduct) return null;
 
   const resultIndex = SHADE_PROFILES.findIndex((item) => item.variantId === result.variantId);
   const nearby = [SHADE_PROFILES[resultIndex - 1], SHADE_PROFILES[resultIndex + 1]].filter(
@@ -43,9 +46,7 @@ export default function ShadeResult({ answers, onStartAgain }: ShadeResultProps)
     <main className="shadeResultPage">
       <div className="shadeResultLayout">
         <section className="shadeResultVisual" aria-label={`${result.name} shade sample`}>
-          <ProductArt
-            product={{ ...product, swatch: result.swatch, selectedVariant: result.name }}
-          />
+          <ProductVisual product={shadeProduct} sizes="(max-width: 700px) 100vw, 50vw" priority />
           <div className="matchedShadeSample" style={{ "--shade": result.swatch }}>
             <span>{result.name}</span>
           </div>
