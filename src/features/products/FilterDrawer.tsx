@@ -6,10 +6,13 @@ import type { ShopFilterControls } from "./useShopFilters";
 const CONCERNS = [
   "Dehydration",
   "Dullness",
+  "Breakouts",
   "Sensitive skin",
   "Natural coverage",
-  "Travel",
-  "Gifting",
+  "Long wear",
+  "Floral",
+  "Fresh",
+  "Woody",
 ];
 
 interface FilterDrawerProps {

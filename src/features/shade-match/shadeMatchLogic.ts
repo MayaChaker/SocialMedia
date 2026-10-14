@@ -22,40 +22,40 @@ export interface ShadeProfile extends ShadeDescription {
 
 type ToneKey = "cool" | "neutral" | "warm";
 
-const SKIN_TINT: Product | undefined = productRepository.getBySlug("petal-skin-tint");
+const FOUNDATION: Product | undefined = productRepository.getBySlug("estee-lauder-double-wear");
 
 const PROFILE_BY_VARIANT: Record<string, ShadeDescription> = {
-  porcelain: {
+  fair: {
     depth: "Fair",
     undertone: "Cool-neutral",
-    description: "A light, softly balanced tint for fair complexions.",
+    description: "A softly balanced shade for fair complexions.",
   },
   light: {
     depth: "Light",
     undertone: "Neutral",
-    description: "A balanced tint that settles naturally into light complexions.",
+    description: "A balanced shade that settles naturally into light complexions.",
   },
   medium: {
     depth: "Medium",
     undertone: "Warm-neutral",
-    description: "A golden-neutral tint designed to blend naturally with medium complexions.",
+    description: "A golden-neutral shade that blends naturally with medium complexions.",
   },
   tan: {
     depth: "Tan",
     undertone: "Warm",
-    description: "A warm, dimensional tint for tan complexions.",
+    description: "A warm, dimensional shade for tan complexions.",
   },
   deep: {
     depth: "Deep",
     undertone: "Neutral-warm",
-    description: "A rich, balanced tint for deep complexions.",
+    description: "A rich, balanced shade for deep complexions.",
   },
 };
 
 const MEDIUM_FAMILY: Record<ToneKey, string> = { cool: "light", neutral: "medium", warm: "medium" };
 
 const VARIANT_BY_ANSWERS: Record<string, Record<ToneKey, string>> = {
-  Fair: { cool: "porcelain", neutral: "porcelain", warm: "porcelain" },
+  Fair: { cool: "fair", neutral: "fair", warm: "fair" },
   Light: { cool: "light", neutral: "light", warm: "medium" },
   Medium: MEDIUM_FAMILY,
   Tan: { cool: "medium", neutral: "tan", warm: "tan" },
@@ -65,16 +65,16 @@ const VARIANT_BY_ANSWERS: Record<string, Record<ToneKey, string>> = {
 const toneKey = (answer = ""): ToneKey =>
   answer.startsWith("Silver") ? "cool" : answer.startsWith("Gold") ? "warm" : "neutral";
 
-export const SHADE_PROFILES: ShadeProfile[] = (SKIN_TINT?.variants ?? []).flatMap((variant) => {
+export const SHADE_PROFILES: ShadeProfile[] = (FOUNDATION?.variants ?? []).flatMap((variant) => {
   const profile = PROFILE_BY_VARIANT[variant.id];
-  if (!profile || !SKIN_TINT) return [];
+  if (!profile || !FOUNDATION) return [];
   return [
     {
       ...profile,
       variantId: variant.id,
       name: variant.name,
       swatch: variant.swatch,
-      productSlug: SKIN_TINT.slug,
+      productSlug: FOUNDATION.slug,
     },
   ];
 });

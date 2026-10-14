@@ -30,9 +30,10 @@ export default function ShopToolbar({
             onChange={(event) => shop.goToCategory(event.target.value)}
           >
             <option value="all">All products</option>
-            <option value="skincare">Skincare</option>
             <option value="makeup">Makeup</option>
-            <option value="sets">Sets</option>
+            <option value="skincare">Skincare</option>
+            <option value="fragrance">Fragrance</option>
+            <option value="hair">Hair</option>
             <option value="new">New arrivals</option>
           </select>
         </label>

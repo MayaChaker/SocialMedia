@@ -11,7 +11,13 @@ interface SetLayout {
   centres: number[];
 }
 
-const LINES: Record<Category, string> = { Skincare: "SKIN", Makeup: "COLOUR", Sets: "RITUALS" };
+const LINES: Record<Category, string> = {
+  Skincare: "SKIN",
+  Makeup: "COLOUR",
+  Fragrance: "PARFUM",
+  Hair: "HAIR",
+  Sets: "RITUALS",
+};
 
 // Where each item of a set sits (centre x) and how much it is scaled down.
 const THREE_PIECE: SetLayout = { scale: 0.6, centres: [52, 148, 100] };

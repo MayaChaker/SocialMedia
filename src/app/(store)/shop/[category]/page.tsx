@@ -4,7 +4,12 @@ import { notFound } from "next/navigation";
 import ShopPage from "../../../../features/products/ShopPage";
 import { CATEGORIES } from "../../../../features/products/shopLogic";
 
-const TITLES: Record<string, string> = { skincare: "Skincare", makeup: "Makeup", sets: "Sets" };
+const TITLES: Record<string, string> = {
+  makeup: "Makeup",
+  skincare: "Skincare",
+  fragrance: "Fragrance",
+  hair: "Hair",
+};
 
 export const dynamicParams = false;
 

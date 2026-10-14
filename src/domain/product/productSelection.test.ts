@@ -1,28 +1,28 @@
 import { resolveProductSelection } from "./productSelection";
 
 test("resolves a valid product by ID", () => {
-  expect(resolveProductSelection(11)).toMatchObject({
-    id: 11,
-    productId: 11,
-    slug: "soft-light-palette",
-    cartId: "11",
+  expect(resolveProductSelection(22)).toMatchObject({
+    id: 22,
+    productId: 22,
+    slug: "maybelline-the-city-mini-palette",
+    cartId: "22",
   });
 });
 
 test("resolves a selected variant with its canonical identity", () => {
-  expect(resolveProductSelection(7, "deep")).toMatchObject({
-    id: 7,
-    name: "Petal Skin Tint",
-    productId: 7,
+  expect(resolveProductSelection(10, "deep")).toMatchObject({
+    id: 10,
+    name: "Double Wear Stay-in-Place Foundation",
+    productId: 10,
     variantId: "deep",
-    selectedVariant: "Mahogany 09",
-    cartId: "7:deep",
+    selectedVariant: "6W1 Sandalwood",
+    cartId: "10:deep",
   });
 });
 
 test("falls back to the base product when a variant is absent or invalid", () => {
-  expect(resolveProductSelection(7)).toMatchObject({ productId: 7, cartId: "7" });
-  expect(resolveProductSelection(7, "missing")).toMatchObject({ productId: 7, cartId: "7" });
+  expect(resolveProductSelection(10)).toMatchObject({ productId: 10, cartId: "10" });
+  expect(resolveProductSelection(10, "missing")).toMatchObject({ productId: 10, cartId: "10" });
 });
 
 test("returns null for a missing product", () => {

@@ -11,14 +11,15 @@ export default function Footer() {
             <Link className="wordmark" href="/">
               VELOURA<span>BEAUTY</span>
             </Link>
-            <p>Skincare, colour, and sets for considered everyday routines.</p>
+            <p>Makeup, skincare, fragrance and hair from the brands you love, in one bag.</p>
           </div>
           <div className="footerColumn">
             <h4>Shop</h4>
             <Link href="/shop">All products</Link>
-            <Link href="/shop/skincare">Skincare</Link>
             <Link href="/shop/makeup">Makeup</Link>
-            <Link href="/shop/sets">Sets</Link>
+            <Link href="/shop/skincare">Skincare</Link>
+            <Link href="/shop/fragrance">Fragrance</Link>
+            <Link href="/shop/hair">Hair</Link>
             <Link href="/shop?collection=new">New arrivals</Link>
           </div>
           <div className="footerColumn">
@@ -39,8 +40,9 @@ export default function Footer() {
         </div>
         <div className="footerBottom">
           <span>
-            Veloura is a fictional brand: a portfolio project by Maya Chaker. No real orders or
-            payments are processed.
+            Veloura is a fictional store: a portfolio project by Maya Chaker. It is not affiliated
+            with the brands shown, and no real orders or payments are processed. Photography from
+            Unsplash.
           </span>
           <div className="footerLegal">
             <Link href="/care/privacy">Privacy</Link>

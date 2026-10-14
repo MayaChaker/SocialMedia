@@ -19,22 +19,22 @@ const catalogueProduct = (product: Product | undefined): Product => {
 };
 
 test("a shade selection updates the product art and the added cart variant", () => {
-  const product = catalogueProduct(productRepository.getBySlug("petal-skin-tint"));
+  const product = catalogueProduct(productRepository.getBySlug("estee-lauder-double-wear"));
   renderCard(product);
   expect(screen.getByRole("img", { name: product.name })).toBeTruthy();
   expect(screen.getByRole("button", { name: "Choose shade" })).toBeDisabled();
-  fireEvent.click(screen.getByRole("button", { name: "Select Mahogany 09 shade" }));
-  expect(screen.getByRole("img", { name: `${product.name} in Mahogany 09` })).toBeTruthy();
-  expect(screen.getByText("Shade: Mahogany 09")).toBeTruthy();
+  fireEvent.click(screen.getByRole("button", { name: "Select 6W1 Sandalwood shade" }));
+  expect(screen.getByRole("img", { name: `${product.name} in 6W1 Sandalwood` })).toBeTruthy();
+  expect(screen.getByText("Shade: 6W1 Sandalwood")).toBeTruthy();
   fireEvent.click(screen.getByRole("button", { name: "Add to bag" }));
   const cart = stored("velouraBeauty.cart.v2");
   expect(cart[0]).toMatchObject({
     productId: product.id,
     variantId: "deep",
-    selectedVariant: "Mahogany 09",
+    selectedVariant: "6W1 Sandalwood",
     cartId: `${product.id}:deep`,
   });
-  expect(cart[0].swatch).toBe("#503127");
+  expect(cart[0].swatch).toBe("#7a4a30");
 });
 
 test("wishlist remains functional on a refined card", () => {

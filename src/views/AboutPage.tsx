@@ -3,8 +3,7 @@
 // MUI icons render through Emotion, which needs the client runtime.
 import { ArrowForward } from "@mui/icons-material";
 import Link from "next/link";
-import ProductScene from "../components/product-art/ProductScene";
-import { SCENES } from "../data/scenes";
+import EditorialImage from "../components/EditorialImage";
 
 const selectionCriteria = [
   [
@@ -24,9 +23,11 @@ export default function AboutPage() {
   return (
     <main className="storyFinal">
       <section className="storyFinalHero">
-        <ProductScene
-          scene={SCENES.campaign}
-          label="Illustration of Veloura skincare and colour essentials on warm stone"
+        <EditorialImage
+          name="category-skincare"
+          alt="A woman with fresh, dewy skin and wet hair"
+          sizes="100vw"
+          priority
         />
         <div className="storyFinalHeroShade" aria-hidden="true" />
         <div className="storyFinalHeroCopy">
@@ -37,8 +38,8 @@ export default function AboutPage() {
             <em>with intention.</em>
           </h1>
           <p>
-            A considered edit of skincare, makeup, and everyday beauty essentials, selected to make
-            finding what works for you feel simpler.
+            A considered edit of makeup, skincare, fragrance and hair from the brands you love,
+            selected to make finding what works for you feel simpler.
           </p>
         </div>
         <span className="storyFinalHeroNote">Beauty, considered.</span>
@@ -46,9 +47,10 @@ export default function AboutPage() {
 
       <section className="storyFinalPhilosophy">
         <div className="storyFinalPhilosophyImage">
-          <ProductScene
-            scene={SCENES.lipstickShades}
-            label="Illustration of five Velvet Ritual Lip shades"
+          <EditorialImage
+            name="shop-the-look"
+            alt="A woman applying red lipstick in front of a mirror"
+            sizes="(max-width: 900px) 100vw, 50vw"
           />
         </div>
         <div className="storyFinalPhilosophyCopy">
@@ -80,9 +82,10 @@ export default function AboutPage() {
           </p>
         </div>
         <div className="storyEditImage">
-          <ProductScene
-            scene={SCENES.morningLayers}
-            label="Illustration of Veloura essence, serum and SPF"
+          <EditorialImage
+            name="category-fragrance"
+            alt="A hand holding a perfume bottle in front of a mirror"
+            sizes="(max-width: 900px) 100vw, 50vw"
           />
           <span>Selected with intention</span>
         </div>
@@ -108,9 +111,10 @@ export default function AboutPage() {
 
       <section className="storyShelf storyDiscover">
         <div className="storyShelfImage">
-          <ProductScene
-            scene={SCENES.eveningEdit}
-            label="Illustration of the Veloura evening routine"
+          <EditorialImage
+            name="evening-routine"
+            alt="A woman pressing serum into her cheek"
+            sizes="(max-width: 900px) 100vw, 50vw"
           />
         </div>
         <div className="storyShelfCopy">
@@ -121,8 +125,8 @@ export default function AboutPage() {
             everyday favorite.
           </h2>
           <p>
-            Explore skincare, makeup, and beauty essentials selected for real routines and
-            individual preferences.
+            Explore makeup, skincare, fragrance and hair selected for real routines and individual
+            preferences.
           </p>
           <Link className="button light" href="/shop">
             Shop the collection <ArrowForward />

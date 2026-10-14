@@ -2,7 +2,7 @@ import { OUT_OF_STOCK_IDS } from "../../data/merchandising";
 import type { Product } from "../../types/commerce";
 
 /** URL segments accepted by /shop/[category]. */
-export const CATEGORIES = ["skincare", "makeup", "sets"];
+export const CATEGORIES = ["makeup", "skincare", "fragrance", "hair"];
 
 export type SortOption = "featured" | "price-low" | "price-high" | "newest";
 

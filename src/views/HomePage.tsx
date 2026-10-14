@@ -1,44 +1,33 @@
 "use client";
 
-import { Check } from "@mui/icons-material";
 import { BESTSELLER_IDS } from "../data/merchandising";
 import { productRepository } from "../repositories/productRepository";
 import ProductCard from "../features/products/ProductCard";
 import { useCartDrawer } from "../hooks/useCartDrawer";
+import BrandStrip from "./home/BrandStrip";
 import EveningEdit from "./home/EveningEdit";
 import HomeCategories from "./home/HomeCategories";
 import HomeHero from "./home/HomeHero";
 import SectionHeading from "./home/SectionHeading";
-
-const TRUST_POINTS = [
-  "Skincare, makeup, and sets",
-  "Browser-saved profile",
-  "Guided shade suggestions",
-  "Complimentary delivery on $75+",
-];
+import ShopTheLook from "./home/ShopTheLook";
 
 const bestsellers = productRepository.getManyByIds(BESTSELLER_IDS);
+const brands = [...new Set(productRepository.getAll().map((product) => product.brand))].sort(
+  (a, b) => a.localeCompare(b),
+);
 
 export default function HomePage() {
   const { openCart } = useCartDrawer();
 
   return (
     <main className="homePage">
-      <HomeHero />
+      <HomeHero brandCount={brands.length} />
+      <BrandStrip brands={brands} />
 
-      <section className="trustBar" aria-label="Why shop Veloura">
-        {TRUST_POINTS.map((point) => (
-          <div key={point}>
-            <Check />
-            <span>{point}</span>
-          </div>
-        ))}
-      </section>
-
-      <section className="homeSection bestsellersSection">
+      <section className="homeSection">
         <SectionHeading
+          eyebrow="Most loved"
           title="Bestsellers"
-          copy="Made to be reached for."
           href="/shop?collection=bestsellers"
           link="Shop all bestsellers"
         />
@@ -50,6 +39,7 @@ export default function HomePage() {
       </section>
 
       <HomeCategories />
+      <ShopTheLook />
       <EveningEdit />
     </main>
   );

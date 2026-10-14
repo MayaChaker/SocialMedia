@@ -7,7 +7,7 @@ export default function ShadeIntro({ onStart }: { onStart: () => void }) {
   return (
     <main className="shadePage shadeLanding">
       <section>
-        <span className="kicker">Petal Skin Tint</span>
+        <span className="kicker">Estée Lauder Double Wear</span>
         <h1>
           Meet your
           <br />

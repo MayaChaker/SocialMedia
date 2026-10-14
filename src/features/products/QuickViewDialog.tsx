@@ -2,7 +2,8 @@ import type { ReactNode, RefObject } from "react";
 import Link from "next/link";
 import { Close, Star } from "@mui/icons-material";
 import { motion } from "framer-motion";
-import ProductArt, { type ArtProduct } from "../../components/product-art/ProductArt";
+import type { ArtProduct } from "../../components/product-art/ProductArt";
+import ProductVisual from "../../components/product-art/ProductVisual";
 import type { Product, Variant } from "../../types/commerce";
 
 interface QuickViewDialogProps {
@@ -56,7 +57,7 @@ export default function QuickViewDialog({
           <Close />
         </button>
         <div className={`previewVisual ${product.color}`}>
-          <ProductArt product={display} />
+          <ProductVisual product={display} sizes="(max-width: 700px) 100vw, 40vw" />
         </div>
         <div>
           <span className="kicker">{product.brand}</span>

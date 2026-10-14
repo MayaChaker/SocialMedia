@@ -15,13 +15,15 @@ const options: ShopFilters = {
 };
 
 test("search covers shade names and product benefits", () => {
-  const tint = PRODUCTS.find((product) => product.slug === "petal-skin-tint") as Product;
-  expect(searchableProductText(tint)).toContain("mahogany 09");
+  const foundation = PRODUCTS.find(
+    (product) => product.slug === "estee-lauder-double-wear",
+  ) as Product;
+  expect(searchableProductText(foundation)).toContain("6w1 sandalwood");
   expect(
     filterAndSortProducts(PRODUCTS, { ...options, query: "broad-spectrum" }).map(
       (product) => product.slug,
     ),
-  ).toContain("daily-silk-spf-50");
+  ).toContain("glossier-invisible-shield-spf-35");
 });
 
 test("multiple filters combine", () => {

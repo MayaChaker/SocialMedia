@@ -27,25 +27,24 @@ const bySlug = (slug: string): Product => {
   return product;
 };
 
-const ESSENCE = "petal-water-essence";
-const CLEANSER = "cloud-melt-cleanser";
-const BALM = "rose-melt-cleansing-balm";
-const SERUM = "luminous-veil-serum";
-const NIGHT_CREAM = "restorative-night-cream";
-const SPF = "daily-silk-spf-50";
+const ESSENCE = "glossier-solution";
+const CLEANSER = "glossier-milky-jelly-cleanser";
+const SERUM = "the-ordinary-hyaluronic-acid-2-b5";
+const NIGHT_CREAM = "la-roche-posay-lipikar-baume-ap";
+const SPF = "glossier-invisible-shield-spf-35";
 
 const treatmentByGoal: Record<RoutineGoal, string> = {
-  Dehydration: ESSENCE,
-  Dullness: SERUM,
+  Dehydration: SERUM,
+  Dullness: ESSENCE,
   "Fine lines": SERUM,
-  "Sensitive skin": ESSENCE,
+  "Sensitive skin": SERUM,
 };
 
 const treatmentReasons: Record<RoutineGoal, string> = {
   Dehydration: "Floods skin with light, lasting hydration.",
-  Dullness: "Restores a fresh, rested-looking glow.",
-  "Fine lines": "Supports resilient skin with peptides and hydration.",
-  "Sensitive skin": "Comforts tight-feeling skin with a gentle milky layer.",
+  Dullness: "Gently exfoliates for a fresher, brighter look.",
+  "Fine lines": "Plumps the look of fine lines with hydration.",
+  "Sensitive skin": "Hydrates without fragrance or harsh actives.",
 };
 
 const finishByTexture: Record<RoutineTexture, string> = {
@@ -53,9 +52,6 @@ const finishByTexture: Record<RoutineTexture, string> = {
   Cushioning: SPF,
   Rich: NIGHT_CREAM,
 };
-
-const cleanserFor = (goal: RoutineGoal, texture: RoutineTexture) =>
-  texture === "Rich" || goal === "Sensitive skin" ? BALM : CLEANSER;
 
 const recommendation = (slug: string, step: string, reason: string): RoutineStep => ({
   product: bySlug(slug),
@@ -73,13 +69,10 @@ export function buildRoutineRecommendations({
   time,
   texture,
 }: RoutineAnswers): RoutineStep[] {
-  const cleanser = cleanserFor(goal, texture);
+  const cleanser = CLEANSER;
   const treatment = treatmentByGoal[goal] || SERUM;
   const finish = finishByTexture[texture] || SPF;
-  const cleanserReason =
-    cleanser === BALM
-      ? "Melts buildup while leaving skin soft and comfortable."
-      : "Cleanses gently without disturbing the skin barrier.";
+  const cleanserReason = "Cleanses gently without disturbing the skin barrier.";
   const finishReason =
     finish === NIGHT_CREAM
       ? "Replenishes overnight with a rich, breathable finish."
@@ -105,8 +98,8 @@ export function buildRoutineRecommendations({
     // Essence always goes before serum, so the extra layer is inserted in the right place.
     const extra =
       treatment === ESSENCE
-        ? recommendation(SERUM, "Treat", "Seals in hydration with a weightless serum.")
-        : recommendation(ESSENCE, "Prepare", "Adds a cushioning hydration layer before treatment.");
+        ? recommendation(SERUM, "Treat", "Follows exfoliation with weightless hydration.")
+        : recommendation(ESSENCE, "Prepare", "Smooths texture so treatment absorbs evenly.");
     routine.splice(treatment === ESSENCE ? 2 : 1, 0, extra);
   }
 

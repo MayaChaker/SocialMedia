@@ -7,7 +7,7 @@ import ShadeIntro from "./ShadeIntro";
 import ShadeQuiz from "./ShadeQuiz";
 import ShadeResult from "./ShadeResult";
 
-/** Shade finder: an intro, three questions, then a suggested Petal Skin Tint shade. */
+/** Shade finder: an intro, three questions, then a suggested Double Wear foundation shade. */
 export default function ShadeMatchPage() {
   const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
