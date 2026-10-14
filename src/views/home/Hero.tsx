@@ -49,14 +49,14 @@ export default function Hero() {
         </div>
         <figure className="pgHeroInset" data-reveal data-hero="inset">
           <Image
-            src={productImagePath("chanel-rouge-allure")}
-            alt="Chanel Rouge Allure lipstick on marble"
+            src={productImagePath("ysl-libre-eau-de-parfum")}
+            alt="A bottle of Yves Saint Laurent Libre surrounded by drops of oil"
             fill
             sizes="(max-width: 900px) 40vw, 16vw"
             quality={90}
             priority
           />
-          <figcaption>Chanel · Rouge Allure</figcaption>
+          <figcaption>Yves Saint Laurent · Libre</figcaption>
         </figure>
 
         <div className="pgHeroFoot" data-reveal data-hero="foot">

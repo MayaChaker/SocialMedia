@@ -99,10 +99,10 @@
 .pgHeroScene {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-template-rows: auto auto 1fr auto;
+  /* meta, headline, copy, a flexible row the inset hangs in, ribbon */
+  grid-template-rows: auto auto auto 1fr auto;
   column-gap: clamp(12px, 1.6vw, 24px);
   max-width: 1600px;
-  min-height: min(calc(100svh - 150px), 860px);
   margin: 0 auto;
 }
 .pgHeroMeta {
@@ -124,7 +124,7 @@
 .pgHeroPortrait {
   position: relative;
   grid-column: 8 / 13;
-  grid-row: 1 / 4;
+  grid-row: 1 / 5;
   align-self: start;
   aspect-ratio: 4 / 5;
   overflow: hidden;
@@ -137,7 +137,7 @@
   position: relative;
   z-index: 3;
   grid-column: 6 / 9;
-  grid-row: 3;
+  grid-row: 3 / 5;
   align-self: end;
   width: 72%;
   justify-self: end;
@@ -164,7 +164,8 @@
   gap: var(--space-5);
   grid-column: 1 / 6;
   grid-row: 3;
-  align-self: end;
+  align-self: start;
+  margin-top: clamp(32px, 3.6vw, 56px);
 }
 .pgHeroFoot p {
   max-width: 38ch;
@@ -175,8 +176,8 @@
 }
 .pgRibbon {
   grid-column: 1 / -1;
-  grid-row: 4;
-  margin-top: clamp(48px, 5vw, 72px);
+  grid-row: 5;
+  margin-top: clamp(56px, 6vw, 88px);
 }
 .pgRibbonBars {
   display: flex;
@@ -380,164 +381,334 @@
   font-size: clamp(28px, 2.4vw, 38px);
 }
 
-/* ---------- Shade studio ---------- */
-.pgStudio {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+/* ---------- The consultation ---------- */
+.pgConsult {
   background: var(--powder);
 }
-.pgStudioStage {
-  position: relative;
+.pgConsultInner {
   display: grid;
-  place-items: center;
-  min-height: min(100svh, 860px);
-  padding: var(--space-8) var(--page-gutter);
-  overflow: hidden;
-  background: var(--shade);
-  transition: background-color var(--motion-base) var(--ease-standard);
+  gap: clamp(40px, 5vw, 64px);
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: clamp(80px, 9vw, 140px) var(--page-gutter);
 }
-.pgStudioShadeName {
-  position: absolute;
-  left: var(--page-gutter);
-  right: var(--page-gutter);
-  bottom: clamp(16px, 3vw, 40px);
-  z-index: 2;
-  color: var(--on-shade);
-  font: italic 400 clamp(64px, 9vw, 150px) / 0.95 var(--serif);
-  letter-spacing: -0.03em;
-  white-space: nowrap;
-  transition: color var(--motion-base) var(--ease-standard);
-  pointer-events: none;
+.pgConsultHead {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  column-gap: clamp(24px, 4vw, 64px);
+  row-gap: var(--space-4);
+  align-items: end;
 }
-/* Room for descenders (the y in "Ruby") inside the roll mask. */
-.pgStudioShadeName .textRoll {
-  padding-bottom: 0.18em;
-  margin-bottom: -0.18em;
+.pgConsultHead .pgEyebrow {
+  grid-column: 1 / -1;
 }
-.pgStudioFigure {
-  position: relative;
-  z-index: 1;
-  width: min(56%, 420px);
-  aspect-ratio: 4 / 5;
-  margin: 0 0 var(--space-8);
-  background: var(--powder-deep);
-  box-shadow: 0 48px 90px -40px color-mix(in srgb, var(--kohl) 70%, transparent);
-}
-.pgStudioFigure img {
-  object-fit: cover;
-}
-.pgStudioPanel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: var(--space-5);
-  max-width: 600px;
-  padding: var(--space-9) var(--page-gutter);
-}
-.pgStudioTitle {
+.pgConsultTitle {
   margin: 0;
-  font: 400 clamp(46px, 5vw, 80px) / 0.92 var(--serif);
+  font: 400 clamp(52px, 7vw, 112px) / 0.9 var(--serif);
   letter-spacing: -0.03em;
 }
-.pgStudioTitle em {
+.pgConsultTitle em {
   color: var(--rouge);
 }
-.pgStudioProduct {
-  display: grid;
-  gap: 4px;
+.pgConsultIntro {
+  max-width: 38ch;
   margin: 0;
+  color: var(--graphite);
+  font-size: var(--text-base);
+  line-height: 1.65;
 }
-.pgStudioProduct span {
+
+/* Tabs: large serif labels with an underline that draws in. */
+.pgTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 clamp(28px, 4vw, 56px);
+  border-bottom: 1px solid color-mix(in srgb, var(--kohl) 16%, transparent);
+}
+.pgTab {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 0 0 18px;
+  border: 0;
+  background: none;
+  color: var(--graphite);
+  font: 400 clamp(26px, 2.6vw, 38px) / 1.1 var(--serif);
+  cursor: pointer;
+  transition: color var(--motion-quick) var(--ease-standard);
+}
+.pgTab::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--kohl);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform var(--motion-base) var(--ease-curtain);
+}
+.pgTab[aria-selected="true"] {
+  color: var(--kohl);
+}
+.pgTab[aria-selected="true"]::after {
+  transform: scaleX(1);
+}
+.pgTab:hover {
+  color: var(--kohl);
+}
+.pgTab:focus-visible {
+  outline: 2px solid var(--rouge);
+  outline-offset: 6px;
+}
+.pgTabIndex {
   font: 500 var(--text-caption) var(--sans);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  letter-spacing: 0.16em;
   color: var(--graphite);
 }
-.pgStudioProduct a {
-  font: 400 var(--text-3xl) var(--serif);
-  color: var(--kohl);
-  text-decoration: none;
+.pgTabPanel {
+  animation: panelIn var(--motion-base) var(--ease-expo-out);
 }
-.pgStudioProduct a:hover {
-  text-decoration: underline;
-  text-underline-offset: 6px;
-  text-decoration-thickness: 1px;
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
 }
-.pgShades {
+
+/* A tool: questions on the left, the live answer on the right. */
+.pgTool {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: start;
+}
+.pgToolControls {
+  display: grid;
+  gap: var(--space-6);
+}
+.pgChoices {
   margin: 0;
   padding: 0;
   border: 0;
 }
-.pgShades legend {
+.pgChoices legend {
   margin-bottom: var(--space-3);
   padding: 0;
-  font: 500 var(--text-xs) var(--sans);
-  letter-spacing: 0.14em;
+  font: 500 var(--text-caption) var(--sans);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--graphite);
 }
-.pgShades legend strong {
-  color: var(--kohl);
-  font-weight: 600;
-}
-.pgShadeOptions {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: var(--space-3);
-}
-.pgShade {
-  position: relative;
-  display: grid;
+.pgChoiceList {
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-2);
-  cursor: pointer;
 }
-.pgShade input {
+.pgChoice {
+  position: relative;
+}
+.pgChoice input {
   position: absolute;
   inset: 0;
+  margin: 0;
   opacity: 0;
   cursor: pointer;
 }
-.pgShadeChip {
-  display: block;
-  aspect-ratio: 4 / 5;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kohl) 12%, transparent);
-  transition: transform var(--motion-quick) var(--ease-expo-out);
+.pgChoiceFace {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1px solid color-mix(in srgb, var(--kohl) 22%, transparent);
+  font-size: var(--text-md);
+  transition:
+    background-color var(--motion-quick) var(--ease-standard),
+    color var(--motion-quick) var(--ease-standard),
+    border-color var(--motion-quick) var(--ease-standard);
 }
-.pgShade:hover .pgShadeChip {
-  transform: translateY(-3px);
+.pgChoice:hover .pgChoiceFace {
+  border-color: var(--kohl);
 }
-.pgShade input:checked + .pgShadeChip {
-  outline: 2px solid var(--kohl);
-  outline-offset: 3px;
+.pgChoice input:checked + .pgChoiceFace {
+  background: var(--kohl);
+  border-color: var(--kohl);
+  color: var(--powder);
 }
-.pgShade input:focus-visible + .pgShadeChip {
+.pgChoice input:focus-visible + .pgChoiceFace {
   outline: 2px solid var(--rouge);
   outline-offset: 3px;
 }
-.pgShadeLabel {
-  font-size: var(--text-xs);
+.pgChoiceSwatch {
+  width: 14px;
+  height: 14px;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kohl) 18%, transparent);
+}
+.pgToolNote {
+  max-width: 44ch;
+  margin: 0;
+  color: var(--graphite);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+.pgToolResult {
+  display: grid;
+  gap: var(--space-5);
+  padding: clamp(24px, 3vw, 40px);
+  background: color-mix(in srgb, var(--white) 55%, var(--powder));
+}
+.pgShadeField {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: clamp(220px, 20vw, 300px);
+  padding: var(--space-5);
+  background: var(--shade);
+  color: var(--on-shade);
+  transition:
+    background-color var(--motion-base) var(--ease-standard),
+    color var(--motion-base) var(--ease-standard);
+}
+.pgShadeFieldLabel,
+.pgShadeFieldMeta {
+  font: 500 var(--text-caption) var(--sans);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.pgShadeFieldName {
+  font: 400 clamp(52px, 5.4vw, 88px) / 1 var(--serif);
+  letter-spacing: -0.02em;
+}
+.pgShadeFieldName .textRoll {
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+.pgToolProduct {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: center;
+}
+.pgToolProduct > div,
+.pgRoutineSteps li > div {
+  display: grid;
+  gap: 2px;
+}
+.pgToolThumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  overflow: hidden;
+  background: var(--tone, var(--powder-deep));
+}
+.pgToolThumb img {
+  object-fit: cover;
+}
+.pgToolBrand {
+  font: 500 var(--text-caption) var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   color: var(--graphite);
 }
-.pgShade input:checked ~ .pgShadeLabel {
+.pgToolResult a:not(.pgTextLink) {
+  font: 400 var(--text-xl) / 1.2 var(--serif);
   color: var(--kohl);
-  font-weight: 600;
+  text-decoration: none;
 }
-.pgPrice {
+.pgToolResult a:not(.pgTextLink):hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+.pgToolPrice {
+  font-size: var(--text-md);
+  font-variant-numeric: tabular-nums;
+}
+.pgRoutineCount {
   margin: 0;
+  font: 400 var(--text-3xl) var(--serif);
+}
+.pgRoutineSteps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid color-mix(in srgb, var(--kohl) 12%, transparent);
+}
+.pgRoutineSteps li {
+  display: grid;
+  grid-template-columns: 28px 56px minmax(0, 1fr) auto;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--kohl) 12%, transparent);
+  animation: panelIn var(--motion-base) var(--ease-expo-out) both;
+}
+.pgRoutineSteps li:nth-child(2) {
+  animation-delay: 60ms;
+}
+.pgRoutineSteps li:nth-child(3) {
+  animation-delay: 120ms;
+}
+.pgRoutineSteps li:nth-child(4) {
+  animation-delay: 180ms;
+}
+.pgRoutineIndex {
+  font: italic 400 var(--text-xl) var(--serif);
+  color: var(--graphite);
+}
+.pgRoutineTotal {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+.pgRoutineTotal span {
+  font: 500 var(--text-caption) var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--graphite);
+}
+.pgRoutineTotal strong {
   font: 400 var(--text-3xl) var(--serif);
   font-variant-numeric: tabular-nums;
 }
-.pgLive {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+
+/* Services that exist on the site today. */
+.pgServices {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-5);
+  margin: 0;
+  padding: var(--space-6) 0 0;
+  list-style: none;
+  border-top: 1px solid color-mix(in srgb, var(--kohl) 16%, transparent);
+}
+.pgServices li {
+  display: grid;
+  gap: 6px;
+}
+.pgServices strong {
+  font: 400 var(--text-2xl) var(--serif);
+}
+.pgServices span {
+  color: var(--graphite);
+  font-size: var(--text-sm);
+  line-height: 1.5;
 }
 
 /* ---------- Narrow screens ---------- */
 @media (max-width: 900px) {
+  .pgConsultHead,
+  .pgTool {
+    grid-template-columns: 1fr;
+  }
+  .pgServices {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .pgHeroScene {
     grid-template-columns: repeat(6, minmax(0, 1fr));
     grid-template-rows: auto auto auto auto auto;
@@ -575,40 +746,20 @@
     height: 40px;
     gap: 1px;
   }
-  .pgStudio {
-    grid-template-columns: 1fr;
-  }
-  .pgStudioStage {
-    min-height: 0;
-    padding-block: var(--space-7) var(--space-9);
-  }
-  .pgStudioFigure {
-    width: min(70%, 360px);
-    margin-bottom: var(--space-7);
-  }
-  .pgStudioPanel {
-    max-width: none;
-    padding-block: var(--space-7) var(--space-8);
-  }
-}
-@media (max-width: 520px) {
-  .pgShadeOptions {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: var(--space-2);
-  }
-  .pgShadeLabel {
-    font-size: var(--text-caption);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .pgButton::before,
-  .pgStudioStage,
-  .pgStudioShadeName,
-  .pgShadeChip {
+  .pgShadeField,
+  .pgChoiceFace {
     transition: none;
   }
-  .pgTextLink:hover {
+  .pgTextLink:hover,
+  .pgTabPanel,
+  .pgRoutineSteps li {
     animation: none;
+  }
+  .pgTab::after {
+    transition: none;
   }
 }
