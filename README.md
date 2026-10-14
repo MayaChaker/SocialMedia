@@ -7,7 +7,8 @@ and a foundation shade finder.
 **Live demo:** https://veloura-beauty-store.vercel.app
 
 > Veloura is not a real company. No real orders or payments are processed; checkout runs in demo
-> mode and everything a shopper saves stays in their own browser.
+> mode and everything a shopper saves stays in their own browser. Because the brand is fictional,
+> its product and campaign photographs are AI-generated to one art-direction brief.
 
 ![Homepage](docs/screenshots/home.jpg)
 
@@ -73,10 +74,11 @@ Some decisions worth calling out:
   `src/domain` with their own unit tests, so components stay thin and the rules can move to a
   server later without rewriting the UI. Prices are calculated in whole cents to avoid
   floating-point drift.
-- **Product art is generated from data.** Instead of a photo per product and per shade, each
-  product declares its packaging type and colours, and `ProductArt` draws it as SVG. A new shade
-  is one line of data. Campaign images on the homepage and About page are composed the same way
-  (`ProductScene` + `src/data/scenes.ts`).
+- **Photography by convention, with an SVG fallback.** Each product and each shade has a
+  photograph at `public/images/products/<slug>[-<shade>].webp`, attached to the catalogue in
+  `src/data/productImages.ts`, and a test fails if a file is missing. `ProductVisual` serves it
+  through `next/image`; a product without a photograph is drawn as SVG by `ProductArt` from its
+  packaging type and colours. Choosing a shade swaps to that shade's own photograph.
 - **State that should be shareable is in the URL** (shop filters, selected shade, order
   confirmation); state that belongs to the shopper is in `localStorage` behind
   `storageRepository`.

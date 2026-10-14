@@ -2,7 +2,7 @@ import Link from "next/link";
 import { resolveProductSelection } from "../../domain/product/productSelection";
 import { productRepository } from "../../repositories/productRepository";
 import { useCustomer } from "../../hooks/useCustomer";
-import ProductArt from "../../components/product-art/ProductArt";
+import ProductVisual from "../../components/product-art/ProductVisual";
 
 /** The shade saved from Shade Match, or a prompt to find one. */
 export default function SavedShadeCard() {
@@ -17,7 +17,7 @@ export default function SavedShadeCard() {
       {shade && shadeProduct ? (
         <div className="savedShadeContent">
           <div className="savedShadeVisual">
-            <ProductArt product={shadeProduct} />
+            <ProductVisual product={shadeProduct} sizes="200px" />
           </div>
           <div>
             <h2>{shade.name}</h2>

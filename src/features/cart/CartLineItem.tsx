@@ -1,6 +1,6 @@
 import { Add, Remove } from "@mui/icons-material";
 import { money } from "../../lib/money";
-import ProductArt from "../../components/product-art/ProductArt";
+import ProductVisual from "../../components/product-art/ProductVisual";
 import type { CartLine } from "../../types/commerce";
 
 const DEFAULT_STOCK = 24;
@@ -16,7 +16,7 @@ export default function CartLineItem({ item, onChangeQuantity, onRemove }: CartL
   return (
     <article className="cartItem">
       <div className={`cartThumb ${item.color}`}>
-        <ProductArt product={item} />
+        <ProductVisual product={item} sizes="100px" />
       </div>
       <div className="cartItemDetails">
         <strong>{item.name}</strong>

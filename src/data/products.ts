@@ -1,4 +1,5 @@
 import type { Product, Variant } from "../types/commerce";
+import { withPhotography } from "./productImages";
 
 const shade = (id: string, name: string, swatch: string, price: number, stock = 24): Variant => ({
   id,
@@ -8,7 +9,7 @@ const shade = (id: string, name: string, swatch: string, price: number, stock = 
   stock,
 });
 
-export const PRODUCTS: Product[] = [
+const CATALOGUE: Product[] = [
   {
     id: 1,
     slug: "petal-water-essence",
@@ -499,3 +500,5 @@ export const PRODUCTS: Product[] = [
     color: "plum",
   },
 ];
+
+export const PRODUCTS: Product[] = CATALOGUE.map(withPhotography);

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { productRepository } from "../../repositories/productRepository";
 import { useCustomer } from "../../hooks/useCustomer";
-import ProductArt from "../../components/product-art/ProductArt";
+import ProductVisual from "../../components/product-art/ProductVisual";
 import type { Product } from "../../types/commerce";
 import type { StoredRoutine } from "../../types/customer";
 
@@ -33,7 +33,7 @@ export default function SavedRoutineCard() {
             {products.map((product) => (
               <Link href={`/product/${product.slug}`} key={product.id}>
                 <span className={`savedRoutineThumb ${product.color}`}>
-                  <ProductArt product={product} />
+                  <ProductVisual product={product} sizes="96px" />
                 </span>
                 <span>
                   <strong>{product.name}</strong>

@@ -9,7 +9,7 @@ import { money } from "../../lib/money";
 import { productRepository } from "../../repositories/productRepository";
 import { useCommerce } from "../../hooks/useCommerce";
 import { useModalDialog } from "../../hooks/useModalDialog";
-import ProductArt from "../../components/product-art/ProductArt";
+import ProductVisual from "../../components/product-art/ProductVisual";
 import { MOTION } from "../../theme/tokens";
 import CartLineItem from "./CartLineItem";
 import PromoCode from "./PromoCode";
@@ -87,7 +87,7 @@ export default function CartDrawer({ open, close }: CartDrawerProps) {
                       <span className="kicker">Pairs well</span>
                       <div>
                         <div className={`miniVisual ${recommendation.color}`}>
-                          <ProductArt product={recommendation} />
+                          <ProductVisual product={recommendation} sizes="72px" />
                         </div>
                         <span>
                           <strong>{recommendation.name}</strong>
