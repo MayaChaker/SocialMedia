@@ -1,0 +1,61 @@
+/*
+ * Motion primitives shared by every page. See docs/motion.md for when to use each one.
+ */
+
+/* Until React hydrates, elements that will be revealed stay hidden (no flash, no layout
+   shift: visibility keeps their space). The gate in the root layout only sets
+   data-motion="on" when reduced motion is not requested. */
+html[data-motion="on"]:not([data-motion-ready]) [data-reveal] {
+  visibility: hidden;
+}
+
+/* A headline line inside its mask: lines rise from below the mask edge. */
+.lineMask {
+  display: block;
+  overflow: hidden;
+  /* Room for descenders and italic overhang, so masks never clip glyphs at rest. */
+  padding-block: 0.06em 0.12em;
+  margin-block: -0.06em -0.12em;
+}
+.lineMask > .line {
+  display: block;
+  will-change: transform;
+}
+
+/* Text that swaps in place (a shade name): the new value rolls up into its mask. */
+.textRoll {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.textRoll > span {
+  display: inline-block;
+  animation: textRollIn var(--motion-base) var(--ease-expo-out) both;
+}
+@keyframes textRollIn {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+/* A count that changed (bag count): one short pulse. */
+.countPulse {
+  animation: countPulse var(--motion-base) var(--ease-expo-out);
+}
+@keyframes countPulse {
+  30% {
+    transform: scale(1.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .textRoll > span,
+  .countPulse {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}

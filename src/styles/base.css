@@ -26,7 +26,8 @@ body {
 html,
 body {
   max-width: 100%;
-  overflow-x: hidden;
+  /* clip, not hidden: hidden turns <body> into a scroll container and breaks position: sticky. */
+  overflow-x: clip;
 }
 button,
 input {
@@ -87,8 +88,8 @@ select:focus-visible {
 
 /* Brand mark */
 .wordmark {
-  font: 400 var(--text-xl) var(--serif);
-  letter-spacing: 0.16em;
+  font: 400 var(--text-2xl) var(--serif);
+  letter-spacing: 0.3em;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -97,7 +98,7 @@ select:focus-visible {
 .wordmark span {
   font: 500 var(--text-caption) var(--sans);
   letter-spacing: 0.22em;
-  color: var(--rose);
+  color: var(--graphite);
 }
 
 /* Labels, buttons and text links */
