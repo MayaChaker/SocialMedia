@@ -10,8 +10,8 @@ test("canonicalizes persisted product data while preserving quantity", () => {
     quantity: 3,
     cartId: "11",
   });
-  // Stale fields from older saved carts must not leak through.
-  expect(item).not.toHaveProperty("image");
+  // Stale fields from older saved carts must not leak through: the image comes from the catalogue.
+  expect(item?.image).toBe("/images/products/soft-light-palette.webp");
 });
 
 test("preserves variant identity when canonicalizing cart lines", () => {
