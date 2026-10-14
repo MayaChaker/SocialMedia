@@ -44,7 +44,7 @@
   --tone-espresso: #8b766a;
 
   /* Typography. --font-serif and --font-sans come from next/font in src/app/layout.tsx. */
-  --serif: var(--font-serif), "Didot", "Bodoni 72", Georgia, serif;
+  --serif: var(--font-serif), "Times New Roman", Georgia, serif;
   --sans: var(--font-sans), "Helvetica Neue", Arial, sans-serif;
   --text-caption: 11px; /* uppercase labels */
   --text-xs: 12px;
@@ -82,15 +82,35 @@
   --scrim: color-mix(in srgb, var(--ink) 40%, transparent);
 
   /* Page layout */
+  --header-height: 76px; /* the sticky .siteHeader on desktop */
   --page-max: 1400px;
   --page-gutter: clamp(24px, 4.2vw, 64px);
   --section-space: clamp(64px, 6vw, 88px);
 
-  /* Motion */
+  /* Motion (legacy names, still used by older stylesheets) */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --duration-fast: 150ms;
   --duration: 300ms;
   --duration-slow: 600ms;
+
+  /* "Pigment" direction (prototype). Neutrals lean cool-mauve, like pressed powder;
+     the only strong colours on the page are product shades, which come from data. */
+  --powder: #ece8ea; /* page ground */
+  --powder-deep: #ddd7db; /* image mats, quiet blocks */
+  --kohl: #17131a; /* type, dark chapters */
+  --kohl-soft: #2a2430;
+  --graphite: #5c5560; /* secondary text, 6.4:1 on powder */
+  --haze: #9a929d; /* large text and rules on kohl */
+  --rouge: #7d1a2c; /* the one accent: emphasis, focus, sale */
+
+  /* Motion tokens, mirrored in src/motion/tokens.ts for GSAP. See docs/motion.md. */
+  --motion-instant: 120ms;
+  --motion-quick: 240ms;
+  --motion-base: 480ms;
+  --motion-slow: 900ms;
+  --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-curtain: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
 }
 
 @media (max-width: 700px) {

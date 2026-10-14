@@ -4,8 +4,8 @@
   align-items: center;
 }
 .announcement {
-  background: var(--bordeaux);
-  color: var(--porcelain);
+  background: var(--kohl);
+  color: var(--powder);
   justify-content: center;
   gap: 44px;
   padding: 7px 18px;
@@ -17,9 +17,9 @@
   opacity: 0.65;
 }
 .siteHeader {
-  height: 78px;
-  background: color-mix(in srgb, var(--porcelain) 94%, transparent);
-  border-bottom: 1px solid var(--line);
+  height: var(--header-height);
+  background: color-mix(in srgb, var(--powder) 92%, transparent);
+  border-bottom: 1px solid var(--powder-deep);
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
@@ -80,7 +80,7 @@
   position: absolute;
   right: 0;
   top: 2px;
-  background: var(--bordeaux);
+  background: var(--rouge);
   color: var(--white);
   width: 16px;
   height: 16px;
@@ -297,7 +297,7 @@
 }
 @media (min-width: 1051px) {
   .siteHeader {
-    height: 76px;
+    height: var(--header-height);
   }
   .siteHeader nav {
     gap: clamp(24px, 1.6vw, 32px);

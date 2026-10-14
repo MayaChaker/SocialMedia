@@ -17,10 +17,11 @@ import { useModalDialog } from "../../hooks/useModalDialog";
 import GlobalSearch from "./GlobalSearch";
 
 const navItems = [
-  ["Shop", "/shop"],
-  ["Routine builder", "/rituals"],
+  ["Makeup", "/shop/makeup"],
+  ["Skincare", "/shop/skincare"],
+  ["Fragrance", "/shop/fragrance"],
+  ["Hair", "/shop/hair"],
   ["Shade match", "/shade-match"],
-  ["Our story", "/about"],
 ] as const;
 
 const isActive = (pathname: string, href: string) =>
@@ -115,7 +116,12 @@ export default function Header() {
           </Link>
           <button onClick={openCart} aria-label={`Shopping bag with ${cartCount} items`}>
             <ShoppingBagOutlined />
-            {cartCount > 0 && <span>{cartCount}</span>}
+            {cartCount > 0 && (
+              // Keyed by the count, so the pulse replays each time the bag changes.
+              <span key={cartCount} className="countPulse">
+                {cartCount}
+              </span>
+            )}
           </button>
         </div>
       </header>
