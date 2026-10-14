@@ -34,6 +34,7 @@ export default function ProductVisual({
       width={1200}
       height={1200}
       sizes={sizes}
+      quality={90}
       priority={priority}
     />
   );

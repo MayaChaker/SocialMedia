@@ -2,6 +2,9 @@
 const nextConfig = {
   reactStrictMode: true,
 
+  // Product photographs are served at a higher quality than the default 75.
+  images: { qualities: [75, 90] },
+
   async redirects() {
     return [{ source: "/our-story", destination: "/about", permanent: true }];
   },
