@@ -1,13 +1,15 @@
 # Veloura Beauty
 
-A beauty e-commerce storefront for a fictional brand, built with React. It covers the full shopping
-journey (catalogue, product variants, bag, checkout) plus two guided tools: a routine builder
-and a foundation shade finder.
+A multi-brand beauty storefront, in the spirit of Sephora, built with Next.js and TypeScript. It
+covers the full shopping journey (catalogue, shades, bag, checkout) plus two guided tools: a
+skincare routine builder and a foundation shade finder.
 
 **Live demo:** https://veloura-beauty-store.vercel.app
 
-> Veloura is not a real company. No real orders or payments are processed; checkout runs in demo
-> mode and everything a shopper saves stays in their own browser.
+> Veloura is a fictional store and is not affiliated with any of the brands it shows. Prices,
+> ratings and stock are illustrative. No real orders or payments are processed; checkout runs in
+> demo mode and everything a shopper saves stays in their own browser. All photographs come from
+> [Unsplash](https://unsplash.com/license); each one is credited in `src/data/photoCredits.ts`.
 
 ![Homepage](docs/screenshots/home.jpg)
 
@@ -19,17 +21,18 @@ and a foundation shade finder.
 
 ## Features
 
-- **Catalogue**: 18 products across skincare, makeup and sets, with search, concern and price
+- **Catalogue**: 36 products from 17 brands (Chanel, Dior, Estée Lauder, NARS, The Ordinary,
+  Glossier, Olaplex…) across makeup, skincare, fragrance and hair, with search, concern and price
   filters, and sorting. Filters live in the URL, so a filtered view can be shared or refreshed.
-- **Shade variants**: lipsticks, tints, concealers and blushes have selectable shades with their own
-  stock; the product illustration and the bag line follow the chosen shade.
+- **Shade variants**: foundation, concealer and lipstick have selectable shades with their own
+  price and stock; the bag line follows the chosen shade.
 - **Bag and checkout**: quantity limits from stock, a promo code (`VELOURA10`), a
   free-delivery threshold, a three-step checkout with browser validation, and an order
   confirmation page that survives a reload.
 - **Routine builder**: three questions (concern, texture, time) produce a 2-, 3- or 4-step routine;
   each step can be swapped for an alternative and the whole routine added to the bag.
-- **Shade match**: depth and undertone questions suggest a Petal Skin Tint shade, which can be
-  saved to the beauty profile.
+- **Shade match**: depth and undertone questions suggest an Estée Lauder Double Wear shade, which
+  can be saved to the beauty profile.
 - **Beauty profile and wishlist**, persisted in `localStorage`.
 - **Accessibility**: keyboard-operable dialogs with focus trapping and focus return, labelled
   controls, a skip link, and reduced-motion support.
@@ -48,8 +51,8 @@ src/
 │   └── checkout/        Checkout and order confirmation, without store navigation
 ├── components/
 │   ├── layout/          Header, footer, search
-│   └── product-art/     SVG product illustrations and still-life scenes
-├── data/                Product catalogue, merchandising and scene art direction
+│   └── product-art/     Product photographs, with an SVG fallback
+├── data/                Catalogue (one file per category), merchandising and photo credits
 ├── domain/              Framework-free business rules (cart, pricing, selection, wishlist)
 ├── features/            One folder per journey: products, cart, checkout, routine, shade-match…
 ├── hooks/               Commerce and customer state, persistence, modal behaviour
@@ -73,10 +76,11 @@ Some decisions worth calling out:
   `src/domain` with their own unit tests, so components stay thin and the rules can move to a
   server later without rewriting the UI. Prices are calculated in whole cents to avoid
   floating-point drift.
-- **Product art is generated from data.** Instead of a photo per product and per shade, each
-  product declares its packaging type and colours, and `ProductArt` draws it as SVG. A new shade
-  is one line of data. Campaign images on the homepage and About page are composed the same way
-  (`ProductScene` + `src/data/scenes.ts`).
+- **Photography by convention, with an SVG fallback.** Each product has a photograph at
+  `public/images/products/<slug>.webp`, attached to the catalogue in `src/data/productImages.ts`.
+  Tests fail if a photograph or its credit is missing. `ProductVisual` serves it through
+  `next/image` with a `sizes` hint per placement; a product without a photograph is drawn as SVG
+  by `ProductArt` from its packaging type and colours.
 - **State that should be shareable is in the URL** (shop filters, selected shade, order
   confirmation); state that belongs to the shopper is in `localStorage` behind
   `storageRepository`.
@@ -117,8 +121,8 @@ production build on every push and pull request.
 
 ## Roadmap
 
-- Design system (Phase 4): turn the existing colours, type, spacing and motion into documented
-  tokens and shared primitives.
+- Shop and product pages: a denser shop grid, a product gallery and a sticky purchase panel in
+  the new visual style, followed by the bag, checkout and profile.
 
 The full plan is in [`docs/refactor-roadmap.md`](docs/refactor-roadmap.md).
 
