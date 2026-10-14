@@ -225,6 +225,10 @@
   display: grid;
   place-items: center;
 }
+.previewVisual:has(.productPhoto) {
+  min-height: 0;
+  place-items: stretch;
+}
 .quickPreview > div:last-child {
   padding: 60px;
   display: flex;
