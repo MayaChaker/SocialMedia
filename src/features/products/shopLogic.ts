@@ -9,6 +9,8 @@ export type SortOption = "featured" | "price-low" | "price-high" | "newest";
 /** Shop filters as read from the URL. Unknown sort values fall back to "featured". */
 export interface ShopFilters {
   category?: string;
+  /** Subcategory slug, e.g. "lips"; only meaningful with a category. */
+  subcategory?: string;
   collection: string;
   query: string;
   concern: string;
@@ -40,11 +42,12 @@ export const searchableProductText = (product: Product): string =>
 
 export function filterAndSortProducts(
   products: Product[],
-  { category, collection, query, concern, underFifty, inStock, sort }: ShopFilters,
+  { category, subcategory, collection, query, concern, underFifty, inStock, sort }: ShopFilters,
 ): Product[] {
   const normalizedQuery = query.trim().toLowerCase();
   const filtered = products
     .filter((product) => !category || product.category.toLowerCase() === category.toLowerCase())
+    .filter((product) => !subcategory || product.subcategory === subcategory)
     .filter((product) => collection !== "new" || product.isNew)
     .filter((product) => collection !== "bestsellers" || product.isBestseller)
     .filter(

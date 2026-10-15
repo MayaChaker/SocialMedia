@@ -42,6 +42,8 @@ interface ProductBase {
   name: string;
   brand: string;
   category: Category;
+  /** Slug from src/data/subcategories.ts, e.g. "lips". */
+  subcategory?: string;
   price: number;
   originalPrice?: number;
   size: string;
@@ -64,6 +66,8 @@ interface ProductBase {
   stock?: number;
   /** Photograph under /public; the SVG art is drawn when it is missing. */
   image?: string;
+  /** More photographs after the main one: the gallery shows thumbnails and the card swaps on hover only when this has items. */
+  gallery?: string[];
 }
 
 /** A single item: drawn from its packaging type and material. */
@@ -79,6 +83,19 @@ export interface ProductSet extends ProductBase {
 }
 
 export type Product = SingleProduct | ProductSet;
+
+/** A customer review. Only real, attributable reviews may be stored (src/data/reviews.ts). */
+export interface Review {
+  id: string;
+  productId: ProductId;
+  author: string;
+  /** 1 to 5. */
+  rating: number;
+  title: string;
+  body: string;
+  /** ISO 8601 date. */
+  date: string;
+}
 
 /** A product as chosen by the shopper: the base product merged with the selected variant. */
 export type ProductSelection = Product & {

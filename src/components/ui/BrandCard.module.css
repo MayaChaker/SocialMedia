@@ -1,0 +1,21 @@
+.card {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: var(--space-2);
+  aspect-ratio: 3 / 2;
+  padding: var(--space-4);
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--color-white);
+  text-align: center;
+  text-decoration: none;
+  transition: border-color var(--duration-hover) var(--ease);
+}
+.card:hover {
+  border-color: var(--color-black);
+}
+.wordmark {
+  font: var(--weight-medium) var(--text-h5) / 1.15 var(--font-heading);
+  letter-spacing: 0.02em;
+}

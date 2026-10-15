@@ -42,7 +42,7 @@ export default function ShopPage({ category }: ShopPageProps) {
       {products.length ? (
         <div className="productGrid shopGrid">
           {products.map((product) => (
-            <ProductCard key={product.id} product={product} onAdded={openCart} shopLayout />
+            <ProductCard key={product.id} product={product} onAdded={openCart} />
           ))}
         </div>
       ) : (

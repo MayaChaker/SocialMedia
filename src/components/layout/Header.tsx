@@ -1,131 +1,80 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  AccountCircleOutlined,
-  Close,
-  FavoriteBorder,
-  Menu,
-  Search,
-  ShoppingBagOutlined,
-} from "@mui/icons-material";
+import { FavoriteBorder, Menu, PersonOutline, ShoppingBagOutlined } from "@mui/icons-material";
+import { FREE_SHIPPING_THRESHOLD } from "../../domain/commerce/commerceConfig";
 import { useCartDrawer } from "../../hooks/useCartDrawer";
 import { useCommerce } from "../../hooks/useCommerce";
-import { useModalDialog } from "../../hooks/useModalDialog";
-import GlobalSearch from "./GlobalSearch";
+import MegaMenu from "./MegaMenu";
+import MobileMenu from "./MobileMenu";
+import SearchBar from "./SearchBar";
+import styles from "./Header.module.css";
 
-const navItems = [
-  ["Shop", "/shop"],
-  ["Routine builder", "/rituals"],
-  ["Shade match", "/shade-match"],
-  ["Our story", "/about"],
-] as const;
-
-const isActive = (pathname: string, href: string) =>
-  pathname === href || pathname.startsWith(`${href}/`);
+const itemCount = (count: number) => `${count} ${count === 1 ? "item" : "items"}`;
 
 export default function Header() {
   const { cart, wishlist } = useCommerce();
   const { openCart } = useCartDrawer();
   const pathname = usePathname();
-  // Panels remember the page they were opened on, so navigating closes them
-  // without an effect.
+  // The menu remembers the page it was opened on, so navigating closes it without an effect.
   const [menuPath, setMenuPath] = useState<string | null>(null);
-  const [searchPath, setSearchPath] = useState<string | null>(null);
-  const menuOpen = menuPath === pathname;
-  const searchOpen = searchPath === pathname;
-  const setMenuOpen = (open: boolean) => setMenuPath(open ? pathname : null);
-  const setSearchOpen = (open: boolean) => setSearchPath(open ? pathname : null);
-  const navRef = useRef<HTMLElement>(null);
   const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
-
-  useModalDialog(menuOpen, navRef, () => setMenuOpen(false));
 
   return (
     <>
-      <div className="announcement" role="region" aria-label="Store announcements">
-        <span>Complimentary delivery on orders $75+</span>
-        <span className="announcementAlt">Build a routine · Find a suggested shade</span>
-      </div>
-      <header className="siteHeader">
-        <button
-          className="mobileMenu"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={menuOpen}
-          aria-controls="mainNav"
-        >
-          {menuOpen ? <Close /> : <Menu />}
-        </button>
-        <Link className="wordmark" href="/" aria-label="Veloura Beauty home">
-          VELOURA<span>BEAUTY</span>
-        </Link>
-        <nav
-          ref={navRef}
-          id="mainNav"
-          className={menuOpen ? "open" : ""}
-          aria-label="Main navigation"
-        >
-          {navItems.map(([label, href]) => (
-            <Link
-              className={isActive(pathname, href) ? "active" : undefined}
-              aria-current={isActive(pathname, href) ? "page" : undefined}
-              onClick={() => setMenuOpen(false)}
-              key={label}
-              href={href}
-            >
-              {label}
-            </Link>
-          ))}
-          <div className="mobileNavExtras">
-            <Link onClick={() => setMenuOpen(false)} href="/profile">
-              <AccountCircleOutlined />
-              <span>Account</span>
-            </Link>
-            <Link onClick={() => setMenuOpen(false)} href="/wishlist">
-              <FavoriteBorder />
-              <span>Wishlist{wishlist.length > 0 && ` (${wishlist.length})`}</span>
-            </Link>
-          </div>
-        </nav>
-        <div className="headerActions">
+      <p className={styles.promo}>
+        Complimentary delivery on orders over ${FREE_SHIPPING_THRESHOLD}
+      </p>
+      <header className={styles.header}>
+        <div className={`container ${styles.bar}`}>
           <button
-            onClick={() => setSearchOpen(!searchOpen)}
-            aria-label={searchOpen ? "Close search" : "Search"}
-            aria-expanded={searchOpen}
+            type="button"
+            className={`${styles.icon} ${styles.menuButton}`}
+            onClick={() => setMenuPath(pathname)}
+            aria-label="Open menu"
           >
-            {searchOpen ? <Close /> : <Search />}
+            <Menu aria-hidden="true" />
           </button>
-          <Link
-            className="secondaryHeaderAction"
-            href="/wishlist"
-            aria-label={`Wishlist with ${wishlist.length} items`}
-          >
-            <FavoriteBorder />
-            {wishlist.length > 0 && <span>{wishlist.length}</span>}
+          <Link href="/" className={styles.logo} aria-label="Veloura, home">
+            VELOURA
           </Link>
-          <Link
-            className="secondaryHeaderAction"
-            href="/profile"
-            aria-label="Beauty profile and account"
-          >
-            <AccountCircleOutlined />
-          </Link>
-          <button onClick={openCart} aria-label={`Shopping bag with ${cartCount} items`}>
-            <ShoppingBagOutlined />
-            {cartCount > 0 && <span>{cartCount}</span>}
-          </button>
+          <div className={styles.search}>
+            <SearchBar />
+          </div>
+          <div className={styles.actions}>
+            <Link
+              href="/profile"
+              className={`${styles.icon} ${styles.account}`}
+              aria-label="Account"
+            >
+              <PersonOutline aria-hidden="true" />
+            </Link>
+            <Link
+              href="/wishlist"
+              className={styles.icon}
+              aria-label={`Wishlist, ${itemCount(wishlist.length)}`}
+            >
+              <FavoriteBorder aria-hidden="true" />
+              {wishlist.length > 0 && <span className={styles.count}>{wishlist.length}</span>}
+            </Link>
+            <button
+              type="button"
+              className={styles.icon}
+              onClick={openCart}
+              aria-label={`Bag, ${itemCount(cartCount)}`}
+            >
+              <ShoppingBagOutlined aria-hidden="true" />
+              {cartCount > 0 && <span className={styles.count}>{cartCount}</span>}
+            </button>
+          </div>
+        </div>
+        <div className={styles.megaMenu}>
+          <MegaMenu />
         </div>
       </header>
-      <button
-        className={menuOpen ? "menuBackdrop open" : "menuBackdrop"}
-        onClick={() => setMenuOpen(false)}
-        aria-label="Close navigation menu"
-        tabIndex={menuOpen ? 0 : -1}
-      />
-      <GlobalSearch open={searchOpen} onSearch={() => setSearchOpen(false)} />
+      <MobileMenu open={menuPath === pathname} onClose={() => setMenuPath(null)} />
     </>
   );
 }

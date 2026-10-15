@@ -1,0 +1,22 @@
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+  margin-bottom: var(--space-6);
+}
+.titles {
+  display: grid;
+  gap: var(--space-2);
+}
+.link {
+  font: var(--weight-medium) var(--text-small) / 1.4 var(--font-body);
+  text-decoration: underline;
+  text-decoration-color: var(--color-grey-400);
+  text-underline-offset: 4px;
+  transition: text-decoration-color var(--duration-hover) var(--ease);
+}
+.link:hover {
+  text-decoration-color: currentColor;
+}

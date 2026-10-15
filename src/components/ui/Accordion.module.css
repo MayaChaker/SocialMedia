@@ -1,0 +1,35 @@
+.accordion {
+  border-top: var(--border);
+}
+.item {
+  border-bottom: var(--border);
+}
+.summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: 56px;
+  font: var(--weight-medium) var(--text-small) / 1.4 var(--font-body);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  list-style: none;
+  cursor: pointer;
+}
+.summary::-webkit-details-marker {
+  display: none;
+}
+.icon {
+  width: 20px;
+  height: 20px;
+}
+.item[open] .icon {
+  transform: rotate(45deg);
+}
+.content {
+  padding-bottom: var(--space-5);
+  color: var(--color-grey-600);
+}
+.content p + p {
+  margin-top: var(--space-3);
+}

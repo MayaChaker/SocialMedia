@@ -1,0 +1,26 @@
+.breadcrumb ol {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-caption);
+  color: var(--color-grey-600);
+}
+.breadcrumb li + li::before {
+  content: "/";
+  margin: 0 var(--space-2);
+  color: var(--color-grey-400);
+}
+.breadcrumb a {
+  text-decoration: none;
+  transition: color var(--duration-hover) var(--ease);
+}
+.breadcrumb a:hover {
+  color: var(--color-black);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.breadcrumb [aria-current="page"] {
+  color: var(--color-black);
+}

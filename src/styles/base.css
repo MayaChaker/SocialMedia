@@ -1,4 +1,4 @@
-/* Element defaults and site-wide primitives. Tokens live in tokens.css. */
+/* Legacy primitives used by pages not yet moved to the design system (see DESIGN_PROGRESS.md). */
 @keyframes ripple {
   0% {
     transform: scale(0.4);
@@ -8,68 +8,6 @@
     transform: scale(2);
     opacity: 0;
   }
-}
-* {
-  box-sizing: border-box;
-}
-html {
-  scroll-behavior: smooth;
-}
-body {
-  margin: 0;
-  background: var(--porcelain);
-  color: var(--ink);
-  font-family: var(--sans);
-  font-size: var(--text-base);
-  -webkit-font-smoothing: antialiased;
-}
-html,
-body {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-button,
-input {
-  font: inherit;
-}
-button,
-input,
-select {
-  font-family: var(--sans);
-}
-button {
-  cursor: pointer;
-}
-a,
-button {
-  -webkit-tap-highlight-color: transparent;
-}
-a {
-  color: inherit;
-}
-:focus-visible {
-  outline: 2px solid var(--rose);
-  outline-offset: 3px;
-}
-.button:focus-visible,
-.textLink:focus-visible,
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-select:focus-visible {
-  outline: 3px solid var(--rose);
-  outline-offset: 3px;
-}
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 .skipLink {
   position: fixed;
@@ -253,34 +191,6 @@ select:focus-visible {
   font: var(--text-2xl) var(--serif);
 }
 
-/* Footer */
-footer {
-  background: var(--ink);
-  color: var(--ivory);
-  padding: 70px clamp(25px, 7vw, 100px) 25px;
-  display: grid;
-  grid-template-columns: 2fr repeat(3, 1fr);
-  gap: 50px;
-}
-footer .wordmark {
-  color: var(--white);
-}
-footer a,
-footer p,
-footer > div > span {
-  display: block;
-  text-decoration: none;
-  color: var(--subtle);
-  font-size: var(--text-caption);
-  margin: 0 0 10px;
-}
-footer h4 {
-  font-size: var(--text-caption);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin: 0 0 20px;
-}
-
 @media (max-width: 700px) {
   .wordmark {
     font-size: var(--text-base);
@@ -300,10 +210,6 @@ footer h4 {
   }
   .contentHero h1 {
     font-size: var(--text-7xl);
-  }
-  footer {
-    grid-template-columns: 1fr 1fr;
-    padding: 55px 25px 25px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

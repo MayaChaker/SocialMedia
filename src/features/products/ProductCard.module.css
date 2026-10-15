@@ -1,0 +1,69 @@
+.card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--space-3);
+  width: 100%;
+}
+.media {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+.imageLink {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.imageLink img,
+.imageLink svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* The only image effect: the second photograph replaces the first on hover. */
+.hoverImage {
+  opacity: 0;
+  transition: opacity var(--duration-hover) var(--ease);
+}
+@media (hover: hover) {
+  .hasHover:hover .hoverImage {
+    opacity: 1;
+  }
+}
+.badge {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+}
+.wishlist {
+  position: absolute;
+  top: var(--space-1);
+  right: var(--space-1);
+}
+
+.body {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+}
+.name {
+  font: var(--weight-regular) var(--text-small) / 1.45 var(--font-body);
+  letter-spacing: 0;
+}
+.name a {
+  text-decoration: none;
+}
+.name a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.shades {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+.add {
+  min-height: 40px;
+}

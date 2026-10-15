@@ -1,0 +1,79 @@
+.nav {
+  border-top: var(--border);
+}
+.items {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  font: var(--weight-medium) var(--text-small) / 1 var(--font-body);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+.top::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: transparent;
+  transition: background-color var(--duration-hover) var(--ease);
+}
+.item:hover .top::after,
+.item:focus-within .top::after,
+.top[aria-current="page"]::after {
+  background: var(--color-black);
+}
+
+/* The panel spans the full width under the header and opens on hover or focus. */
+.panel {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  z-index: var(--z-menu);
+  border-top: var(--border);
+  border-bottom: var(--border);
+  background: var(--color-bg);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--duration-hover) var(--ease),
+    visibility 0s linear var(--duration-hover);
+}
+.item:hover .panel,
+.item:focus-within .panel {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+.columns {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 220px));
+  gap: var(--space-7);
+  padding-block: var(--space-6) var(--space-7);
+}
+.columns ul {
+  display: grid;
+  gap: var(--space-2);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.columns a {
+  font-size: var(--text-small);
+  text-decoration: none;
+}
+.columns a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

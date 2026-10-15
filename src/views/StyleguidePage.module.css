@@ -1,0 +1,118 @@
+.page {
+  display: grid;
+  gap: var(--space-8);
+  padding-block: var(--space-7) var(--space-8);
+}
+.intro {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 720px;
+}
+.block {
+  display: grid;
+  gap: var(--space-5);
+  padding-top: var(--space-6);
+  border-top: var(--border);
+}
+.blockHead {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: var(--space-5) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.swatches li {
+  display: grid;
+  gap: var(--space-1);
+}
+.swatch {
+  height: 72px;
+  margin-bottom: var(--space-2);
+  border: var(--border);
+  border-radius: var(--radius);
+  background: var(--fill);
+}
+
+.type {
+  display: grid;
+  gap: var(--space-5);
+  margin: 0;
+}
+.type dd {
+  margin: var(--space-1) 0 0;
+}
+
+.spaces {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.spaces li {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+}
+.spaces li span:first-child {
+  background: var(--color-accent);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+.onSurface {
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+.stack {
+  display: grid;
+  gap: var(--space-4);
+}
+.forms {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-5);
+  align-items: start;
+}
+.narrow {
+  max-width: 560px;
+}
+.brands {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.filters {
+  display: grid;
+  gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .brands {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .filters {
+    grid-template-columns: 260px 1fr;
+  }
+}
+@media (min-width: 1024px) {
+  .brands {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}

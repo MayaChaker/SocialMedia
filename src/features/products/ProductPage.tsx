@@ -103,7 +103,7 @@ export default function ProductPage({ slug }: { slug: string }) {
                 variants={product.variants}
                 selectedId={selected?.id}
                 onSelect={selectShade}
-                showCheck={false}
+                size="large"
               />
             </div>
           )}
@@ -129,7 +129,6 @@ export default function ProductPage({ slug }: { slug: string }) {
         eyebrow="Complete the ritual"
         products={related}
         openCart={openCart}
-        shelf="related"
       />
       {recent.length > 0 && (
         <ProductShelf
@@ -137,7 +136,6 @@ export default function ProductPage({ slug }: { slug: string }) {
           eyebrow="Continue exploring"
           products={recent}
           openCart={openCart}
-          shelf="recent"
         />
       )}
     </main>
