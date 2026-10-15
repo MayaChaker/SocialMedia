@@ -1,47 +1,50 @@
 /*
- * Veloura design tokens ("Maison" direction).
+ * Veloura design tokens ("Pigment" direction).
  * Every colour, font size, radius, shadow and duration in the other stylesheets
- * comes from here. Product shade colours are data (src/data/products.ts), not tokens.
+ * comes from here. Product shade colours are data (src/data/catalogue), not tokens.
+ *
+ * The older token names below are kept as aliases of the Pigment palette, so pages that
+ * have not been rewritten yet already share the same ground, type colour and accent.
  */
 :root {
-  /* Grounds, from lightest to deepest */
+  /* Grounds, from lightest to deepest (aliases) */
   --white: #ffffff;
-  --porcelain: #faf8f5; /* page background */
-  --ivory: #f3eee7; /* quiet sections */
-  --stone: #e9e3da; /* travertine: image grounds, hero */
-  --stone-strong: #d9cfc3;
+  --porcelain: var(--powder);
+  --ivory: #e4dfe2;
+  --stone: var(--powder-deep);
+  --stone-strong: #cfc8cd;
 
-  /* Text */
-  --ink: #1b1715; /* espresso: headings, body, primary buttons */
-  --ink-soft: #3a322e;
-  --muted: #6a5f57; /* secondary text, 5.9:1 on porcelain */
-  --subtle: #8c8077; /* icons and large text only */
+  /* Text (aliases) */
+  --ink: var(--kohl);
+  --ink-soft: var(--kohl-soft);
+  --muted: var(--graphite);
+  --subtle: #8a838d; /* icons and large text only */
 
-  /* Accents */
-  --bordeaux: #5c2a35; /* night range, hover on dark buttons */
-  --bordeaux-deep: #3e1c24;
-  --rose: #8f5650; /* links, eyebrows, focus ring */
-  --rose-gold: #a98670; /* caps and fine rules, never text */
-  --blush: #efe1dc;
-  --blush-strong: #e3cbc4;
+  /* Accent (aliases): one accent only */
+  --bordeaux: var(--rouge);
+  --bordeaux-deep: #5e1220;
+  --rose: var(--rouge);
+  --rose-gold: var(--haze);
+  --blush: #e4dfe2;
+  --blush-strong: #d6cfd4;
 
-  /* Lines */
-  --line: #e2dbd2;
-  --line-strong: #c9bcae;
+  /* Lines (aliases) */
+  --line: #d9d3d7;
+  --line-strong: #c3bbc1;
 
   /* Feedback */
   --success: #2f5d50;
   --error: #9b2c2c;
 
-  /* Product tones: the ground behind each product's art, set by its `color` field */
-  --tone-ivory: #ede8df;
-  --tone-blush: #e5cbc7;
-  --tone-rose: #ddc2b6;
-  --tone-sand: #d7c2a6;
-  --tone-clay: #c99d86;
-  --tone-sage: #c8d0c0;
-  --tone-plum: #9e7b80;
-  --tone-espresso: #8b766a;
+  /* Product grounds: every product sits on the same mat, whatever its `color` field. */
+  --tone-ivory: var(--powder-deep);
+  --tone-blush: var(--powder-deep);
+  --tone-rose: var(--powder-deep);
+  --tone-sand: var(--powder-deep);
+  --tone-clay: var(--powder-deep);
+  --tone-sage: var(--powder-deep);
+  --tone-plum: var(--powder-deep);
+  --tone-espresso: var(--powder-deep);
 
   /* Typography. --font-serif and --font-sans come from next/font in src/app/layout.tsx. */
   --serif: var(--font-serif), "Times New Roman", Georgia, serif;

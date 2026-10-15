@@ -83,11 +83,6 @@
 .pgTextLink:hover {
   animation: underlineDraw var(--motion-base) var(--ease-expo-out);
 }
-@keyframes underlineDraw {
-  from {
-    background-size: 0 1px;
-  }
-}
 .pgTextLinkLight {
   color: var(--powder);
 }

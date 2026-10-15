@@ -2,8 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { Check } from "@mui/icons-material";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { money } from "../../lib/money";
 import { OUT_OF_STOCK_IDS } from "../../data/merchandising";
 import { resolveProductSelection } from "../../domain/product/productSelection";
@@ -20,11 +19,14 @@ interface ProductCardProps {
   product: Product;
   /** Called after the product is added to the bag, e.g. to open the bag drawer. */
   onAdded?: () => void;
-  /** The denser layout used on the shop grid. */
-  shopLayout?: boolean;
 }
 
-export default function ProductCard({ product, onAdded, shopLayout = false }: ProductCardProps) {
+/**
+ * A product in a grid: the photograph in a 4:5 frame, then brand, name, price and shades.
+ * Quick view and add to bag sit over the photograph, revealed on hover and keyboard focus
+ * (always visible on touch screens).
+ */
+export default function ProductCard({ product, onAdded }: ProductCardProps) {
   const { addToCart } = useCommerce();
   const [preview, setPreview] = useState(false);
   const [selectedId, setSelectedId] = useState("");
@@ -61,6 +63,7 @@ export default function ProductCard({ product, onAdded, shopLayout = false }: Pr
       variants={product.variants}
       selectedId={selectedId}
       onSelect={setSelectedId}
+      showCheck={false}
     />
   );
 
@@ -74,11 +77,7 @@ export default function ProductCard({ product, onAdded, shopLayout = false }: Pr
 
   return (
     <>
-      <motion.article
-        className={`productCard ${outOfStock ? "soldOut" : ""}`}
-        whileHover={{ y: -2 }}
-        transition={{ duration: 0.2 }}
-      >
+      <article className={`productCard ${outOfStock ? "soldOut" : ""}`}>
         <div className={`productImage ${product.color}`}>
           {(outOfStock || product.badge) && (
             <span className="productBadge">{outOfStock ? "Out of stock" : product.badge}</span>
@@ -91,9 +90,18 @@ export default function ProductCard({ product, onAdded, shopLayout = false }: Pr
           >
             <ProductVisual product={display} sizes="(max-width: 700px) 50vw, 25vw" />
           </Link>
-          <button className="quickView" onClick={() => setPreview(true)}>
-            Quick view
-          </button>
+          <div className="cardActions">
+            <button className="cardAction" onClick={() => setPreview(true)}>
+              Quick view
+            </button>
+            <button
+              className={`cardAction primary ${justAdded ? "added" : ""}`}
+              disabled={outOfStock || needsShade}
+              onClick={add}
+            >
+              {actionLabel}
+            </button>
+          </div>
         </div>
         <ProductCardDetails
           product={product}
@@ -101,20 +109,11 @@ export default function ProductCard({ product, onAdded, shopLayout = false }: Pr
           selected={selected}
           swatches={swatches}
           productHref={productHref}
-          shopLayout={shopLayout}
         />
-        <button
-          className={`addButton ripple ${justAdded ? "added" : ""}`}
-          disabled={outOfStock || needsShade}
-          onClick={add}
-        >
-          {justAdded && <Check />}
-          {actionLabel}
-        </button>
         <span className="srOnly" aria-live="polite">
           {justAdded ? `${product.name}${shadeLabel} added to bag` : ""}
         </span>
-      </motion.article>
+      </article>
       <AnimatePresence>
         {preview && (
           <QuickViewDialog

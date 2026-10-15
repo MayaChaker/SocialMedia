@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, type CSSProperties } from "react";
+import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Check, Star } from "@mui/icons-material";
+import { Check } from "@mui/icons-material";
 import { money } from "../../lib/money";
+import { textOn } from "../../lib/contrast";
 import { resolveProductSelection } from "../../domain/product/productSelection";
 import { productRepository } from "../../repositories/productRepository";
 import { useCartDrawer } from "../../hooks/useCartDrawer";
@@ -45,11 +47,11 @@ export default function ProductPage({ slug }: { slug: string }) {
         (item.category === product.category ||
           product.matches.some((match) => item.matches.includes(match))),
     )
-    .slice(0, 3);
+    .slice(0, 4);
   const display = resolveProductSelection(product, selected?.id) ?? product;
   const recent = productRepository
     .getManyByIds(recentlyViewed.filter((id) => id !== product.id))
-    .slice(0, 3);
+    .slice(0, 4);
   const profileMatches = product.matches.filter((match) =>
     [...profile.skinGoals, ...profile.preferences].includes(match),
   );
@@ -57,41 +59,50 @@ export default function ProductPage({ slug }: { slug: string }) {
     addToCart(display);
     openCart();
   };
+
   return (
-    <main className={`productPage ${product.variants?.length ? "shadeProductPage" : ""}`}>
-      <button className="backLink" onClick={() => router.back()}>
-        ← Back to collection
-      </button>
-      <section className="productDetail">
-        <div className="productGallery">
+    <main className="productPage">
+      <nav className="pdpCrumbs" aria-label="Breadcrumb">
+        <Link href="/shop">Shop</Link>
+        <span aria-hidden="true">/</span>
+        <Link href={`/shop/${product.category.toLowerCase()}`}>{product.category}</Link>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{product.brand}</span>
+      </nav>
+
+      <section className="pdp">
+        <div className="pdpMedia">
           <div className={`detailVisual ${product.color}`}>
             <ProductVisual product={display} sizes="(max-width: 900px) 100vw, 55vw" priority />
-            {product.badge && <span className="detailBadge">{product.badge}</span>}
+            {product.badge && <span className="productBadge">{product.badge}</span>}
           </div>
-          <div className="galleryDetails">
-            <div>
-              <span>Texture</span>
-              <strong>{product.texture}</strong>
+          {selected && (
+            <div
+              className="pdpShadeBand"
+              style={
+                {
+                  "--shade": selected.swatch,
+                  "--on-shade": textOn(selected.swatch),
+                } as CSSProperties
+              }
+            >
+              <span className="textRoll">
+                <span key={selected.id}>{selected.name}</span>
+              </span>
             </div>
-            <div>
-              <span>Finish</span>
-              <strong>{product.finish}</strong>
-            </div>
-          </div>
+          )}
         </div>
-        <div className="detailCopy">
+
+        <div className="pdpPanel">
           <div className="detailTopline">
             <span className="kicker">{product.brand}</span>
             <WishlistButton productId={product.id} productName={product.name} />
           </div>
           <h1>{product.name}</h1>
           <p className="detailNote">{product.note}</p>
-          <div className="rating">
-            <Star /> {product.rating} <span>{product.reviews} reviews</span>
-          </div>
-          <div className="detailPrice">
+          <p className="detailPrice">
             {money(display.price)} <small>{product.size}</small>
-          </div>
+          </p>
           <p className="description">{product.description}</p>
           {product.variants && (
             <div className="detailVariants">
@@ -107,13 +118,26 @@ export default function ProductPage({ slug }: { slug: string }) {
               />
             </div>
           )}
-          <button className="button dark full ripple" onClick={add}>
+          <button className="button dark full" onClick={add}>
             Add to bag · {money(display.price)}
           </button>
+          <p className="pdpService">
+            Complimentary delivery from $75 · Demo checkout, no payment taken
+          </p>
+          <dl className="pdpSpecs">
+            <div>
+              <dt>Texture</dt>
+              <dd>{product.texture}</dd>
+            </div>
+            <div>
+              <dt>Finish</dt>
+              <dd>{product.finish}</dd>
+            </div>
+          </dl>
           <div className="matchPanel">
             <Check />
             <div>
-              <strong>Why it matches you</strong>
+              <strong>Why it suits you</strong>
               <p>
                 {profileMatches.length
                   ? `Matches your ${profileMatches.join(" and ").toLowerCase()} preferences.`
@@ -124,9 +148,10 @@ export default function ProductPage({ slug }: { slug: string }) {
           <ProductFacts product={product} />
         </div>
       </section>
+
       <ProductShelf
         title="Pairs well with"
-        eyebrow="Complete the ritual"
+        eyebrow="Complete the look"
         products={related}
         openCart={openCart}
         shelf="related"

@@ -3,41 +3,43 @@ import type { ShopFilterControls } from "./useShopFilters";
 
 interface ShopToolbarProps {
   shop: ShopFilterControls;
-  resultCount: number;
   filtersOpen: boolean;
   onOpenFilters: () => void;
 }
 
-/** Result count, category and sort selects, and the button that opens the filter drawer. */
-export default function ShopToolbar({
-  shop,
-  resultCount,
-  filtersOpen,
-  onOpenFilters,
-}: ShopToolbarProps) {
-  const { query, sort } = shop.filters;
+const TABS = [
+  ["all", "All"],
+  ["makeup", "Makeup"],
+  ["skincare", "Skincare"],
+  ["fragrance", "Fragrance"],
+  ["hair", "Hair"],
+  ["new", "New in"],
+] as const;
+
+/** Category tabs, the filter drawer button and the sort select. */
+export default function ShopToolbar({ shop, filtersOpen, onOpenFilters }: ShopToolbarProps) {
+  const { sort } = shop.filters;
   return (
     <section className="shopToolbar" aria-label="Shop controls">
-      <div className="shopCount" aria-live="polite">
-        <strong>{resultCount}</strong> {resultCount === 1 ? "product" : "products"}
-        {query && <span> for “{query}”</span>}
-      </div>
-      <div className="shopControls">
-        <label className="toolbarSelect">
-          <span>Category</span>
-          <select
-            value={shop.activeCategory}
-            onChange={(event) => shop.goToCategory(event.target.value)}
+      <nav className="shopTabs" aria-label="Categories">
+        {TABS.map(([value, label]) => (
+          <button
+            key={value}
+            className={shop.activeCategory === value ? "active" : undefined}
+            aria-current={shop.activeCategory === value ? "page" : undefined}
+            onClick={() => shop.goToCategory(value)}
           >
-            <option value="all">All products</option>
-            <option value="makeup">Makeup</option>
-            <option value="skincare">Skincare</option>
-            <option value="fragrance">Fragrance</option>
-            <option value="hair">Hair</option>
-            <option value="new">New arrivals</option>
-          </select>
-        </label>
-        <button onClick={onOpenFilters} aria-expanded={filtersOpen} aria-controls="shopFilters">
+            {label}
+          </button>
+        ))}
+      </nav>
+      <div className="shopControls">
+        <button
+          className="shopFilterButton"
+          onClick={onOpenFilters}
+          aria-expanded={filtersOpen}
+          aria-controls="shopFilters"
+        >
           <Tune /> Filter{shop.filterCount ? ` (${shop.filterCount})` : ""}
         </button>
         <label className="toolbarSelect">
@@ -45,8 +47,8 @@ export default function ShopToolbar({
           <select value={sort} onChange={(event) => shop.setSort(event.target.value)}>
             <option value="featured">Featured</option>
             <option value="newest">Newest</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
+            <option value="price-low">Price: low to high</option>
+            <option value="price-high">Price: high to low</option>
           </select>
         </label>
       </div>

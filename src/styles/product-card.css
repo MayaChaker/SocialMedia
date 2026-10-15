@@ -1,32 +1,27 @@
+/*
+ * Product cards, shade swatches and the quick view dialog.
+ * Every product photograph sits in the same 4:5 frame on the same mat.
+ */
+
 .productGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-8) clamp(12px, 1.6vw, 24px);
 }
 .productCard {
-  min-width: 0;
-}
-.productImage {
-  height: 420px;
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ---------- The photograph ---------- */
+.productImage {
+  position: relative;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
-  text-decoration: none;
 }
-/* Product photographs fill their container; the SVG art keeps its own sizing rules. */
-.productPhoto {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform var(--duration-slow) var(--ease-out);
-}
-.productImage:hover .productPhoto {
-  transform: scale(1.03);
-}
-/* Every product-art container takes its ground from the product's tone class (tokens.css). */
+/* Every product-art container takes the same mat (tone tokens all point to it). */
 .productImage,
 .previewVisual,
 .cartThumb,
@@ -34,564 +29,325 @@
 .detailVisual,
 .routineProductVisual,
 .savedRoutineThumb {
-  background: var(--tone, var(--stone));
-}
-.productBadge,
-.quickView {
-  position: absolute;
-  text-transform: uppercase;
-}
-.productBadge {
-  top: 14px;
-  left: 14px;
-  background: color-mix(in srgb, var(--porcelain) 88%, transparent);
-  padding: 6px 8px;
-  font-size: var(--text-caption);
-  letter-spacing: 0.08em;
-  z-index: 2;
-}
-.quickView {
-  left: 12px;
-  right: 12px;
-  height: 40px;
-  background: color-mix(in srgb, var(--ink) 92%, transparent);
-  color: var(--white);
-  display: grid;
-  place-items: center;
-  letter-spacing: 0.1em;
-  transition: bottom 0.2s;
-}
-.productImage:hover .quickView {
-  bottom: 12px;
-}
-.productInfo {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 16px 0 12px;
-}
-.productInfo a {
-  text-decoration: none;
-}
-.productInfo h3 {
-  font: 400 var(--text-lg) var(--serif);
-  margin: 0 0 5px;
-}
-.productInfo p {
-  color: var(--muted);
-  margin: 0 0 6px;
-}
-.productInfo small {
-  color: var(--subtle);
-}
-.price {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 3px;
-  white-space: nowrap;
-}
-.price del {
-  color: var(--subtle);
-}
-.addButton {
-  width: 100%;
-  background: 0 0;
-  border: 1px solid var(--ink);
-  text-transform: uppercase;
-}
-.addButton:hover {
-  background: var(--ink);
-  color: var(--white);
-}
-.rating {
-  font-size: var(--text-caption);
-  letter-spacing: 0.08em;
-  margin: 12px 0;
-  color: var(--rose);
-}
-.rating span {
-  letter-spacing: 0;
-  margin-left: 8px;
-}
-@media (max-width: 1050px) {
-  .productImage {
-    height: 480px;
-  }
-}
-@media (max-width: 700px) {
-  .productGrid {
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  .productImage {
-    height: 300px;
-  }
-  .productInfo {
-    display: block;
-    padding-top: 12px;
-    min-height: 96px;
-  }
-  .productInfo h3 {
-    font-size: var(--text-md);
-  }
-  .productInfo p {
-    font-size: var(--text-caption);
-  }
-  .price {
-    align-items: flex-start;
-    flex-direction: row;
-    margin-top: 8px;
-  }
-  .addButton {
-    height: 36px;
-  }
-  .quickView {
-    display: none;
-  }
-}
-@media (max-width: 410px) {
-  .productGrid {
-    grid-template-columns: 1fr;
-  }
-  .productImage {
-    height: 410px;
-  }
+  background: var(--tone, var(--powder-deep));
 }
 .visualLink {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
 }
-.wishlistButton {
-  position: absolute;
-  right: 13px;
-  top: 12px;
-  z-index: 3;
-  border-radius: 50%;
-  border: 0;
-  background: color-mix(in srgb, var(--porcelain) 86%, transparent);
-  color: var(--ink);
-  display: grid;
-  place-items: center;
+.productPhoto {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--motion-slow) var(--ease-expo-out);
 }
-.wishlistButton.active {
-  color: var(--bordeaux);
+.productImage:hover .productPhoto {
+  transform: scale(1.04);
 }
-.productMeta {
-  font-weight: 600;
-}
-.cardRating {
-  color: var(--ink);
-  letter-spacing: 0;
-}
-.cardRating small,
-.rating span {
-  color: var(--muted);
-}
-.previewOverlay {
-  position: fixed;
-  inset: 0;
-  background: color-mix(in srgb, var(--ink) 46%, transparent);
-  z-index: 80;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-}
-.quickPreview {
-  width: min(850px, 100%);
-  background: var(--porcelain);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  position: relative;
-  box-shadow: 0 30px 90px color-mix(in srgb, var(--ink) 20%, transparent);
-}
-.previewClose {
-  position: absolute;
-  right: 12px;
-  top: 12px;
-  z-index: 2;
-  width: 38px;
-  height: 38px;
-  border: 0;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--porcelain) 90%, transparent);
-}
-.previewVisual {
-  min-height: 520px;
-  display: grid;
-  place-items: center;
-}
-.previewVisual:has(.productPhoto) {
-  min-height: 0;
-  place-items: stretch;
-}
-.quickPreview > div:last-child {
-  padding: 60px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-}
-.quickPreview h2 {
-  font: var(--text-6xl) / 1 var(--serif);
-  font-weight: 400;
-  margin: 14px 0;
-}
-.quickPreview p {
-  color: var(--muted);
-  line-height: 1.8;
-}
-.quickPreview .textLink {
-  margin: 18px auto 0;
-}
-.rating {
-  display: flex;
-  align-items: center;
-}
-.rating svg {
-  font-size: var(--text-sm);
-}
-@media (max-width: 700px) {
-  .quickPreview {
-    grid-template-columns: 1fr;
-    max-height: 90vh;
-    overflow: auto;
-  }
-  .previewVisual {
-    min-height: 320px;
-  }
-  .quickPreview > div:last-child {
-    padding: 35px 24px;
-  }
-}
-.productCard {
-  display: flex;
-  flex-direction: column;
-}
-.productImage {
-  border: 1px solid color-mix(in srgb, var(--bordeaux-deep) 3.5%, transparent);
-}
-.productMeta {
-  min-height: 29px;
-}
-.productInfo {
-  flex: 1;
-}
-.addButton {
-  transition:
-    background 0.2s,
-    color 0.2s,
-    transform 0.15s;
-}
-.addButton:active {
-  transform: scale(0.985);
-}
-/* Product illustrations keep their proportions and leave breathing room inside each frame. */
+/* SVG art (products without a photograph) keeps breathing room inside the frame. */
 .productArt {
+  display: block;
   width: 100%;
   height: 100%;
   padding: 14% 12% 8%;
-  display: block;
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform var(--motion-slow) var(--ease-expo-out);
+}
+.productImage:hover .productArt {
+  transform: scale(1.025);
 }
 /* Campaign photographs (next/image with `fill`) cover their positioned frame. */
 .editorialImage {
   object-fit: cover;
 }
-.productImage:hover .productArt {
-  transform: scale(1.025);
-}
-@media (max-width: 700px) {
-  .productMeta {
-    gap: 5px;
-  }
-  .cardRating small {
-    display: none;
-  }
-}
-.productCard {
-  position: relative;
-}
-.productInfo {
-  padding-bottom: 9px;
-}
-.productInfo small {
-  color: var(--muted);
+.productBadge {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 2;
+  padding: 5px 8px;
+  background: var(--powder);
+  color: var(--kohl);
+  font: 500 var(--text-caption) var(--sans);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
 }
-.cardSwatches {
-  display: flex;
-}
-.cardSwatches i {
-  width: 14px;
-  height: 14px;
+.wishlistButton {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
   border-radius: 50%;
-  border: 2px solid var(--porcelain);
-  box-shadow: 0 0 0 1px var(--line);
-}
-.addButton {
-  justify-content: center;
-  gap: 6px;
-}
-.addButton svg {
-  font-size: var(--text-md);
-}
-.soldOut .productImage > a {
-  opacity: 0.55;
-}
-@media (max-width: 700px) {
-  .productInfo h3 {
-    font-size: var(--text-base);
-  }
-  .productInfo small {
-    display: none;
-  }
-}
-.addButton,
-.cardRating,
-.productMeta {
-  display: flex;
-  align-items: center;
-}
-.productMeta {
-  justify-content: space-between;
-  padding-top: 12px;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.cardRating {
-  gap: 3px;
-}
-.cardRating svg {
-  font-size: var(--text-caption);
-  color: var(--rose);
-}
-.visualLink {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-.cardSwatches {
-  align-items: center;
-}
-.cardSwatches button {
-  padding: 4px;
-}
-.cardSwatches button span {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--swatch);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 16%, transparent);
-}
-.cardSwatches button:hover span {
-  transform: scale(1.08);
-}
-.addButton {
-  height: 42px;
+  background: color-mix(in srgb, var(--powder) 82%, transparent);
+  color: var(--kohl);
   cursor: pointer;
+  transition: color var(--motion-quick) var(--ease-standard);
 }
-.addButton:focus-visible {
-  outline: 2px solid var(--rose);
+.wishlistButton svg {
+  font-size: 20px;
 }
-.cardSwatches button:focus-visible {
-  outline: 2px solid var(--rose);
+.wishlistButton.active {
+  color: var(--rouge);
+}
+.wishlistButton:focus-visible {
+  outline: 2px solid var(--rouge);
   outline-offset: 2px;
 }
-.previewShade {
-  margin: 12px 0 4px !important;
-  font-size: var(--text-caption) !important;
-  color: var(--muted);
+
+/* Quick view and add to bag: revealed on hover or keyboard focus. */
+.cardActions {
+  position: absolute;
+  left: var(--space-2);
+  right: var(--space-2);
+  bottom: var(--space-2);
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--motion-quick) var(--ease-standard),
+    transform var(--motion-base) var(--ease-expo-out);
 }
-.quickPreview .cardSwatches {
-  margin: 12px 0 20px;
+.productImage:hover .cardActions,
+.productImage:focus-within .cardActions {
+  opacity: 1;
+  transform: none;
 }
-@media (max-width: 700px) {
-  .productMeta {
-    font-size: var(--text-caption);
-  }
-  .productInfo h3 {
-    font-size: var(--text-md);
-  }
-  .productInfo p {
-    display: none;
-  }
-  .cardSwatches {
-    gap: 4px;
-  }
-  .cardSwatches button {
-    width: 26px;
-    height: 26px;
-  }
-  .addButton {
-    height: 40px;
-  }
-  .quickPreview .cardSwatches {
-    gap: 8px;
-  }
+.cardAction {
+  min-height: 42px;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: color-mix(in srgb, var(--powder) 94%, transparent);
+  color: var(--kohl);
+  font: 600 var(--text-caption) var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color var(--motion-quick) var(--ease-standard),
+    color var(--motion-quick) var(--ease-standard);
 }
-.addButton {
+.cardAction:hover:not(:disabled) {
+  background: var(--kohl);
+  color: var(--powder);
+}
+.cardAction.primary.added {
+  background: var(--rouge);
+  color: var(--powder);
+}
+.cardAction:disabled {
+  color: var(--graphite);
+  cursor: not-allowed;
+}
+.cardAction:focus-visible {
+  outline: 2px solid var(--rouge);
+  outline-offset: -2px;
+}
+.soldOut .visualLink {
+  opacity: 0.55;
+}
+
+/* ---------- The text ---------- */
+.cardBody {
+  display: grid;
+  gap: 4px;
+  padding-top: var(--space-4);
+}
+.cardBody p {
+  margin: 0;
+}
+.cardBrand {
+  color: var(--graphite);
+  font: 500 var(--text-caption) var(--sans);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.cardName {
+  color: var(--kohl);
+  text-decoration: none;
+}
+.cardName h3 {
+  margin: 0;
+  font: 400 var(--display-4) / 1.2 var(--serif);
+}
+.cardName:hover h3 {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+}
+.cardPrice {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin-top: 2px;
   font-size: var(--text-md);
-  letter-spacing: 0.045em;
+  font-variant-numeric: tabular-nums;
 }
-.productInfo p {
-  font-size: var(--text-md);
-  line-height: 1.55;
+.cardPrice del {
+  color: var(--graphite);
 }
-.cardRating,
-.price,
-.productInfo small,
-.productMeta {
+.cardShade {
+  color: var(--graphite);
   font-size: var(--text-sm);
 }
-.productInfo h3,
-.wishlistButton svg {
-  font-size: var(--text-xl);
-}
+
+/* ---------- Shade swatches (cards, quick view, product page) ---------- */
 .cardSwatches {
-  min-height: 34px;
-  margin: 2px 0 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--space-2);
 }
 .cardSwatches button {
   position: relative;
   display: grid;
   place-items: center;
-  flex: 0 0 34px;
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
   border: 0;
-  border-radius: 50%;
-  background: 0 0;
+  background: none;
   cursor: pointer;
 }
-.cardSwatches button.selected {
-  box-shadow:
-    0 0 0 2px var(--porcelain),
-    0 0 0 4px var(--bordeaux);
-}
-.quickView {
-  opacity: 0.94;
-  font-size: var(--text-md);
-}
-.addButton:disabled {
-  opacity: 0.58;
-  cursor: not-allowed;
-}
-.addButton:focus-visible {
-  outline: 3px solid var(--rose);
-  outline-offset: 3px;
-}
-@media (max-width: 700px) {
-  .productInfo h3 {
-    font-size: var(--text-lg);
-  }
-  .productInfo p {
-    display: block;
-    font-size: var(--text-sm);
-  }
-}
-.productNameLink {
-  text-decoration: none;
-  display: block;
-}
-.cardRating.neutral {
-  color: var(--muted);
-}
-.cardPrice {
-  min-height: 27px;
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 6px;
-  font-family: var(--sans);
-}
-.cardPrice strong {
-  font-size: var(--text-base);
-  font-weight: 600;
-}
-.cardPrice del,
-.cardVariantInfo {
-  font-size: var(--text-sm);
-  color: var(--muted);
-}
-.cardVariantInfo {
-  min-height: 21px;
-}
-.cardVariantInfo strong {
-  color: var(--ink);
-  font-weight: 600;
-}
-.cardSwatches {
-  gap: 8px;
-}
 .cardSwatches button > span {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
+  width: 20px;
+  height: 20px;
   background: var(--swatch);
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 16%, transparent);
+  box-shadow: inset 0 0 0 1px var(--hairline);
+  transition: transform var(--motion-quick) var(--ease-expo-out);
 }
-.cardSwatches button > svg {
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  color: var(--white);
-  filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--ink) 70%, transparent));
+.cardSwatches button:hover:not(:disabled) > span {
+  transform: translateY(-2px);
+}
+.cardSwatches button.selected {
+  outline: 1px solid var(--kohl);
+  outline-offset: -1px;
+}
+.cardSwatches button:focus-visible {
+  outline: 2px solid var(--rouge);
+  outline-offset: 1px;
 }
 .cardSwatches button:disabled {
-  opacity: 0.35;
+  opacity: 0.3;
   cursor: not-allowed;
 }
-.addButton {
-  min-height: 46px;
-  border-color: var(--bordeaux);
-  background: var(--bordeaux);
-  color: var(--white);
-  font-weight: 600;
+.cardSwatches button > svg {
+  display: none;
 }
-.addButton:hover:not(:disabled) {
-  background: var(--bordeaux-deep);
-  border-color: var(--bordeaux-deep);
+
+/* ---------- Quick view ---------- */
+.previewOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: var(--space-5);
+  background: color-mix(in srgb, var(--kohl) 40%, transparent);
 }
-.addButton.added {
-  background: var(--rose);
-  border-color: var(--rose);
+.quickPreview {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  width: min(920px, 100%);
+  max-height: 92dvh;
+  overflow: auto;
+  background: var(--powder);
 }
-.addButton:disabled {
-  background: var(--ivory);
-  color: var(--muted);
-  border-color: var(--line);
+.previewClose {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--powder) 86%, transparent);
+  color: var(--kohl);
+  cursor: pointer;
 }
-.wishlistButton {
-  width: 44px;
-  height: 44px;
+.previewVisual {
+  position: relative;
+  aspect-ratio: 4 / 5;
 }
-.wishlistButton.active {
-  background: var(--bordeaux);
-  color: var(--white);
-}
-.quickView {
-  min-height: 44px;
-  bottom: 12px;
+.quickPreview > div:last-child {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
+  gap: var(--space-3);
+  padding: clamp(32px, 4vw, 56px);
+}
+.quickPreview h2 {
+  margin: 0;
+  font: 400 var(--display-3) / 1.05 var(--serif);
+}
+.quickPreview p {
+  margin: 0;
+  color: var(--graphite);
+  line-height: 1.7;
+}
+.quickPreview .previewPrice {
+  color: var(--kohl);
+  font-size: var(--text-base);
+  font-variant-numeric: tabular-nums;
+}
+.previewShade {
+  font-size: var(--text-sm);
+}
+.quickPreview .button {
+  margin-top: var(--space-3);
+}
+.quickPreview .textLink {
+  align-self: center;
+  margin-top: var(--space-2);
+}
+
+@media (max-width: 1050px) {
+  .productGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+/* Touch screens have no hover: the actions stay visible. */
+@media (hover: none) {
+  .cardActions {
+    opacity: 1;
+    transform: none;
+  }
 }
 @media (max-width: 700px) {
-  .quickView {
-    display: flex;
+  .productGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-7) 10px;
+  }
+  /* On phones only the add action stays over the photo; quick view is one tap away on the page. */
+  .cardActions {
+    grid-template-columns: 1fr;
+  }
+  .cardAction:not(.primary) {
+    display: none;
   }
   .quickPreview {
-    width: 100%;
-    max-height: 92dvh;
+    grid-template-columns: 1fr;
   }
-  .previewVisual {
-    min-height: 280px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .productPhoto,
+  .productArt,
+  .cardActions,
+  .cardSwatches button > span {
+    transition: none;
   }
 }

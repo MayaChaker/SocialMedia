@@ -1,9 +1,10 @@
 import type { ReactNode, RefObject } from "react";
 import Link from "next/link";
-import { Close, Star } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import { motion } from "framer-motion";
 import type { ArtProduct } from "../../components/product-art/ProductArt";
 import ProductVisual from "../../components/product-art/ProductVisual";
+import { money } from "../../lib/money";
 import type { Product, Variant } from "../../types/commerce";
 
 interface QuickViewDialogProps {
@@ -62,12 +63,7 @@ export default function QuickViewDialog({
         <div>
           <span className="kicker">{product.brand}</span>
           <h2 id={`preview-title-${product.id}`}>{product.name}</h2>
-          {product.rating && product.reviews && (
-            <div className="rating">
-              <Star /> {product.rating}
-              <span>{product.reviews} reviews</span>
-            </div>
-          )}
+          <p className="previewPrice">{money(display.price)}</p>
           <p id={`preview-description-${product.id}`}>{product.description}</p>
           {product.variants && (
             <p className="previewShade">

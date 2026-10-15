@@ -38,6 +38,13 @@ html[data-motion="on"]:not([data-motion-ready]) [data-reveal] {
   }
 }
 
+/* Text links redraw their underline from the left on hover. */
+@keyframes underlineDraw {
+  from {
+    background-size: 0 1px;
+  }
+}
+
 /* A count that changed (bag count): one short pulse. */
 .countPulse {
   animation: countPulse var(--motion-base) var(--ease-expo-out);
@@ -50,7 +57,8 @@ html[data-motion="on"]:not([data-motion-ready]) [data-reveal] {
 
 @media (prefers-reduced-motion: reduce) {
   .textRoll > span,
-  .countPulse {
+  .countPulse,
+  .textLink:hover {
     animation: none;
   }
   *,
