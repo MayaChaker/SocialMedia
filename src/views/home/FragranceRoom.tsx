@@ -54,7 +54,7 @@ export default function FragranceRoom() {
                         <li key={note}>{note}</li>
                       ))}
                     </ul>
-                    <Link className="pgTextLink pgTextLinkLight" href={`/product/${product.slug}`}>
+                    <Link className="pgTextLink" href={`/product/${product.slug}`}>
                       Discover {product.name}
                     </Link>
                   </div>

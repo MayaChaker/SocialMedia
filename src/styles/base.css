@@ -17,8 +17,8 @@ html {
 }
 body {
   margin: 0;
-  background: var(--porcelain);
-  color: var(--ink);
+  background: var(--powder);
+  color: var(--kohl);
   font-family: var(--sans);
   font-size: var(--text-base);
   -webkit-font-smoothing: antialiased;
@@ -254,34 +254,6 @@ select:focus-visible {
   font: var(--text-2xl) var(--serif);
 }
 
-/* Footer */
-footer {
-  background: var(--ink);
-  color: var(--ivory);
-  padding: 70px clamp(25px, 7vw, 100px) 25px;
-  display: grid;
-  grid-template-columns: 2fr repeat(3, 1fr);
-  gap: 50px;
-}
-footer .wordmark {
-  color: var(--white);
-}
-footer a,
-footer p,
-footer > div > span {
-  display: block;
-  text-decoration: none;
-  color: var(--subtle);
-  font-size: var(--text-caption);
-  margin: 0 0 10px;
-}
-footer h4 {
-  font-size: var(--text-caption);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin: 0 0 20px;
-}
-
 @media (max-width: 700px) {
   .wordmark {
     font-size: var(--text-base);
@@ -301,10 +273,6 @@ footer h4 {
   }
   .contentHero h1 {
     font-size: var(--text-7xl);
-  }
-  footer {
-    grid-template-columns: 1fr 1fr;
-    padding: 55px 25px 25px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

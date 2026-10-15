@@ -82,7 +82,8 @@
   --scrim: color-mix(in srgb, var(--ink) 40%, transparent);
 
   /* Page layout */
-  --header-height: 76px; /* the sticky .siteHeader on desktop */
+  --announcement-height: 34px;
+  --header-height: 76px; /* the sticky .siteHeader */
   --page-max: 1400px;
   --page-gutter: clamp(24px, 4.2vw, 64px);
   --section-space: clamp(64px, 6vw, 88px);
@@ -102,6 +103,14 @@
   --graphite: #5c5560; /* secondary text, 6.4:1 on powder */
   --haze: #9a929d; /* large text and rules on kohl */
   --rouge: #7d1a2c; /* the one accent: emphasis, focus, sale */
+  --hairline: color-mix(in srgb, var(--kohl) 14%, transparent); /* every rule and border */
+
+  /* Type scale for the Pigment direction: four display sizes, used the same way on every page. */
+  --display-1: clamp(64px, 10.2vw, 172px); /* the one statement per page */
+  --display-2: clamp(48px, 6.4vw, 104px); /* chapter titles */
+  --display-3: clamp(28px, 2.6vw, 40px); /* product names, tabs, totals */
+  --display-4: clamp(20px, 1.6vw, 24px); /* small serif: list items, prices */
+  --chapter-space: clamp(88px, 9vw, 144px); /* vertical space around each chapter */
 
   /* Motion tokens, mirrored in src/motion/tokens.ts for GSAP. See docs/motion.md. */
   --motion-instant: 120ms;
@@ -115,6 +124,7 @@
 
 @media (max-width: 700px) {
   :root {
+    --header-height: 64px;
     --page-gutter: 22px;
     --section-space: 52px;
   }

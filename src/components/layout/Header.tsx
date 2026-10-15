@@ -124,6 +124,8 @@ export default function Header() {
             )}
           </button>
         </div>
+        {/* Inside the sticky header, so it always opens directly under it. */}
+        <GlobalSearch open={searchOpen} onSearch={() => setSearchOpen(false)} />
       </header>
       <button
         className={menuOpen ? "menuBackdrop open" : "menuBackdrop"}
@@ -131,7 +133,6 @@ export default function Header() {
         aria-label="Close navigation menu"
         tabIndex={menuOpen ? 0 : -1}
       />
-      <GlobalSearch open={searchOpen} onSearch={() => setSearchOpen(false)} />
     </>
   );
 }

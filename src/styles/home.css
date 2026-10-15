@@ -115,7 +115,7 @@
   grid-column: 1 / 10;
   grid-row: 2;
   margin: var(--space-5) 0 0;
-  font: 400 clamp(64px, 10.2vw, 172px) / 0.86 var(--serif);
+  font: 400 var(--display-1) / 0.86 var(--serif);
   letter-spacing: -0.035em;
 }
 .pgHeroTitle em {
@@ -141,7 +141,7 @@
   align-self: end;
   width: 72%;
   justify-self: end;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 4 / 5;
   margin: 0 0 calc(-1 * var(--space-6));
   overflow: visible;
   background: var(--powder-deep);
@@ -199,30 +199,27 @@
   background: var(--powder);
 }
 .pgRoomPanel {
-  background: var(--kohl);
-  color: var(--powder);
+  color: var(--kohl);
 }
 .pgRoomStage {
   display: grid;
   gap: clamp(48px, 6vw, 80px);
   max-width: 1600px;
   margin: 0 auto;
-  padding: var(--space-9) var(--page-gutter);
+  padding: var(--chapter-space) var(--page-gutter);
+  border-top: 1px solid var(--hairline);
 }
 .pgRoomHead {
   display: grid;
   gap: var(--space-4);
 }
-.pgRoomHead .pgEyebrow {
-  color: var(--haze);
-}
 .pgRoomTitle {
   margin: 0;
-  font: 400 clamp(52px, 7vw, 112px) / 0.9 var(--serif);
+  font: 400 var(--display-2) / 0.9 var(--serif);
   letter-spacing: -0.03em;
 }
 .pgRoomTitle em {
-  color: var(--haze);
+  color: var(--rouge);
 }
 .pgRoomStep {
   display: grid;
@@ -234,7 +231,7 @@
   margin: 0;
   aspect-ratio: 4 / 5;
   overflow: hidden;
-  background: var(--kohl-soft);
+  background: var(--powder-deep);
 }
 .pgRoomFigure img {
   object-fit: cover;
@@ -246,18 +243,18 @@
 }
 .pgRoomIndex {
   font: italic 400 var(--text-xl) var(--serif);
-  color: var(--haze);
+  color: var(--graphite);
 }
 .pgRoomBrand {
   margin: 0;
   font: 500 var(--text-caption) var(--sans);
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--haze);
+  color: var(--graphite);
 }
 .pgRoomName {
   margin: 0;
-  font: 400 clamp(32px, 3.2vw, 46px) / 1 var(--serif);
+  font: 400 var(--display-3) / 1 var(--serif);
 }
 .pgRoomMore {
   display: grid;
@@ -277,7 +274,7 @@
   margin: var(--space-2) 0 0;
   padding: 0;
   list-style: none;
-  color: var(--powder-deep);
+  color: var(--graphite);
   font-size: var(--text-md);
 }
 /* Unstaged (tablets, or reduced motion on any width): photo and copy side by side. */
@@ -323,8 +320,11 @@
 .pgRoom[data-staged] .pgRoomFigure {
   grid-column: 7 / 13;
   grid-row: 1 / -1;
-  aspect-ratio: auto;
+  justify-self: end;
+  align-self: center;
+  aspect-ratio: 4 / 5;
   height: 100%;
+  max-width: 100%;
   clip-path: inset(100% 0 0 0);
   transition: clip-path var(--motion-slow) var(--ease-curtain);
 }
@@ -345,8 +345,8 @@
   grid-template-columns: 44px minmax(0, 1fr);
   column-gap: var(--space-4);
   padding: var(--space-4) 0;
-  border-top: 1px solid var(--kohl-soft);
-  opacity: 0.38;
+  border-top: 1px solid var(--hairline);
+  opacity: 0.4;
   transition: opacity var(--motion-base) var(--ease-standard);
 }
 .pgRoom[data-staged] .pgRoomCopy > * {
@@ -378,7 +378,7 @@
   grid-template-rows: 1fr;
 }
 .pgRoom[data-staged] .pgRoomName {
-  font-size: clamp(28px, 2.4vw, 38px);
+  font-size: var(--display-3);
 }
 
 /* ---------- The consultation ---------- */
@@ -390,7 +390,8 @@
   gap: clamp(40px, 5vw, 64px);
   max-width: 1600px;
   margin: 0 auto;
-  padding: clamp(80px, 9vw, 140px) var(--page-gutter);
+  padding: var(--chapter-space) var(--page-gutter);
+  border-top: 1px solid var(--hairline);
 }
 .pgConsultHead {
   display: grid;
@@ -404,7 +405,7 @@
 }
 .pgConsultTitle {
   margin: 0;
-  font: 400 clamp(52px, 7vw, 112px) / 0.9 var(--serif);
+  font: 400 var(--display-2) / 0.9 var(--serif);
   letter-spacing: -0.03em;
 }
 .pgConsultTitle em {
@@ -423,7 +424,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0 clamp(28px, 4vw, 56px);
-  border-bottom: 1px solid color-mix(in srgb, var(--kohl) 16%, transparent);
+  border-bottom: 1px solid var(--hairline);
 }
 .pgTab {
   position: relative;
@@ -434,7 +435,7 @@
   border: 0;
   background: none;
   color: var(--graphite);
-  font: 400 clamp(26px, 2.6vw, 38px) / 1.1 var(--serif);
+  font: 400 var(--display-3) / 1.1 var(--serif);
   cursor: pointer;
   transition: color var(--motion-quick) var(--ease-standard);
 }
@@ -523,7 +524,7 @@
   gap: 10px;
   min-height: 44px;
   padding: 0 18px;
-  border: 1px solid color-mix(in srgb, var(--kohl) 22%, transparent);
+  border: 1px solid var(--hairline);
   font-size: var(--text-md);
   transition:
     background-color var(--motion-quick) var(--ease-standard),
@@ -545,7 +546,7 @@
 .pgChoiceSwatch {
   width: 14px;
   height: 14px;
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kohl) 18%, transparent);
+  box-shadow: inset 0 0 0 1px var(--hairline);
 }
 .pgToolNote {
   max-width: 44ch;
@@ -558,7 +559,7 @@
   display: grid;
   gap: var(--space-5);
   padding: clamp(24px, 3vw, 40px);
-  background: color-mix(in srgb, var(--white) 55%, var(--powder));
+  border: 1px solid var(--hairline);
 }
 .pgShadeField {
   display: flex;
@@ -636,7 +637,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid color-mix(in srgb, var(--kohl) 12%, transparent);
+  border-top: 1px solid var(--hairline);
 }
 .pgRoutineSteps li {
   display: grid;
@@ -644,7 +645,7 @@
   gap: var(--space-4);
   align-items: center;
   padding: var(--space-3) 0;
-  border-bottom: 1px solid color-mix(in srgb, var(--kohl) 12%, transparent);
+  border-bottom: 1px solid var(--hairline);
   animation: panelIn var(--motion-base) var(--ease-expo-out) both;
 }
 .pgRoutineSteps li:nth-child(2) {
@@ -684,7 +685,7 @@
   margin: 0;
   padding: var(--space-6) 0 0;
   list-style: none;
-  border-top: 1px solid color-mix(in srgb, var(--kohl) 16%, transparent);
+  border-top: 1px solid var(--hairline);
 }
 .pgServices li {
   display: grid;

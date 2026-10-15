@@ -38,6 +38,9 @@ export default function Footer() {
             <Link href="/care/accessibility">Accessibility</Link>
           </div>
         </div>
+        <p className="footerMark" aria-hidden="true">
+          VELOURA
+        </p>
         <div className="footerBottom">
           <span>
             Veloura is a fictional store: a portfolio project by Maya Chaker. It is not affiliated
