@@ -28,7 +28,7 @@ export default function RitualsIntro({ onStart }: { onStart: () => void }) {
           preferences, and available time.
         </p>
         <button className="button dark" onClick={onStart}>
-          Build My Routine — 3 Questions <ArrowForward aria-hidden="true" />
+          Build my routine · 3 questions <ArrowForward aria-hidden="true" />
         </button>
       </section>
       <section className="ritualPrinciples" aria-label="Why build a Veloura routine">

@@ -75,7 +75,7 @@
   text-decoration: none;
 }
 .productInfo h3 {
-  font: 400 var(--text-lg) var(--serif);
+  font: 300 var(--text-lg) var(--serif);
   margin: 0 0 5px;
 }
 .productInfo p {
@@ -109,7 +109,7 @@
   font-size: var(--text-caption);
   letter-spacing: 0.08em;
   margin: 12px 0;
-  color: var(--rose);
+  color: var(--color-umber);
 }
 .rating span {
   letter-spacing: 0;
@@ -179,7 +179,7 @@
   place-items: center;
 }
 .wishlistButton.active {
-  color: var(--bordeaux);
+  color: var(--color-umber);
 }
 .productMeta {
   font-weight: 600;
@@ -237,7 +237,7 @@
   justify-content: center;
 }
 .quickPreview h2 {
-  font: var(--text-6xl) / 1 var(--serif);
+  font: 300 var(--text-6xl) / 1 var(--serif);
   font-weight: 400;
   margin: 14px 0;
 }
@@ -370,7 +370,7 @@
 }
 .cardRating svg {
   font-size: var(--text-caption);
-  color: var(--rose);
+  color: var(--color-umber);
 }
 .visualLink {
   display: block;
@@ -551,7 +551,7 @@
 .addButton {
   min-height: 46px;
   border-color: var(--bordeaux);
-  background: var(--bordeaux);
+  background: var(--color-umber);
   color: var(--white);
   font-weight: 600;
 }
@@ -560,7 +560,7 @@
   border-color: var(--bordeaux-deep);
 }
 .addButton.added {
-  background: var(--rose);
+  background: var(--color-umber);
   border-color: var(--rose);
 }
 .addButton:disabled {
@@ -573,7 +573,7 @@
   height: 44px;
 }
 .wishlistButton.active {
-  background: var(--bordeaux);
+  background: var(--color-umber);
   color: var(--white);
 }
 .quickView {

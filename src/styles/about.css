@@ -7,13 +7,13 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--rose);
+  color: var(--color-umber);
 }
 .storyFinalHero {
   height: clamp(620px, 76vh, 780px);
   position: relative;
   overflow: hidden;
-  background: var(--bordeaux);
+  background: var(--color-umber);
   color: var(--white);
 }
 .storyFinalHeroShade {
@@ -38,12 +38,12 @@
   color: var(--blush-strong);
 }
 .storyFinalHeroCopy h1 {
-  font: 400 clamp(59px, 6.4vw, 94px) / 0.94 var(--serif);
+  font: 300 clamp(59px, 6.4vw, 94px) / 0.94 var(--serif);
   letter-spacing: -0.025em;
   margin: 18px 0 25px;
 }
 .storyFinalHeroCopy h1 em {
-  font-weight: 400;
+  font-weight: 300;
   color: var(--blush-strong);
 }
 .storyFinalHeroCopy p {
@@ -85,14 +85,14 @@
   max-width: 520px;
 }
 .storyFinalPhilosophyCopy h2 {
-  font: 400 clamp(43px, 4.7vw, 65px) / 1.03 var(--serif);
+  font: 300 clamp(43px, 4.7vw, 65px) / 1.03 var(--serif);
   letter-spacing: -0.015em;
   margin: 16px 0 28px;
 }
 .storyEditCopy h2 em,
 .storyFinalPhilosophyCopy h2 em {
-  font-weight: 400;
-  color: var(--rose);
+  font-weight: 300;
+  color: var(--color-umber);
 }
 .storyFinalPhilosophyCopy p {
   font-size: var(--text-md);
@@ -174,7 +174,7 @@
 .storyCriteria h2,
 .storyEditCopy h2,
 .storyShelfCopy h2 {
-  font: 400 clamp(43px, 4.7vw, 65px) / 1.03 var(--serif);
+  font: 300 clamp(43px, 4.7vw, 65px) / 1.03 var(--serif);
   letter-spacing: -0.015em;
 }
 .storyShelfCopy h2 {
@@ -200,7 +200,7 @@
   padding: 12px 15px;
   font-weight: 600;
   letter-spacing: 0.13em;
-  color: var(--rose);
+  color: var(--color-umber);
 }
 .storyCriteria {
   width: min(100%, var(--page-max));
@@ -236,11 +236,11 @@
   padding-right: 0;
 }
 .storyCriteria article > span {
-  font: var(--text-2xl) var(--serif);
-  color: var(--rose);
+  font: 300 var(--text-2xl) var(--serif);
+  color: var(--color-umber);
 }
 .storyCriteria h3 {
-  font: 400 var(--text-2xl) var(--serif);
+  font: 300 var(--text-2xl) var(--serif);
   margin: 1px 0 9px;
 }
 .storyCriteria p {
@@ -254,7 +254,7 @@
   display: grid;
   grid-template-columns: 55% 45%;
   min-height: 610px;
-  background: var(--bordeaux);
+  background: var(--color-umber);
   color: var(--white);
 }
 .storyShelfImage {

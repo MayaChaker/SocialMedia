@@ -5,8 +5,8 @@
 }
 .profilePage > h1,
 .wishlistPage > h1 {
-  font: var(--text-7xl) var(--serif);
-  font-weight: 400;
+  font: 300 var(--text-7xl) var(--serif);
+  font-weight: 300;
   margin: 12px 0 45px;
 }
 .wishlistPage > .productGrid {
@@ -46,7 +46,7 @@
   margin: 0;
 }
 .profilePage legend {
-  font: var(--text-2xl) var(--serif);
+  font: 300 var(--text-2xl) var(--serif);
   margin-bottom: 16px;
 }
 .profileForm fieldset > div,
@@ -65,7 +65,7 @@
   gap: 5px;
 }
 .profilePage fieldset button.selected {
-  background: var(--bordeaux);
+  background: var(--color-umber);
   color: var(--white);
 }
 .profilePage fieldset svg {
@@ -107,7 +107,7 @@
   margin-bottom: 40px;
 }
 .profileHeader h1 {
-  font: 400 clamp(48px, 6vw, 74px) / 1 var(--serif);
+  font: 300 clamp(48px, 6vw, 74px) / 1 var(--serif);
   margin: 12px 0 18px;
 }
 .profileHeader p {
@@ -143,7 +143,7 @@
 }
 .profileForm legend {
   padding: 0 14px 0 0;
-  font-weight: 600;
+  font-weight: 300;
 }
 .profileForm fieldset > div {
   gap: 9px;
@@ -153,20 +153,22 @@
   padding: 0 14px;
   gap: 6px;
 }
+/* Chosen chips: umber with light text, the same everywhere on the page. */
 .profileForm fieldset button.selected {
-  border-color: var(--bordeaux);
-  background: var(--blush);
+  border-color: var(--color-umber);
+  background: var(--color-umber);
+  color: var(--color-ivory);
 }
 .profileSaveStatus {
   min-height: 24px;
-  color: var(--rose);
+  color: var(--color-umber);
 }
 .profileSaved {
   display: grid;
   gap: 20px;
 }
 .savedProfileCard h2 {
-  font: 400 var(--text-3xl) var(--serif);
+  font: 300 var(--text-3xl) var(--serif);
   margin: 10px 0;
 }
 .savedShadeContent {

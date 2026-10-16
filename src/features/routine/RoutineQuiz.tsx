@@ -117,7 +117,7 @@ export default function RoutineQuiz({ routine, headingRef }: RoutineQuizProps) {
                 disabled={!selected}
                 onClick={routine.continueQuestion}
               >
-                {isLast ? "See My Routine" : "Continue"}
+                {isLast ? "See my routine" : "Continue"}
                 <ArrowForward aria-hidden="true" />
               </button>
             </div>

@@ -36,7 +36,7 @@ export default function RoutineResult({ routine, result, headingRef }: RoutineRe
             <div className="routinePreferencesTitle">
               <h2>Your preferences</h2>
               <button type="button" onClick={routine.editAnswers}>
-                Edit Answers
+                Edit answers
               </button>
             </div>
             <dl>
@@ -73,7 +73,7 @@ export default function RoutineResult({ routine, result, headingRef }: RoutineRe
             >
               {routine.fullStatus === "added"
                 ? "Added"
-                : `Add Full Routine — ${money(routine.routineTotal)}`}
+                : `Add the full routine · ${money(routine.routineTotal)}`}
             </button>
             <button
               className={`saveRitualButton ${saved ? "saved" : ""}`}
@@ -84,7 +84,7 @@ export default function RoutineResult({ routine, result, headingRef }: RoutineRe
               {saved ? "Routine Saved" : "Save Routine"}
             </button>
             <button className="button outline routineEditButton" onClick={routine.editAnswers}>
-              Edit Answers
+              Edit answers
             </button>
           </div>
           <p className="saveRitualStatus" role="status" aria-live="polite">
@@ -98,15 +98,15 @@ export default function RoutineResult({ routine, result, headingRef }: RoutineRe
           )}
           <div className="routineSecondaryActions">
             <Link className="textLink" href="/shop">
-              Explore All Products
+              Explore all products
             </Link>
             <button className="textLink" onClick={routine.startAgain}>
-              {routine.confirmReset ? "Confirm Start Again" : "Start Again"}
+              {routine.confirmReset ? "Confirm start again" : "Start again"}
             </button>
           </div>
           {routine.confirmReset && (
             <p className="resetNotice" role="status">
-              Starting again will clear these unsaved answers. Select “Confirm Start Again” to
+              Starting again will clear these unsaved answers. Select “Confirm start again” to
               continue.
             </p>
           )}
