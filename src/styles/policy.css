@@ -3,7 +3,7 @@
   padding: 100px clamp(24px, 10vw, 160px);
 }
 .policyPage > h1 {
-  font: 400 clamp(55px, 7vw, 92px) / 1 var(--serif);
+  font: 300 clamp(55px, 7vw, 92px) / 1 var(--serif);
   margin: 15px 0 20px;
 }
 .policyIntro {
@@ -25,8 +25,8 @@
   border-bottom: 1px solid var(--line);
 }
 .policyPage h2 {
-  font: var(--text-3xl) var(--serif);
-  font-weight: 400;
+  font: 300 var(--text-3xl) var(--serif);
+  font-weight: 300;
   margin: 0;
 }
 .policyPage section p {
