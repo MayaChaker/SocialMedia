@@ -23,3 +23,8 @@
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+@container (min-width: 900px) {
+  .max3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

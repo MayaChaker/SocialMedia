@@ -1,64 +1,82 @@
 .page {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: var(--space-5) var(--gutter) 0;
-}
-.head {
-  display: grid;
-  gap: var(--space-2);
-  padding: var(--space-6) 0 var(--space-5);
-}
-.head h1 {
-  font-size: var(--text-h1);
+  padding: 0 var(--gutter);
 }
 
-/* Subcategory tabs: links, so each type has its own shareable address. */
-.subs {
-  display: flex;
+/* A short header: breadcrumb, then the title with the count on the right. */
+.head {
+  display: grid;
   gap: var(--space-5);
-  margin-bottom: var(--space-4);
-  overflow-x: auto;
-  scrollbar-width: none;
+  padding: var(--space-6) 0 var(--space-5);
   border-bottom: var(--border);
 }
-.subs::-webkit-scrollbar {
+.titleRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+}
+.titleRow > div {
+  display: grid;
+  gap: var(--space-2);
+}
+.titleRow h1 {
+  font-size: var(--text-h1);
+}
+.titleRow > p {
+  flex: 0 0 auto;
+  padding-bottom: var(--space-2);
+}
+
+.body {
+  display: grid;
+}
+.sidebar {
   display: none;
 }
-.subs a {
-  flex: 0 0 auto;
-  padding: var(--space-3) 0;
-  border-bottom: 1px solid transparent;
-  margin-bottom: -1px;
+
+/* The category's types, as quiet links above the filters. */
+.types {
+  padding: var(--space-5) 0 var(--space-4);
+  border-bottom: var(--border);
+}
+.types ul {
+  display: grid;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.types a {
+  display: flex;
+  justify-content: space-between;
+  padding: 7px 0;
+  color: var(--color-taupe);
   font-size: 0.875rem;
   text-decoration: none;
-  transition: border-color var(--duration-hover) var(--ease);
+  transition: color var(--duration-hover) var(--ease);
 }
-.subs a:hover {
-  border-color: var(--color-taupe);
+.types a:hover,
+.types a[aria-current="page"] {
+  color: var(--color-umber);
 }
-.subs a[aria-current="page"] {
-  border-color: var(--color-umber);
+.types a[aria-current="page"] {
   font-weight: var(--weight-medium);
-}
-.subs span {
-  color: var(--color-taupe);
-  font-size: var(--text-caption);
 }
 
 .toolbar {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) 0;
-  margin-bottom: var(--space-5);
+  padding: var(--space-4) 0;
 }
 .filterButton {
   display: inline-flex;
+  flex: 1;
   align-items: center;
+  justify-content: center;
   gap: var(--space-2);
-  height: 44px;
-  padding: 0 var(--space-4);
+  height: 46px;
   border: 1px solid var(--color-umber);
   background: none;
   font: var(--weight-medium) var(--text-small) / 1 var(--font-body);
@@ -68,11 +86,46 @@
   width: 18px;
   height: 18px;
 }
+.showing {
+  display: none;
+  color: var(--color-taupe);
+  font-size: var(--text-small);
+}
+.showing strong {
+  color: var(--color-umber);
+  font-weight: var(--weight-medium);
+}
+.sort {
+  display: inline-flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  height: 46px;
+  border: 1px solid var(--color-umber);
+  color: var(--color-taupe);
+  font-size: var(--text-small);
+}
+/* On phones the label is read by screen readers only, to keep the button on one line. */
+.sort span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+.sort select {
+  border: 0;
+  background: none;
+  color: var(--color-umber);
+  font: var(--weight-medium) var(--text-small) / 1 var(--font-body);
+  cursor: pointer;
+}
 .chips {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
-  margin: 0;
+  margin: 0 0 var(--space-5);
   padding: 0;
   list-style: none;
 }
@@ -95,24 +148,9 @@
   width: 14px;
   height: 14px;
 }
-.sort {
-  margin-left: auto;
-  width: 220px;
-}
-.sort select {
-  height: 44px;
-}
-
-.body {
-  display: grid;
-}
-.sidebar {
-  display: none;
-}
 .pagination {
   display: grid;
   justify-items: center;
-  gap: var(--space-4);
   padding: var(--space-8) 0 0;
 }
 .empty {
@@ -128,33 +166,44 @@
   margin-top: var(--space-2);
 }
 
-@media (max-width: 767px) {
-  .sort {
-    width: auto;
-    flex: 1;
-  }
-  .chips {
-    order: 3;
-    width: 100%;
-  }
-}
 @media (min-width: 1024px) {
   .head {
     padding-top: var(--space-7);
-  }
-  .filterButton {
-    display: none;
+    padding-bottom: var(--space-6);
   }
   .body {
-    grid-template-columns: 240px minmax(0, 1fr);
+    grid-template-columns: 230px minmax(0, 1fr);
     gap: var(--space-7);
   }
   .sidebar {
     position: sticky;
-    top: calc(var(--header-height) + var(--space-5));
+    top: var(--header-height);
     display: block;
     align-self: start;
-    max-height: calc(100vh - var(--header-height) - var(--space-6));
+    max-height: calc(100vh - var(--header-height));
     overflow-y: auto;
+    padding-bottom: var(--space-6);
+  }
+  .filterButton {
+    display: none;
+  }
+  .toolbar {
+    justify-content: space-between;
+    padding: var(--space-5) 0;
+  }
+  .showing {
+    display: block;
+  }
+  .sort {
+    flex: 0 0 auto;
+    height: auto;
+    border: 0;
+  }
+  .sort span {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
   }
 }

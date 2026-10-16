@@ -10,7 +10,6 @@ import { useCartDrawer } from "../../hooks/useCartDrawer";
 import Breadcrumb, { type Crumb } from "../../components/ui/Breadcrumb";
 import Button from "../../components/ui/Button";
 import Drawer from "../../components/ui/Drawer";
-import { Select } from "../../components/ui/Field";
 import FiltersSidebar, { type FilterGroup } from "../../components/ui/FiltersSidebar";
 import Pagination from "../../components/ui/Pagination";
 import ProductGrid, { ProductGridItem } from "../../components/ui/ProductGrid";
@@ -48,9 +47,18 @@ interface ShopPageProps {
   search?: boolean;
 }
 
+interface NavLink {
+  label: string;
+  href: string;
+  count: number;
+  current: boolean;
+}
+
 /**
- * Every product listing: the shop, a category, a brand and search results. Filters live
- * in the URL; the sidebar sits beside the grid on desktop and in a drawer on phones.
+ * Every product listing: the shop, a category, a brand and search results. A short
+ * header, then a quiet sidebar (the category's types as links, filters as closed
+ * accordions) beside a three-column grid. On phones the sidebar opens in a drawer.
+ * Filters live in the URL.
  */
 export default function ShopPage({ category, brandSlug, search = false }: ShopPageProps) {
   const { openCart } = useCartDrawer();
@@ -63,19 +71,50 @@ export default function ShopPage({ category, brandSlug, search = false }: ShopPa
   const counts = facetCounts(catalogue, filters);
   const pages = pageCount(products.length);
   const page = Math.min(shop.page, pages);
-  const visible = products.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const first = (page - 1) * PAGE_SIZE;
+  const visible = products.slice(first, first + PAGE_SIZE);
 
   const current = category ? CATEGORY_LABELS[category] : undefined;
-  const subs = current
-    ? SUBCATEGORIES[current.category]
-        .map((sub) => ({
-          ...sub,
-          count: catalogue.filter(
-            (product) => product.category === current.category && product.subcategory === sub.slug,
-          ).length,
-        }))
-        .filter((sub) => sub.count > 0)
+  const inCategory = current
+    ? catalogue.filter((product) => product.category === current.category)
     : [];
+
+  // The sidebar's first block: a category's types, or the categories on the whole shop.
+  const navLinks: NavLink[] = current
+    ? [
+        {
+          label: `All ${current.label.toLowerCase()}`,
+          href: shop.hrefForSub(),
+          count: inCategory.length,
+          current: !filters.subcategory,
+        },
+        ...SUBCATEGORIES[current.category]
+          .map((sub) => ({
+            label: sub.label,
+            href: shop.hrefForSub(sub.slug),
+            count: inCategory.filter((product) => product.subcategory === sub.slug).length,
+            current: filters.subcategory === sub.slug,
+          }))
+          .filter((link) => link.count > 0),
+      ]
+    : !brand && !search
+      ? [
+          {
+            label: "All products",
+            href: "/shop",
+            count: catalogue.length,
+            current: !filters.collection,
+          },
+          ...CATEGORIES.map((segment) => ({
+            label: CATEGORY_LABELS[segment]?.label ?? segment,
+            href: `/shop/${segment}`,
+            count: catalogue.filter(
+              (product) => product.category === CATEGORY_LABELS[segment]?.category,
+            ).length,
+            current: false,
+          })),
+        ]
+      : [];
 
   const title = brand
     ? brand.name
@@ -95,29 +134,11 @@ export default function ShopPage({ category, brandSlug, search = false }: ShopPa
   else {
     crumbs.push({ label: "Shop", href: "/shop" });
     if (current) crumbs.push({ label: current.label, href: `/shop/${category}` });
-    const sub = subs.find((item) => item.slug === filters.subcategory);
+    const sub = navLinks.find((link) => link.current && filters.subcategory);
     if (sub) crumbs.push({ label: sub.label });
   }
 
   const groups: FilterGroup[] = [
-    ...(!category && !brand && !search
-      ? [
-          {
-            id: "category",
-            legend: "Category",
-            multiple: false,
-            selected: [],
-            onChange: ([value]: string[]) => shop.goToCategory(value ?? ""),
-            options: CATEGORIES.map((segment) => ({
-              value: segment,
-              label: CATEGORY_LABELS[segment]?.label ?? segment,
-              count: catalogue.filter(
-                (product) => product.category === CATEGORY_LABELS[segment]?.category,
-              ).length,
-            })),
-          },
-        ]
-      : []),
     ...(!brand
       ? [
           {
@@ -164,83 +185,112 @@ export default function ShopPage({ category, brandSlug, search = false }: ShopPa
     ...(filters.inStock ? [{ label: "In stock", remove: () => shop.setInStock(false) }] : []),
   ];
 
-  const sidebar = <FiltersSidebar groups={groups} onClear={shop.clearFilters} />;
+  const sidebar = (
+    <FiltersSidebar
+      groups={groups}
+      onClear={shop.clearFilters}
+      intro={
+        navLinks.length > 0 && (
+          <nav className={styles.types} aria-label="Category">
+            <p className="text-label text-muted">Category</p>
+            <ul>
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    aria-current={link.current ? "page" : undefined}
+                    onClick={() => setFiltersOpen(false)}
+                  >
+                    {link.label}
+                    <span>{link.count}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )
+      }
+    />
+  );
+
+  const sort = (
+    <label className={styles.sort}>
+      <span>Sort by</span>
+      <select value={filters.sort} onChange={(event) => shop.setSort(event.target.value)}>
+        {SORT_OPTIONS.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
 
   return (
     <main className={styles.page}>
-      <Breadcrumb items={crumbs} />
       <header className={styles.head}>
-        {brand && <p className="text-label text-muted">Brand</p>}
-        <h1>{title}</h1>
-        <p className="text-small text-muted" aria-live="polite">
-          {plural(products.length)}
-        </p>
-      </header>
-
-      {subs.length > 0 && (
-        <nav className={styles.subs} aria-label={`${current?.label} types`}>
-          <Link href={shop.hrefForSub()} aria-current={!filters.subcategory ? "page" : undefined}>
-            All
-          </Link>
-          {subs.map((sub) => (
-            <Link
-              key={sub.slug}
-              href={shop.hrefForSub(sub.slug)}
-              aria-current={filters.subcategory === sub.slug ? "page" : undefined}
-            >
-              {sub.label} <span>{sub.count}</span>
-            </Link>
-          ))}
-        </nav>
-      )}
-
-      <div className={styles.toolbar}>
-        <button type="button" className={styles.filterButton} onClick={() => setFiltersOpen(true)}>
-          <Tune aria-hidden="true" />
-          Filters{shop.filterCount > 0 && ` (${shop.filterCount})`}
-        </button>
-        {chips.length > 0 && (
-          <ul className={styles.chips} aria-label="Filters in use">
-            {chips.map((chip) => (
-              <li key={chip.label}>
-                <button type="button" onClick={chip.remove} aria-label={`Remove ${chip.label}`}>
-                  {chip.label}
-                  <Close aria-hidden="true" />
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-        <div className={styles.sort}>
-          <Select
-            label="Sort by"
-            hideLabel
-            value={filters.sort}
-            onChange={(event) => shop.setSort(event.target.value)}
-            options={SORT_OPTIONS}
-          />
+        <Breadcrumb items={crumbs} />
+        <div className={styles.titleRow}>
+          <div>
+            {brand && <p className="text-label text-muted">Brand</p>}
+            <h1>{title}</h1>
+          </div>
+          <p className="text-label text-muted" aria-live="polite">
+            {plural(products.length)}
+          </p>
         </div>
-      </div>
+      </header>
 
       <div className={styles.body}>
         <aside className={styles.sidebar} aria-label="Filters">
           {sidebar}
         </aside>
-        <div>
+
+        <div className={styles.results}>
+          <div className={styles.toolbar}>
+            <button
+              type="button"
+              className={styles.filterButton}
+              onClick={() => setFiltersOpen(true)}
+            >
+              <Tune aria-hidden="true" />
+              Filters{shop.filterCount > 0 && ` (${shop.filterCount})`}
+            </button>
+            {products.length > 0 && (
+              <p className={styles.showing}>
+                Showing{" "}
+                <strong>
+                  {first + 1}–{first + visible.length}
+                </strong>{" "}
+                of {products.length}
+              </p>
+            )}
+            {sort}
+          </div>
+
+          {chips.length > 0 && (
+            <ul className={styles.chips} aria-label="Filters in use">
+              {chips.map((chip) => (
+                <li key={chip.label}>
+                  <button type="button" onClick={chip.remove} aria-label={`Remove ${chip.label}`}>
+                    {chip.label}
+                    <Close aria-hidden="true" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+
           {visible.length ? (
             <>
-              <ProductGrid>
+              <ProductGrid maxColumns={3}>
                 {visible.map((product, index) => (
                   <ProductGridItem key={product.id}>
-                    <ProductCard product={product} onAdded={openCart} priority={index < 2} />
+                    <ProductCard product={product} onAdded={openCart} priority={index < 3} />
                   </ProductGridItem>
                 ))}
               </ProductGrid>
               <div className={styles.pagination}>
-                <p className="text-small text-muted">
-                  Showing {(page - 1) * PAGE_SIZE + 1}–{(page - 1) * PAGE_SIZE + visible.length} of{" "}
-                  {products.length}
-                </p>
                 <Pagination page={page} pageCount={pages} hrefFor={shop.hrefForPage} />
               </div>
             </>
