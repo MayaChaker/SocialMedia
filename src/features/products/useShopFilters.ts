@@ -1,60 +1,92 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { CATEGORIES } from "./shopLogic";
+import type { ShopFilters } from "./shopLogic";
 
-const FILTER_KEYS = ["concern", "price", "stock"];
+/** Query parameters cleared by "Clear all"; search, collection and subcategory stay. */
+const FILTER_KEYS = ["brand", "price", "stock", "page"];
+
+const list = (value: string | null) => (value ? value.split(",").filter(Boolean) : []);
 
 const withQuery = (path: string, next: URLSearchParams) => {
   const search = next.toString();
   return search ? `${path}?${search}` : path;
 };
 
+interface Scope {
+  /** Category segment from /shop/[category]. */
+  category?: string;
+  /** Brand name on a brand page. */
+  brand?: string;
+}
+
 /**
  * Shop filters stored in the URL, so results survive a refresh and can be shared.
- * Filter changes replace the URL in place; switching category pushes a new entry.
+ * Filter changes replace the URL in place and return to the first page.
  */
-export function useShopFilters(category?: string) {
+export function useShopFilters({ category, brand }: Scope = {}) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
-  const query = params.get("search") || "";
-  const collection = params.get("collection") || "";
-  const subcategory = params.get("sub") || undefined;
-  const concern = params.get("concern") || "";
-  const underFifty = params.get("price") === "under-50";
-  const inStock = params.get("stock") === "in";
-  const sort = params.get("sort") || "featured";
+  const page = Math.max(1, Number(params.get("page")) || 1);
 
-  const updateParams = (change: (next: URLSearchParams) => void) => {
+  const filters: ShopFilters = {
+    category,
+    brand,
+    subcategory: params.get("sub") || undefined,
+    collection: params.get("collection") || "",
+    query: params.get("q") || params.get("search") || "",
+    brands: list(params.get("brand")),
+    prices: list(params.get("price")),
+    inStock: params.get("stock") === "in",
+    sort: params.get("sort") || "featured",
+  };
+
+  const update = (change: (next: URLSearchParams) => void) => {
     const next = new URLSearchParams(params);
     change(next);
+    next.delete("page");
     router.replace(withQuery(pathname, next), { scroll: false });
   };
-  const setParam = (key: string, value: string) =>
-    updateParams((next) => (value ? next.set(key, value) : next.delete(key)));
+  const setList = (key: string, values: string[]) =>
+    update((next) => (values.length ? next.set(key, values.join(",")) : next.delete(key)));
 
-  /** Switches category while keeping the shopper's filters and search. */
-  const goToCategory = (value: string) => {
+  /** The URL of another page of the same results. */
+  const hrefForPage = (target: number) => {
     const next = new URLSearchParams(params);
-    next.delete("collection");
-    next.delete("sub");
-    if (value === "new") next.set("collection", "new");
-    const path = CATEGORIES.includes(value) ? `/shop/${value}` : "/shop";
-    router.push(withQuery(path, next));
+    if (target > 1) next.set("page", String(target));
+    else next.delete("page");
+    return withQuery(pathname, next);
+  };
+
+  /** The URL of a subcategory tab, keeping the shopper's filters. */
+  const hrefForSub = (slug?: string) => {
+    const next = new URLSearchParams(params);
+    next.delete("page");
+    if (slug) next.set("sub", slug);
+    else next.delete("sub");
+    return withQuery(pathname, next);
   };
 
   return {
-    filters: { category, subcategory, collection, query, concern, underFifty, inStock, sort },
-    /** Number of drawer filters in use (concern, price, stock). */
-    filterCount: Number(Boolean(concern)) + Number(underFifty) + Number(inStock),
-    activeCategory: collection === "new" ? "new" : category || "all",
-    setConcern: (value: string) => setParam("concern", value),
-    setUnderFifty: (enabled: boolean) => setParam("price", enabled ? "under-50" : ""),
-    setInStock: (enabled: boolean) => setParam("stock", enabled ? "in" : ""),
-    setSort: (value: string) => setParam("sort", value === "featured" ? "" : value),
-    clearSearch: () => setParam("search", ""),
-    clearFilters: () => updateParams((next) => FILTER_KEYS.forEach((key) => next.delete(key))),
-    clearAll: () => router.push("/shop"),
-    goToCategory,
+    filters,
+    page,
+    /** Number of sidebar filters in use. */
+    filterCount: filters.brands.length + filters.prices.length + Number(filters.inStock),
+    setBrands: (values: string[]) => setList("brand", values),
+    setPrices: (values: string[]) => setList("price", values),
+    setInStock: (enabled: boolean) =>
+      update((next) => (enabled ? next.set("stock", "in") : next.delete("stock"))),
+    setSort: (value: string) =>
+      update((next) => (value === "featured" ? next.delete("sort") : next.set("sort", value))),
+    clearFilters: () => update((next) => FILTER_KEYS.forEach((key) => next.delete(key))),
+    /** Opens a category, keeping the shopper's filters and search. */
+    goToCategory: (segment: string) => {
+      const next = new URLSearchParams(params);
+      next.delete("sub");
+      next.delete("page");
+      router.push(withQuery(segment ? `/shop/${segment}` : "/shop", next));
+    },
+    hrefForPage,
+    hrefForSub,
   };
 }
 

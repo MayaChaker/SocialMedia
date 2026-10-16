@@ -20,7 +20,7 @@ export default function SearchBar({ id = "siteSearch", onSearch }: SearchBarProp
     event.preventDefault();
     const term = query.trim();
     if (!term) return;
-    router.push(`/shop?search=${encodeURIComponent(term)}`);
+    router.push(`/search?q=${encodeURIComponent(term)}`);
     setQuery("");
     onSearch?.();
   };

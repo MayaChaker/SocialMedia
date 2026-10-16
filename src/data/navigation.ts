@@ -15,7 +15,7 @@ export interface MenuColumn {
 
 export interface MenuItem {
   label: string;
-  /** Omitted for an item that only opens its panel (Brands, until brand pages exist). */
+  /** Omitted for an item that only opens its panel. */
   href?: string;
   /** Off until the section has products; turning it on is a one-word change. */
   enabled: boolean;
@@ -57,7 +57,7 @@ export const MENU: readonly MenuItem[] = [
   { label: "Haircare", href: "/shop/hair", category: "Hair", image: "hair", enabled: true },
   { label: "Body", href: "/shop/body", enabled: false },
   { label: "Tools", href: "/shop/tools", enabled: false },
-  { label: "Brands", brands: true, enabled: true },
+  { label: "Brands", href: "/brands", brands: true, enabled: true },
   { label: "New in", href: "/shop?collection=new", enabled: true },
   { label: "Sale", href: "/shop?collection=sale", enabled: false },
 ];
@@ -73,10 +73,13 @@ const byCount = ([a, countA]: [string, number], [b, countB]: [string, number]) =
 export function menuColumns(item: MenuItem): MenuColumn[] {
   if (item.brands) {
     // Every brand, A to Z, split into three columns.
-    const links = BRANDS.map((brand) => ({ label: brand.name, href: brandHref(brand.name) }));
+    const links = [
+      { label: "All brands A–Z", href: "/brands" },
+      ...BRANDS.map((brand) => ({ label: brand.name, href: brandHref(brand.name) })),
+    ];
     const size = Math.ceil(links.length / 3);
     return [0, 1, 2].map((index) => ({
-      title: index === 0 ? "Brands A–Z" : "",
+      title: index === 0 ? "Brands" : "",
       links: links.slice(index * size, (index + 1) * size),
     }));
   }
