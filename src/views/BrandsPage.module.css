@@ -1,86 +1,195 @@
 .page {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: var(--space-5) var(--gutter) 0;
+  padding: var(--space-5) var(--gutter) var(--section-space);
 }
 .head {
   display: grid;
-  gap: var(--space-3);
-  padding: var(--space-6) 0 var(--space-6);
+  gap: var(--space-5);
+  padding: var(--space-6) 0 var(--space-5);
 }
-/* The alphabet: letters with brands are links, the rest are shown faded for orientation. */
-.letters {
-  position: sticky;
-  top: var(--header-height);
-  z-index: 2;
+.head > div {
+  display: grid;
+  gap: var(--space-3);
+}
+.head h1 em,
+.featured h2 em,
+.allHead h2 em {
+  font-style: italic;
+}
+.find {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: var(--control-height);
+  padding: 0 var(--space-4);
+  border: var(--border);
+  background: var(--color-white);
+  color: var(--color-taupe);
+  transition: border-color var(--duration-hover) var(--ease);
+}
+.find:focus-within {
+  border-color: var(--color-umber);
+}
+.find svg {
+  width: 18px;
+  height: 18px;
+}
+.find input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: none;
+  color: var(--color-umber);
+  font-size: var(--text-body);
+}
+.find input::placeholder {
+  color: var(--color-taupe);
+}
+
+/* Category chips, with how many brands each one keeps. */
+.chips {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-1) var(--space-3);
-  padding: var(--space-3) 0;
-  border-block: var(--border);
-  background: var(--color-ivory);
-  font: var(--weight-medium) var(--text-small) / 1 var(--font-body);
+  gap: var(--space-2);
+  padding-bottom: var(--space-6);
+  border-bottom: var(--border);
 }
-.letters a,
-.letters span {
-  display: grid;
-  place-items: center;
-  min-width: 24px;
-  height: 28px;
+.chips button {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: 10px var(--space-4);
+  border: var(--border);
+  background: var(--color-paper);
+  font-size: var(--text-small);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-hover) var(--ease),
+    border-color var(--duration-hover) var(--ease);
 }
-.letters a {
-  text-decoration: none;
+.chips button:hover {
+  border-color: var(--color-umber);
 }
-.letters a:hover {
-  color: var(--color-accent);
+.chips button span {
+  color: var(--color-taupe);
+  font-size: var(--text-caption);
 }
-.letters span {
+.chips button[aria-pressed="true"] {
+  border-color: var(--color-umber);
+  background: var(--color-umber);
+  color: var(--color-ivory);
+}
+.chips button[aria-pressed="true"] span {
   color: var(--color-line);
 }
-.groups {
-  display: grid;
-}
-.group {
+
+.featured {
   display: grid;
   gap: var(--space-3);
-  padding: var(--space-6) 0;
+  padding: var(--space-7) 0;
   border-bottom: var(--border);
-  scroll-margin-top: calc(var(--header-height) + 64px);
 }
-.letter {
-  color: var(--color-taupe);
-  font: italic var(--weight-light) var(--text-h3) / 1 var(--font-display);
-}
-.group ul {
+.featuredRow {
   display: grid;
-  margin: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-3);
+  margin: var(--space-4) 0 0;
   padding: 0;
   list-style: none;
 }
-.group a {
+.tile {
   display: grid;
-  gap: 2px;
-  padding: var(--space-3) 0;
+  gap: var(--space-1);
   text-decoration: none;
 }
+.tilePhoto {
+  display: block;
+  aspect-ratio: 4 / 5;
+  margin-bottom: var(--space-2);
+  overflow: hidden;
+  background: var(--color-bone);
+}
+.tilePhoto img,
+.tilePhoto svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-image) var(--ease);
+}
+.tile:hover .tilePhoto img {
+  transform: scale(1.03);
+}
+.tileName,
 .name {
-  font: var(--weight-light) var(--text-h4) / 1.2 var(--font-display);
+  font: var(--weight-light) 1.375rem / 1.2 var(--font-display);
   transition: color var(--duration-hover) var(--ease);
 }
-.group a:hover .name {
+.tile:hover .tileName,
+.list a:hover .name {
   color: var(--color-accent);
+}
+.meta {
+  color: var(--color-taupe);
+  font-size: var(--text-caption);
+}
+
+/* Every brand, A to Z, in one even grid. */
+.all {
+  padding-top: var(--space-7);
+}
+.allHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+.list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  border-top: var(--border);
+  list-style: none;
+}
+.list a {
+  display: grid;
+  gap: var(--space-1);
+  height: 100%;
+  padding: var(--space-4) var(--space-4) var(--space-4) 0;
+  border-bottom: var(--border);
+  text-decoration: none;
+}
+.empty {
+  padding: var(--space-6) 0;
+  color: var(--color-taupe);
+}
+
+@media (min-width: 700px) {
+  .featuredRow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 1024px) {
   .head {
+    grid-template-columns: 1fr minmax(0, 380px);
+    align-items: end;
     padding-top: var(--space-7);
   }
-  .group {
-    grid-template-columns: 160px 1fr;
-    gap: var(--space-6);
+  .featuredRow {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
-  .group ul {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0 var(--space-6);
+  .list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .list a {
+    padding: var(--space-5) var(--space-5) var(--space-5) 0;
   }
 }
