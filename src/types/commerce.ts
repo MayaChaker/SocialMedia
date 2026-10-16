@@ -50,8 +50,6 @@ interface ProductBase {
   badge?: string;
   isNew?: boolean;
   isBestseller?: boolean;
-  rating: number;
-  reviews: number;
   note: string;
   description: string;
   ingredients: string;

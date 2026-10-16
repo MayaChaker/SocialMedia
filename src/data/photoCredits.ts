@@ -1,5 +1,5 @@
 /**
- * Every photograph comes from Unsplash under the Unsplash License, which allows free use
+ * Every photograph comes from Unsplash or Pexels, under their licenses, which allow free use
  * without permission. Credits are kept anyway.
  */
 export interface PhotoCredit {
@@ -152,6 +152,98 @@ export const PHOTO_CREDITS: Record<string, PhotoCredit> = {
   "olaplex-no-6-bond-smoother": {
     photographer: "Shayna Douglas",
     source: "https://images.unsplash.com/photo-1642005801149-b33da87c1175",
+  },
+  "olaplex-no-7-bonding-oil": {
+    photographer: "Deniz Gezer",
+    source: "https://www.pexels.com/photo/27685223/",
+  },
+  "gisou-honey-infused-hair-wash": {
+    photographer: "Roselene de Koning",
+    source: "https://www.pexels.com/photo/30696654/",
+  },
+  "loreal-professionnel-liss-unlimited-shampoo": {
+    photographer: "Viktorya Sergeeva",
+    source: "https://www.pexels.com/photo/14267487/",
+  },
+  "keune-care-absolute-volume-shampoo": {
+    photographer: "Natallia",
+    source: "https://www.pexels.com/photo/13573922/",
+  },
+  "keune-care-satin-oil-conditioner": {
+    photographer: "Natallia Photo",
+    source: "https://images.unsplash.com/photo-1686121544157-6f178a23d584",
+  },
+  "kevin-murphy-angel-wash": {
+    photographer: "Nick Scott",
+    source: "https://images.unsplash.com/photo-1601070846144-6be3aad73f7b",
+  },
+  "aveda-flax-seed-aloe-sculpturing-gel": {
+    photographer: "Kevin Sicher",
+    source: "https://images.unsplash.com/photo-1734892494503-775c358c69b5",
+  },
+  "aveda-men-pure-formance-grooming-clay": {
+    photographer: "Kevin Sicher",
+    source: "https://images.unsplash.com/photo-1734892498467-9344ffc6917b",
+  },
+  "clinique-smart-clinical-repair-eye-cream": {
+    photographer: "Theodora Ispas",
+    source: "https://images.unsplash.com/photo-1687160897014-bdc8b8160815",
+  },
+  "kiehls-midnight-recovery-concentrate": {
+    photographer: "Camille Brodard",
+    source: "https://images.unsplash.com/photo-1623248509111-0bbf620a0af6",
+  },
+  "kiehls-calendula-water-cream": {
+    photographer: "Delfina Iacub",
+    source: "https://images.unsplash.com/photo-1599406953566-59bb9db6b2d0",
+  },
+  "cetaphil-gentle-skin-cleanser": {
+    photographer: "sarah b",
+    source: "https://images.unsplash.com/photo-1643747238009-6863ea63e78d",
+  },
+  "fenty-beauty-gloss-bomb-cream": {
+    photographer: "Devon Vereen",
+    source: "https://images.unsplash.com/photo-1640317372997-b76e600ee5ef",
+  },
+  "charlotte-tilbury-airbrush-flawless-foundation": {
+    photographer: "Karly Jones",
+    source: "https://images.unsplash.com/photo-1632038559953-abd80bed8966",
+  },
+  "rouge-dior-lipstick": {
+    photographer: "Anna Keibalo",
+    source: "https://images.unsplash.com/photo-1692306650906-5c475bf1e663",
+  },
+  "ysl-rouge-pur-couture": {
+    photographer: "Nada Gamal",
+    source: "https://images.unsplash.com/photo-1587313512268-a3b47aa30166",
+  },
+  "kiehls-original-musk": {
+    photographer: "0xk",
+    source: "https://images.unsplash.com/photo-1622373225827-a74a2e5dd4b7",
+  },
+  "le-labo-santal-33": {
+    photographer: "Marie G.",
+    source: "https://images.unsplash.com/photo-1635847421955-db26af776e5d",
+  },
+  "le-labo-tonka-25": {
+    photographer: "Cosmin Ursea",
+    source: "https://images.unsplash.com/photo-1638777734006-b680454ae5da",
+  },
+  "le-labo-baie-19": {
+    photographer: "Filip Baotić",
+    source: "https://images.unsplash.com/photo-1726135943496-cd61574f281f",
+  },
+  "byredo-gypsy-water": {
+    photographer: "Harper Sunday",
+    source: "https://images.unsplash.com/photo-1680789527322-eab29923811a",
+  },
+  "tom-ford-ombre-leather": {
+    photographer: "Alfred Guzman",
+    source: "https://images.unsplash.com/photo-1654617058572-f1f473581778",
+  },
+  "jo-malone-nectarine-blossom-honey": {
+    photographer: "charlesdeluvio",
+    source: "https://images.unsplash.com/photo-1519669011783-4eaa95fa1b7d",
   },
 };
 

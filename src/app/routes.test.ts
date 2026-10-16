@@ -21,7 +21,7 @@ test.each([
 });
 
 test("every product and category is pre-rendered", () => {
-  expect(productParams()).toHaveLength(36);
+  expect(productParams()).toHaveLength(59);
   expect(categoryParams()).toEqual([
     { category: "makeup" },
     { category: "skincare" },
