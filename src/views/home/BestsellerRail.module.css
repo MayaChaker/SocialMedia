@@ -1,0 +1,74 @@
+.section {
+  padding-top: var(--section-space);
+}
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+.head > :first-child {
+  flex: 1;
+}
+.arrows {
+  display: none;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+.arrows button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: var(--border);
+  background: none;
+  cursor: pointer;
+  transition: border-color var(--duration-hover) var(--ease);
+}
+.arrows button:hover {
+  border-color: var(--color-umber);
+}
+/* Shows 1.4 cards on phones and 3.6 on desktop, so the cut-off card invites a scroll. */
+.track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 68%;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0 var(--gutter) var(--space-2);
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gutter);
+  scrollbar-width: none;
+  /* Keeps the off-screen cards inside the rail; without it they widen the whole page. */
+  contain: paint;
+}
+.track::-webkit-scrollbar {
+  display: none;
+}
+.track > li {
+  display: flex;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 768px) {
+  .track {
+    grid-auto-columns: 40%;
+    gap: var(--space-5);
+  }
+}
+@media (min-width: 1024px) {
+  .arrows {
+    display: flex;
+  }
+  .track {
+    grid-auto-columns: calc(
+      (min(100vw, var(--container-max)) - 2 * var(--gutter) - 3 * 24px) / 3.6
+    );
+    gap: 24px;
+  }
+}

@@ -1,56 +1,95 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import EditorialImage from "../../components/EditorialImage";
-import ProductVisual from "../../components/product-art/ProductVisual";
-import { SHOP_THE_LOOK } from "../../data/merchandising";
+import { productRepository } from "../../repositories/productRepository";
 import { useCartDrawer } from "../../hooks/useCartDrawer";
 import { useCommerce } from "../../hooks/useCommerce";
 import { money } from "../../lib/money";
-import { productRepository } from "../../repositories/productRepository";
+import Button from "../../components/ui/Button";
+import type { Product } from "../../types/commerce";
+import styles from "./ShopTheLook.module.css";
 
-const products = SHOP_THE_LOOK.slugs.flatMap((slug) => {
-  const product = productRepository.getBySlug(slug);
-  return product ? [product] : [];
-});
-const lookTotal = products.reduce((sum, product) => sum + product.price, 0);
+/** The products that recreate the campaign's red lip. None has shades, so all three add at once. */
+const LOOK = [
+  "chanel-rouge-allure",
+  "armani-luminous-silk-foundation",
+  "too-faced-better-than-sex-mascara",
+]
+  .map((slug) => productRepository.getBySlug(slug))
+  .filter((product): product is Product => product !== undefined);
 
-/** A campaign photograph with the products that recreate it, addable to the bag together. */
+const TOTAL = LOOK.reduce((sum, product) => sum + product.price, 0);
+
+/** An editorial break between the product rows: the campaign photograph and its products. */
 export default function ShopTheLook() {
-  const { openCart } = useCartDrawer();
   const { addToCart } = useCommerce();
-  const addLook = () => {
+  const { openCart } = useCartDrawer();
+  const [added, setAdded] = useState(false);
+  const timerRef = useRef<number | undefined>(undefined);
+
+  useEffect(() => () => window.clearTimeout(timerRef.current), []);
+
+  const add = (products: Product[]) => {
     products.forEach((product) => addToCart(product));
     openCart();
+    setAdded(true);
+    window.clearTimeout(timerRef.current);
+    timerRef.current = window.setTimeout(() => setAdded(false), 1600);
   };
 
+  if (LOOK.length < 3) return null;
+
   return (
-    <section className="shopTheLook" aria-labelledby="look-title">
-      <div className="shopTheLookImage">
-        <EditorialImage
-          name={SHOP_THE_LOOK.image}
-          alt={SHOP_THE_LOOK.alt}
-          sizes="(max-width: 900px) 100vw, 50vw"
+    <section className={styles.section} aria-labelledby="look-title">
+      <div className={styles.image}>
+        <Image
+          src="/images/campaign/makeup.webp"
+          alt="A woman with a red lip holding a gold lipstick"
+          fill
+          sizes="(max-width: 1023px) 100vw, 58vw"
+          quality={85}
         />
       </div>
-      <div className="shopTheLookCopy">
-        <span className="kicker">Shop the look</span>
-        <h2 id="look-title">{SHOP_THE_LOOK.title}</h2>
-        <ul>
-          {products.map((product) => (
+      <div className={styles.panel}>
+        <p className="text-label text-muted">Shop the look</p>
+        <h2 id="look-title">
+          The red <em>lip</em>
+        </h2>
+        <p className={styles.copy}>
+          A satin red, a luminous base and lashes with volume: three products, one look.
+        </p>
+        <ol className={styles.list}>
+          {LOOK.map((product) => (
             <li key={product.id}>
-              <div className={`lookThumb ${product.color}`}>
-                <ProductVisual product={product} sizes="88px" decorative />
-              </div>
+              <Link href={`/product/${product.slug}`} className={styles.thumb}>
+                {product.image && (
+                  <Image src={product.image} alt="" fill sizes="72px" quality={80} />
+                )}
+              </Link>
               <div>
-                <small>{product.brand}</small>
-                <Link href={`/product/${product.slug}`}>{product.name}</Link>
+                <p className="text-label">{product.brand}</p>
+                <Link href={`/product/${product.slug}`} className={styles.name}>
+                  {product.name}
+                </Link>
               </div>
-              <b>{money(product.price)}</b>
+              <div className={styles.buy}>
+                <span>{money(product.price)}</span>
+                <button
+                  type="button"
+                  onClick={() => add([product])}
+                  aria-label={`Add ${product.name} to bag`}
+                >
+                  Add
+                </button>
+              </div>
             </li>
           ))}
-        </ul>
-        <button className="button dark" onClick={addLook}>
-          Add the look · {money(lookTotal)}
-        </button>
+        </ol>
+        <Button fullWidth onClick={() => add(LOOK)}>
+          {added ? "Added to bag" : `Add all three · ${money(TOTAL)}`}
+        </Button>
       </div>
     </section>
   );
