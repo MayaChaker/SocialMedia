@@ -2,139 +2,136 @@
 
 import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Check } from "@mui/icons-material";
-import { money } from "../../lib/money";
+import { OUT_OF_STOCK_IDS } from "../../data/merchandising";
+import { MENU } from "../../data/navigation";
+import { SUBCATEGORIES } from "../../data/subcategories";
 import { resolveProductSelection } from "../../domain/product/productSelection";
 import { productRepository } from "../../repositories/productRepository";
 import { useCartDrawer } from "../../hooks/useCartDrawer";
 import { useCommerce } from "../../hooks/useCommerce";
 import { useCustomer } from "../../hooks/useCustomer";
-import ProductVisual from "../../components/product-art/ProductVisual";
+import Breadcrumb, { type Crumb } from "../../components/ui/Breadcrumb";
+import type { Product } from "../../types/commerce";
 import NotFoundPage from "../../views/NotFoundPage";
-import WishlistButton from "../wishlist/WishlistButton";
-import ProductFacts from "./ProductFacts";
+import ProductGallery from "./ProductGallery";
+import ProductPurchase from "./ProductPurchase";
 import ProductShelf from "./ProductShelf";
-import ShadeSwatches from "./ShadeSwatches";
+import styles from "./ProductPage.module.css";
 
 const catalogue = productRepository.getAll();
+const DEFAULT_STOCK = 24;
 
-export default function ProductPage({ slug }: { slug: string }) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const params = useSearchParams();
-  const { openCart } = useCartDrawer();
-  const product = productRepository.getBySlug(slug);
-  // The selected shade is part of the URL (?variant=deep) so it can be linked to directly.
-  const selected =
-    product?.variants?.find((variant) => variant.id === params.get("variant")) ||
-    product?.variants?.[0];
-  const selectShade = (variantId: string) =>
-    router.replace(`${pathname}?variant=${encodeURIComponent(variantId)}`, { scroll: false });
-  const { addToCart } = useCommerce();
-  const { addRecentlyViewed, recentlyViewed, profile } = useCustomer();
-  const productId = product?.id;
-  useEffect(() => {
-    if (productId) addRecentlyViewed(productId);
-  }, [productId, addRecentlyViewed]);
-  if (!product) return <NotFoundPage />;
-  // Memoised by the React Compiler; the catalogue is small enough to filter on every render.
-  const related = catalogue
+/** Products from the same category or sharing a concern, closest first. */
+const pairsFor = (product: Product) =>
+  catalogue
     .filter(
       (item) =>
         item.id !== product.id &&
         (item.category === product.category ||
           product.matches.some((match) => item.matches.includes(match))),
     )
-    .slice(0, 3);
-  const display = resolveProductSelection(product, selected?.id) ?? product;
+    .sort(
+      (a, b) => Number(b.category === product.category) - Number(a.category === product.category),
+    )
+    .slice(0, 4);
+
+const crumbsFor = (product: Product): Crumb[] => {
+  const section = MENU.find((item) => item.category === product.category);
+  const sub = SUBCATEGORIES[product.category].find((item) => item.slug === product.subcategory);
+  return [
+    { label: "Home", href: "/" },
+    ...(section?.href ? [{ label: section.label, href: section.href }] : []),
+    ...(section?.href && sub
+      ? [{ label: sub.label, href: `${section.href}?sub=${sub.slug}` }]
+      : []),
+    { label: product.name },
+  ];
+};
+
+export default function ProductPage({ slug }: { slug: string }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const params = useSearchParams();
+  const { openCart } = useCartDrawer();
+  const { addToCart } = useCommerce();
+  const { addRecentlyViewed, recentlyViewed } = useCustomer();
+  const product = productRepository.getBySlug(slug);
+  const productId = product?.id;
+
+  useEffect(() => {
+    if (productId) addRecentlyViewed(productId);
+  }, [productId, addRecentlyViewed]);
+
+  if (!product) return <NotFoundPage />;
+
+  // The chosen shade lives in the URL (?variant=deep), so it can be linked to directly.
+  const shade =
+    product.variants?.find((variant) => variant.id === params.get("variant")) ??
+    product.variants?.[0];
+  const display = resolveProductSelection(product, shade?.id) ?? product;
+  const stock = OUT_OF_STOCK_IDS.includes(product.id)
+    ? 0
+    : (shade?.stock ?? product.stock ?? DEFAULT_STOCK);
   const recent = productRepository
     .getManyByIds(recentlyViewed.filter((id) => id !== product.id))
-    .slice(0, 3);
-  const profileMatches = product.matches.filter((match) =>
-    [...profile.skinGoals, ...profile.preferences].includes(match),
-  );
-  const add = () => {
-    addToCart(display);
+    .slice(0, 4);
+
+  const selectShade = (variantId: string) =>
+    router.replace(`${pathname}?variant=${encodeURIComponent(variantId)}`, { scroll: false });
+  const add = (quantity: number) => {
+    addToCart(display, quantity);
     openCart();
   };
+
   return (
-    <main className={`productPage ${product.variants?.length ? "shadeProductPage" : ""}`}>
-      <button className="backLink" onClick={() => router.back()}>
-        ← Back to collection
-      </button>
-      <section className="productDetail">
-        <div className="productGallery">
-          <div className={`detailVisual ${product.color}`}>
-            <ProductVisual product={display} sizes="(max-width: 900px) 100vw, 55vw" priority />
-            {product.badge && <span className="detailBadge">{product.badge}</span>}
-          </div>
-          <div className="galleryDetails">
-            <div>
-              <span>Texture</span>
-              <strong>{product.texture}</strong>
-            </div>
-            <div>
-              <span>Finish</span>
-              <strong>{product.finish}</strong>
-            </div>
-          </div>
-        </div>
-        <div className="detailCopy">
-          <div className="detailTopline">
-            <span className="kicker">{product.brand}</span>
-            <WishlistButton productId={product.id} productName={product.name} />
-          </div>
-          <h1>{product.name}</h1>
-          <p className="detailNote">{product.note}</p>
-          <div className="detailPrice">
-            {money(display.price)} <small>{product.size}</small>
-          </div>
-          <p className="description">{product.description}</p>
-          {product.variants && (
-            <div className="detailVariants">
-              <span>
-                Shade: <strong>{selected?.name}</strong>
-              </span>
-              <ShadeSwatches
-                productName={product.name}
-                variants={product.variants}
-                selectedId={selected?.id}
-                onSelect={selectShade}
-                size="large"
-              />
-            </div>
-          )}
-          <button className="button dark full ripple" onClick={add}>
-            Add to bag · {money(display.price)}
-          </button>
-          <div className="matchPanel">
-            <Check />
-            <div>
-              <strong>Why it matches you</strong>
-              <p>
-                {profileMatches.length
-                  ? `Matches your ${profileMatches.join(" and ").toLowerCase()} preferences.`
-                  : `A versatile fit for your ${profile.skinType.toLowerCase()} skin profile.`}
-              </p>
-            </div>
-          </div>
-          <ProductFacts product={product} />
-        </div>
+    <main className={styles.page}>
+      <Breadcrumb items={crumbsFor(product)} />
+      <section className={styles.product}>
+        <ProductGallery product={product} display={display} shade={shade} />
+        <ProductPurchase
+          product={product}
+          shade={shade}
+          price={display.price}
+          stock={stock}
+          onSelectShade={selectShade}
+          onAdd={add}
+        />
       </section>
-      <ProductShelf
-        title="Pairs well with"
-        eyebrow="Complete the ritual"
-        products={related}
-        openCart={openCart}
-      />
-      {recent.length > 0 && (
+
+      <section className={styles.howTo} aria-labelledby="how-to-use">
+        <div>
+          <p className="text-label text-muted">How to use</p>
+          <h2 id="how-to-use">
+            Use it <em>well</em>
+          </h2>
+        </div>
+        <dl className={styles.howToList}>
+          <div>
+            <dt>Apply</dt>
+            <dd>{product.ritual}</dd>
+          </div>
+          <div>
+            <dt>In your routine</dt>
+            <dd>{product.order}</dd>
+          </div>
+          <div>
+            <dt>Texture</dt>
+            <dd>
+              {product.texture}, {product.finish.toLowerCase()} finish
+            </dd>
+          </div>
+        </dl>
+      </section>
+
+      <div className={styles.shelves}>
         <ProductShelf
-          title="Recently viewed"
-          eyebrow="Continue exploring"
-          products={recent}
+          title="Pairs well with"
+          eyebrow="Complete the look"
+          products={pairsFor(product)}
           openCart={openCart}
         />
-      )}
+        <ProductShelf title="Recently viewed" products={recent} openCart={openCart} />
+      </div>
     </main>
   );
 }

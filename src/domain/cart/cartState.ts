@@ -7,18 +7,23 @@ export type CartEntry = StoredCartLine | CartLine;
 const DEFAULT_STOCK = 24;
 const lineId = (item: CartEntry) => item.cartId || String(item.id);
 
-export function addCartItem(items: CartEntry[], selection: SelectionInput): CartEntry[] {
+/** Adds `quantity` of a product (one by default), never beyond its stock. */
+export function addCartItem(
+  items: CartEntry[],
+  selection: SelectionInput,
+  quantity = 1,
+): CartEntry[] {
   const variantId = typeof selection === "object" ? selection.variantId : undefined;
   const product = resolveProductSelection(selection, variantId);
-  if (!product) return items;
+  if (!product || quantity < 1) return items;
   const stock = product.stock ?? DEFAULT_STOCK;
   if (stock <= 0) return items;
 
   const existing = items.find((item) => lineId(item) === product.cartId);
-  if (!existing) return [...items, { ...product, quantity: 1 }];
+  if (!existing) return [...items, { ...product, quantity: Math.min(quantity, stock) }];
   return items.map((item) =>
     lineId(item) === product.cartId
-      ? { ...product, quantity: Math.min(Number(item.quantity) + 1, stock) }
+      ? { ...product, quantity: Math.min(Number(item.quantity) + quantity, stock) }
       : item,
   );
 }

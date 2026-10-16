@@ -7,6 +7,12 @@ test("adds an item and increments an existing cart line", () => {
   expect(addCartItem(added, { productId: 11 })[0]?.quantity).toBe(2);
 });
 
+test("adds several at once, capped at stock", () => {
+  expect(addCartItem([], { productId: 11 }, 3)[0]?.quantity).toBe(3);
+  expect(addCartItem([], { productId: 11 }, 99)[0]?.quantity).toBe(24);
+  expect(addCartItem([], { productId: 11 }, 0)).toEqual([]);
+});
+
 test("updates quantity within stock and removes zero-quantity lines", () => {
   const items = addCartItem([], { productId: 11 });
   expect(updateCartItemQuantity(items, "11", 2)[0]?.quantity).toBe(3);
