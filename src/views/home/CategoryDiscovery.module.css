@@ -1,0 +1,84 @@
+.section {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--section-space) var(--gutter) 0;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-6) var(--space-3);
+  align-items: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* Every second portrait drops, so the four never read as identical cards. */
+.tile:nth-child(even) {
+  margin-top: var(--space-7);
+}
+.image {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+.image img {
+  object-fit: cover;
+  transition: transform 800ms var(--ease);
+}
+.tile:hover .image img {
+  transform: scale(1.035);
+}
+.title {
+  display: grid;
+  gap: var(--space-1);
+  margin: var(--space-3) 0 var(--space-2);
+}
+.title h3 {
+  font-size: var(--text-h3);
+}
+.title a {
+  text-decoration: none;
+}
+.number {
+  margin-right: var(--space-2);
+  color: var(--color-taupe);
+  font: italic var(--weight-light) 0.875rem / 1 var(--font-display);
+}
+.subs {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-5);
+  }
+  .tile:nth-child(even) {
+    margin-top: var(--space-9);
+  }
+  .title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: var(--space-4) 0 var(--space-2);
+  }
+  .subs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--color-taupe);
+    font-size: var(--text-small);
+  }
+  .subs a {
+    text-decoration: none;
+  }
+  .subs a:hover {
+    color: var(--color-umber);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+}

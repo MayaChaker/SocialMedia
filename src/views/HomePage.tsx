@@ -1,46 +1,20 @@
-"use client";
-
-import { BESTSELLER_IDS } from "../data/merchandising";
-import { productRepository } from "../repositories/productRepository";
-import ProductCard from "../features/products/ProductCard";
-import { useCartDrawer } from "../hooks/useCartDrawer";
-import BrandStrip from "./home/BrandStrip";
-import EveningEdit from "./home/EveningEdit";
-import HomeCategories from "./home/HomeCategories";
+import BestsellerRail from "./home/BestsellerRail";
+import BrandIndex from "./home/BrandIndex";
+import CategoryDiscovery from "./home/CategoryDiscovery";
 import HomeHero from "./home/HomeHero";
-import SectionHeading from "./home/SectionHeading";
-import ShopTheLook from "./home/ShopTheLook";
+import NewIn from "./home/NewIn";
+import ServicesRow from "./home/ServicesRow";
 
-const bestsellers = productRepository.getManyByIds(BESTSELLER_IDS);
-const brands = [...new Set(productRepository.getAll().map((product) => product.brand))].sort(
-  (a, b) => a.localeCompare(b),
-);
-
+/** Inspire, then route to products: campaign, categories, bestsellers, brands, new in. */
 export default function HomePage() {
-  const { openCart } = useCartDrawer();
-
   return (
-    <main className="homePage">
-      <HomeHero brandCount={brands.length} />
-      <BrandStrip brands={brands} />
-
-      <section className="homeSection">
-        <SectionHeading
-          eyebrow="Most loved"
-          title="Bestsellers"
-          href="/shop?collection=bestsellers"
-          link="Shop all bestsellers"
-        />
-        <div className="productGrid homeGrid">
-          {bestsellers.map((product) => (
-            <ProductCard key={product.id} product={product} onAdded={openCart} />
-          ))}
-        </div>
-      </section>
-
-      <HomeCategories />
-      <ShopTheLook />
-      <EveningEdit />
+    <main>
+      <HomeHero />
+      <ServicesRow />
+      <CategoryDiscovery />
+      <BestsellerRail />
+      <BrandIndex />
+      <NewIn />
     </main>
   );
 }
