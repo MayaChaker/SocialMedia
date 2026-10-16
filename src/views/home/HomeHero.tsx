@@ -20,8 +20,8 @@ export default function HomeHero() {
           </p>
           <div className={styles.actions}>
             <Button href="/shop">Shop the edit</Button>
-            <Button href="#brands" variant="text">
-              Explore the brands
+            <Button href="/shop?collection=new" variant="text">
+              Discover new in
             </Button>
           </div>
         </div>
