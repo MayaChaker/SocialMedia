@@ -14,8 +14,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/brands",
     ...BRANDS.map((brand) => `/brands/${brand.slug}`),
     ...productRepository.getAll().map((product) => `/product/${product.slug}`),
-    "/rituals",
-    "/shade-match",
     "/about",
     ...Object.keys(POLICIES).map((policy) => `/care/${policy}`),
   ];

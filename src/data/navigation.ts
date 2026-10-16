@@ -36,7 +36,6 @@ export const MENU: readonly MenuItem[] = [
     href: "/shop/makeup",
     category: "Makeup",
     image: "makeup",
-    discover: [{ label: "Find your foundation shade", href: "/shade-match" }],
     enabled: true,
   },
   {
@@ -44,7 +43,6 @@ export const MENU: readonly MenuItem[] = [
     href: "/shop/skincare",
     category: "Skincare",
     image: "skincare",
-    discover: [{ label: "Build your routine", href: "/rituals" }],
     enabled: true,
   },
   {

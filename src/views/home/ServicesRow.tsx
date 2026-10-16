@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BRANDS } from "../../data/brands";
 import { FREE_SHIPPING_THRESHOLD } from "../../domain/commerce/commerceConfig";
 import styles from "./ServicesRow.module.css";
 
@@ -9,18 +10,18 @@ const SERVICES = [
     href: "/care/shipping",
   },
   {
-    title: "Shade Match",
-    copy: "A few questions, a suggested foundation shade",
-    href: "/shade-match",
+    title: "Free returns",
+    copy: "Within 30 days of delivery",
+    href: "/care/shipping",
   },
   {
-    title: "Routine Builder",
-    copy: "A skincare routine for your skin and goals",
-    href: "/rituals",
+    title: "Brands A–Z",
+    copy: `${BRANDS.length} houses in one place`,
+    href: "/brands",
   },
 ];
 
-/** What Veloura does besides selling: right under the hero, one line each. */
+/** What shopping at Veloura includes: right under the hero, one line each. */
 export default function ServicesRow() {
   return (
     <ul className={styles.services}>

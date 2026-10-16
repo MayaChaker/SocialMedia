@@ -1,46 +1,47 @@
 # Veloura Beauty
 
-A multi-brand beauty storefront, in the spirit of Sephora, built with Next.js and TypeScript. It
-covers the full shopping journey (catalogue, shades, bag, checkout) plus two guided tools: a
-skincare routine builder and a foundation shade finder.
+A multi-brand beauty storefront built with Next.js and TypeScript. It covers the full shopping
+journey: catalogue, brands, search, shades, bag, and a three-step checkout with a delivery map.
 
 **Live demo:** https://veloura-beauty-store.vercel.app
 
-> Veloura is a fictional store and is not affiliated with any of the brands it shows. Prices,
-> ratings and stock are illustrative. No real orders or payments are processed; checkout runs in
-> demo mode and everything a shopper saves stays in their own browser. All photographs come from
-> [Unsplash](https://unsplash.com/license); each one is credited in `src/data/photoCredits.ts`.
+> Veloura is not affiliated with any of the brands it shows. Prices and stock are illustrative.
+> No real payments are processed: the payment options at checkout are presentation only, and
+> everything a shopper saves stays in their own browser. Product photographs come from
+> [Unsplash](https://unsplash.com/license) and [Pexels](https://www.pexels.com/license/); each one
+> is credited in `src/data/photoCredits.ts`.
 
 ![Homepage](docs/screenshots/home.jpg)
 
-| Routine builder                                  | Product with shade selection                     |
-| ------------------------------------------------ | ------------------------------------------------ |
-| ![Routine builder](docs/screenshots/routine.jpg) | ![Product page](docs/screenshots/product.jpg)    |
-| **Shopping bag**                                 | **Mobile**                                       |
-| ![Shopping bag](docs/screenshots/cart.jpg)       | ![Mobile home](docs/screenshots/mobile-home.jpg) |
+| Shop                                             | Product with shade selection                  |
+| ------------------------------------------------ | --------------------------------------------- |
+| ![Shop](docs/screenshots/shop.jpg)               | ![Product page](docs/screenshots/product.jpg) |
+| **Shopping bag**                                 | **Checkout with a delivery map**              |
+| ![Shopping bag](docs/screenshots/cart.jpg)       | ![Checkout](docs/screenshots/checkout.jpg)    |
+| **Mobile**                                       |                                               |
+| ![Mobile home](docs/screenshots/mobile-home.jpg) |                                               |
 
 ## Features
 
-- **Catalogue**: 36 products from 17 brands (Chanel, Dior, Estée Lauder, NARS, The Ordinary,
-  Glossier, Olaplex…) across makeup, skincare, fragrance and hair, with search, concern and price
-  filters, and sorting. Filters live in the URL, so a filtered view can be shared or refreshed.
-- **Shade variants**: foundation, concealer and lipstick have selectable shades with their own
+- **Catalogue**: 59 products from 31 brands (Chanel, Dior, Le Labo, NARS, The Ordinary, Kiehl's,
+  Olaplex…) across makeup, skincare, fragrance and haircare, with category, brand, price and
+  availability filters, sorting and pages. Filters live in the URL, so a filtered view can be
+  shared or refreshed.
+- **Brands A–Z** and a page per brand, plus a search results page.
+- **Shade variants**: foundations, concealers and lipsticks have selectable shades with their own
   price and stock; the bag line follows the chosen shade.
-- **Bag and checkout**: quantity limits from stock, a promo code (`VELOURA10`), a
-  free-delivery threshold, a three-step checkout with browser validation, and an order
-  confirmation page that survives a reload.
-- **Routine builder**: three questions (concern, texture, time) produce a 2-, 3- or 4-step routine;
-  each step can be swapped for an alternative and the whole routine added to the bag.
-- **Shade match**: depth and undertone questions suggest an Estée Lauder Double Wear shade, which
-  can be saved to the beauty profile.
+- **Bag and checkout**: quantities capped at stock, a promo code (`VELOURA10`), a free-delivery
+  threshold, and a three-step checkout (information, delivery, payment). The delivery step drops a
+  pin on an OpenStreetMap map (Leaflet, no API key) and fills the street and area from it.
+- **Order confirmation** on its own URL, so it survives a reload.
 - **Beauty profile and wishlist**, persisted in `localStorage`.
 - **Accessibility**: keyboard-operable dialogs with focus trapping and focus return, labelled
   controls, a skip link, and reduced-motion support.
 
 ## Tech stack
 
-Next.js 16 (App Router) · React 19 · TypeScript (strict) · Framer Motion · MUI icons · Jest and React Testing
-Library · ESLint · Prettier · GitHub Actions · Vercel
+Next.js 16 (App Router) · React 19 · TypeScript (strict) · CSS Modules · Framer Motion · Leaflet ·
+MUI icons · Jest and React Testing Library · ESLint · Prettier · GitHub Actions · Vercel
 
 ## How it is built
 
@@ -54,7 +55,7 @@ src/
 │   └── product-art/     Product photographs, with an SVG fallback
 ├── data/                Catalogue (one file per category), merchandising and photo credits
 ├── domain/              Framework-free business rules (cart, pricing, selection, wishlist)
-├── features/            One folder per journey: products, cart, checkout, routine, shade-match…
+├── features/            One folder per journey: products, cart, checkout, wishlist, profile
 ├── hooks/               Commerce and customer state, persistence, modal behaviour
 ├── providers/           Client-side state shared by every page
 ├── repositories/        Access to the catalogue and to browser storage
@@ -67,7 +68,7 @@ Some decisions worth calling out:
 
 - **Static where possible.** Every product, category and policy page is pre-rendered at build time
   (`generateStaticParams`) with its own title and description; unknown URLs return a real 404.
-  Interactive parts (bag, filters, quizzes) are client components inside those pages.
+  Interactive parts (bag, filters, checkout) are client components inside those pages.
 - **No hydration mismatches from saved state.** The bag, wishlist and profile live in
   `localStorage`, which the server cannot read. `usePersistentState` renders the default first
   and loads the saved value after mount, and exposes a `hydrated` flag so checkout does not
@@ -113,16 +114,16 @@ Optional environment variables are listed in [`.env.example`](.env.example).
 
 ## Testing
 
-Unit tests cover the domain rules (pricing, cart state, variant selection, routine and shade
-logic). Integration tests walk through checkout to the confirmation page, URL-driven filters,
+Unit tests cover the domain rules (pricing, cart state, variant selection, shop filters).
+Integration tests walk through checkout to the confirmation page, URL-driven filters,
 and the route handlers' not-found and metadata behaviour, with `next/navigation` replaced by an
 in-memory stand-in (`src/test/navigation.ts`). CI runs formatting, lint, the type check, tests and a
 production build on every push and pull request.
 
 ## Roadmap
 
-- Shop and product pages: a denser shop grid, a product gallery and a sticky purchase panel in
-  the new visual style, followed by the bag, checkout and profile.
+- The remaining content pages (customer care, about, beauty profile) in the new visual style.
+- A real payment provider behind the existing checkout steps.
 
 The full plan is in [`docs/refactor-roadmap.md`](docs/refactor-roadmap.md).
 
