@@ -1,38 +1,47 @@
 "use client";
 
 import { useRef } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { Close, LocalShippingOutlined, ShoppingBagOutlined } from "@mui/icons-material";
+import { Close, ShoppingBagOutlined } from "@mui/icons-material";
+import { FREE_SHIPPING_THRESHOLD } from "../../domain/commerce/commerceConfig";
 import { money } from "../../lib/money";
 import { productRepository } from "../../repositories/productRepository";
 import { useCommerce } from "../../hooks/useCommerce";
 import { useModalDialog } from "../../hooks/useModalDialog";
+import Button from "../../components/ui/Button";
 import ProductVisual from "../../components/product-art/ProductVisual";
 import { MOTION } from "../../theme/tokens";
 import CartLineItem from "./CartLineItem";
-import PromoCode from "./PromoCode";
+import styles from "./CartDrawer.module.css";
 
 const catalogue = productRepository.getAll();
+const itemCount = (count: number) => `${count} ${count === 1 ? "item" : "items"}`;
 
 interface CartDrawerProps {
   open: boolean;
   close: () => void;
 }
 
-/** Slide-in shopping bag with lines, a pairing suggestion, promo code and totals. */
+/** The bag, sliding in from the right: delivery progress, lines, one suggestion, subtotal. */
 export default function CartDrawer({ open, close }: CartDrawerProps) {
   const { cart, totals, updateQuantity, removeFromCart, addToCart } = useCommerce();
   const router = useRouter();
   const drawerRef = useRef<HTMLElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  // Suggest the first single-shade product that is not in the bag yet.
-  const recommendation = catalogue.find(
-    (product) => !product.variants && !cart.some((item) => item.productId === product.id),
-  );
-  const merchandiseTotal = money(totals.subtotal - totals.discount);
   useModalDialog(open, drawerRef, close, closeRef);
+
+  const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const merchandise = totals.subtotal - totals.discount;
+  const progress = Math.min(100, Math.round((merchandise / FREE_SHIPPING_THRESHOLD) * 100));
+  // One suggestion: a single-shade product from the same category as the first line.
+  const first = cart[0];
+  const suggestion = catalogue.find(
+    (product) =>
+      !product.variants &&
+      product.category === first?.category &&
+      !cart.some((item) => item.productId === product.id),
+  );
 
   const checkout = () => {
     close();
@@ -44,8 +53,9 @@ export default function CartDrawer({ open, close }: CartDrawerProps) {
       {open && (
         <>
           <motion.button
-            className="drawerOverlay motionOverlay"
+            className={styles.overlay}
             aria-label="Close bag"
+            tabIndex={-1}
             onClick={close}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -53,79 +63,102 @@ export default function CartDrawer({ open, close }: CartDrawerProps) {
           />
           <motion.aside
             ref={drawerRef}
-            className="cartDrawer motionDrawer"
+            className={styles.drawer}
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={MOTION.drawer}
             aria-modal="true"
             role="dialog"
-            aria-label="Shopping bag"
+            aria-labelledby="bag-title"
           >
-            <header className="cartHeader">
-              <div>
-                <span className="kicker">Your selection</span>
-                <h2>Shopping bag</h2>
-              </div>
-              <button ref={closeRef} onClick={close} aria-label="Close bag">
-                <Close />
+            <header className={styles.head}>
+              <h2 id="bag-title">Your bag {count > 0 && <span>{itemCount(count)}</span>}</h2>
+              <button
+                ref={closeRef}
+                className={styles.close}
+                onClick={close}
+                aria-label="Close bag"
+              >
+                <Close aria-hidden="true" />
               </button>
             </header>
+
             {cart.length ? (
               <>
-                <div className="cartItems">
+                <div className={styles.progress}>
+                  <p>
+                    {totals.freeShippingRemaining > 0 ? (
+                      <>
+                        You are <strong>{money(totals.freeShippingRemaining)}</strong> away from
+                        complimentary delivery
+                      </>
+                    ) : (
+                      "Your order qualifies for complimentary delivery"
+                    )}
+                  </p>
+                  <div className={styles.bar} aria-hidden="true">
+                    <i style={{ width: `${progress}%` }} />
+                  </div>
+                </div>
+                <div className={styles.lines}>
                   {cart.map((item) => (
                     <CartLineItem
                       key={item.cartId}
                       item={item}
                       onChangeQuantity={updateQuantity}
                       onRemove={removeFromCart}
+                      onNavigate={close}
                     />
                   ))}
-                  {recommendation && (
-                    <div className="cartRecommendation">
-                      <span className="kicker">Pairs well</span>
+                  {suggestion && (
+                    <div className={styles.suggestion}>
+                      <p className="text-label text-muted">Pairs well</p>
                       <div>
-                        <div className={`miniVisual ${recommendation.color}`}>
-                          <ProductVisual product={recommendation} sizes="72px" />
-                        </div>
-                        <span>
-                          <strong>{recommendation.name}</strong>
-                          <small>{money(recommendation.price)}</small>
+                        <span className={styles.suggestionThumb}>
+                          <ProductVisual product={suggestion} sizes="64px" decorative />
                         </span>
-                        <button onClick={() => addToCart(recommendation)}>Add</button>
+                        <p>
+                          {suggestion.name}
+                          <small>
+                            {suggestion.brand} · {money(suggestion.price)}
+                          </small>
+                        </p>
+                        <Button
+                          variant="secondary"
+                          onClick={() => addToCart(suggestion)}
+                          aria-label={`Add ${suggestion.name} to bag`}
+                        >
+                          Add
+                        </Button>
                       </div>
                     </div>
                   )}
                 </div>
-                <footer className="cartFooter">
-                  <PromoCode />
-                  <div>
+                <footer className={styles.foot}>
+                  <p className={styles.subtotal}>
                     <span>Subtotal</span>
-                    <strong>{merchandiseTotal}</strong>
-                  </div>
-                  <p className="shippingProgress">
-                    <LocalShippingOutlined />
-                    {totals.freeShippingRemaining > 0
-                      ? `${money(totals.freeShippingRemaining)} away from complimentary delivery`
-                      : "Your order qualifies for complimentary delivery"}
+                    <strong>{money(merchandise)}</strong>
                   </p>
-                  <button className="button dark full ripple" onClick={checkout}>
-                    Checkout · {merchandiseTotal}
-                  </button>
-                  <button className="textLink" onClick={close}>
+                  <p className={styles.footNote}>
+                    Delivery and promo codes are applied at checkout.
+                  </p>
+                  <Button fullWidth onClick={checkout}>
+                    Checkout
+                  </Button>
+                  <button type="button" className={styles.continue} onClick={close}>
                     Continue shopping
                   </button>
                 </footer>
               </>
             ) : (
-              <div className="emptyBag">
-                <ShoppingBagOutlined />
-                <h3>Your bag is waiting.</h3>
-                <p>Explore considered skincare, colour, and sets.</p>
-                <Link className="button dark" href="/shop" onClick={close}>
-                  Shop the collection
-                </Link>
+              <div className={styles.empty}>
+                <ShoppingBagOutlined aria-hidden="true" />
+                <h3>Your bag is empty</h3>
+                <p>Discover makeup, skincare, fragrance and haircare from the houses you love.</p>
+                <Button href="/shop" onClick={close}>
+                  Shop all products
+                </Button>
               </div>
             )}
           </motion.aside>
