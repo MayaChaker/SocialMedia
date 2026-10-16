@@ -16,11 +16,8 @@ export const brandSlug = (name: string): string =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
-/**
- * Where a brand link goes. Brand pages arrive with the catalogue phase; until then a brand
- * opens the shop filtered by its name, so no link leads to a missing page.
- */
-export const brandHref = (name: string): string => `/shop?search=${encodeURIComponent(name)}`;
+/** A brand's page, from its name. */
+export const brandHref = (name: string): string => `/brands/${brandSlug(name)}`;
 
 const byName = (a: Brand, b: Brand) => a.name.localeCompare(b.name, "en", { sensitivity: "base" });
 

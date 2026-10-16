@@ -8,7 +8,7 @@ const TITLES: Record<string, string> = {
   makeup: "Makeup",
   skincare: "Skincare",
   fragrance: "Fragrance",
-  hair: "Hair",
+  hair: "Haircare",
 };
 
 export const dynamicParams = false;

@@ -1,0 +1,86 @@
+.page {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-5) var(--gutter) 0;
+}
+.head {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-6) 0 var(--space-6);
+}
+/* The alphabet: letters with brands are links, the rest are shown faded for orientation. */
+.letters {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-3) 0;
+  border-block: var(--border);
+  background: var(--color-ivory);
+  font: var(--weight-medium) var(--text-small) / 1 var(--font-body);
+}
+.letters a,
+.letters span {
+  display: grid;
+  place-items: center;
+  min-width: 24px;
+  height: 28px;
+}
+.letters a {
+  text-decoration: none;
+}
+.letters a:hover {
+  color: var(--color-accent);
+}
+.letters span {
+  color: var(--color-line);
+}
+.groups {
+  display: grid;
+}
+.group {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-6) 0;
+  border-bottom: var(--border);
+  scroll-margin-top: calc(var(--header-height) + 64px);
+}
+.letter {
+  color: var(--color-taupe);
+  font: italic var(--weight-light) var(--text-h3) / 1 var(--font-display);
+}
+.group ul {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.group a {
+  display: grid;
+  gap: 2px;
+  padding: var(--space-3) 0;
+  text-decoration: none;
+}
+.name {
+  font: var(--weight-light) var(--text-h4) / 1.2 var(--font-display);
+  transition: color var(--duration-hover) var(--ease);
+}
+.group a:hover .name {
+  color: var(--color-accent);
+}
+
+@media (min-width: 1024px) {
+  .head {
+    padding-top: var(--space-7);
+  }
+  .group {
+    grid-template-columns: 160px 1fr;
+    gap: var(--space-6);
+  }
+  .group ul {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 var(--space-6);
+  }
+}

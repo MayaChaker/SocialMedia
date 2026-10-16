@@ -26,9 +26,6 @@ export default function Header() {
     <>
       <div className={styles.announcement} role="region" aria-label="Store announcements">
         <p>Complimentary delivery on orders over ${FREE_SHIPPING_THRESHOLD}</p>
-        <p>
-          Not sure of your shade? <Link href="/shade-match">Try Shade Match</Link>
-        </p>
         <p>Free returns within 30 days</p>
       </div>
       <header className={styles.header}>
