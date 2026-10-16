@@ -1,0 +1,22 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 var(--space-2);
+  border-radius: var(--radius);
+  font: var(--weight-semibold) var(--text-caption) / 1 var(--font-body);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.new {
+  background: var(--color-white);
+  color: var(--color-umber);
+}
+.bestseller {
+  background: var(--color-umber);
+  color: var(--color-white);
+}
+.exclusive {
+  background: var(--color-accent);
+  color: var(--color-white);
+}

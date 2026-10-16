@@ -1,0 +1,44 @@
+.newsletter {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 460px;
+}
+.title {
+  font: var(--weight-light) clamp(1.75rem, 1.4rem + 0.8vw, 2.125rem) / 1.1 var(--font-display);
+}
+/* An underlined field with the action on the same line. */
+.form {
+  display: flex;
+  margin-top: var(--space-2);
+  border-bottom: 1px solid var(--color-umber);
+}
+.form input {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-3) 0;
+  border: 0;
+  background: none;
+  font-size: var(--text-body);
+}
+.form input::placeholder {
+  color: var(--color-taupe);
+}
+.form input:focus-visible {
+  outline: none;
+}
+.form:focus-within {
+  border-bottom-color: var(--color-accent);
+}
+.form button {
+  padding: 0 0 0 var(--space-4);
+  border: 0;
+  background: none;
+  font: var(--weight-medium) var(--text-caption) / 1 var(--font-body);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color var(--duration-hover) var(--ease);
+}
+.form button:hover {
+  color: var(--color-accent);
+}

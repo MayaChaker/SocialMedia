@@ -1,0 +1,31 @@
+.sidebar {
+  display: grid;
+  align-content: start;
+}
+.group {
+  display: grid;
+  min-width: 0;
+  margin: 0;
+  padding: 0 0 var(--space-5);
+  border: 0;
+  border-bottom: var(--border);
+}
+/* The legend sits on the fieldset edge, so spacing goes outside the group. */
+.group + .group {
+  margin-top: var(--space-5);
+}
+.group legend {
+  margin-bottom: var(--space-3);
+  padding: 0;
+}
+.clear {
+  justify-self: start;
+  margin-top: var(--space-4);
+  padding: var(--space-1) 0;
+  border: 0;
+  background: none;
+  font-size: var(--text-small);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}

@@ -1,13 +1,14 @@
-import { Check } from "@mui/icons-material";
+import type { CSSProperties } from "react";
 import type { Variant } from "../../types/commerce";
+import styles from "./ShadeSwatches.module.css";
 
 interface ShadeSwatchesProps {
   productName: string;
   variants: Variant[];
   selectedId: string | undefined;
   onSelect: (variantId: string) => void;
-  /** Tick the selected swatch (product cards); the product page marks it with a ring only. */
-  showCheck?: boolean;
+  /** Larger swatches on the product page. */
+  size?: "small" | "large";
 }
 
 /** Colour buttons for choosing a shade. Sold-out shades stay visible but cannot be chosen. */
@@ -16,10 +17,14 @@ export default function ShadeSwatches({
   variants,
   selectedId,
   onSelect,
-  showCheck = true,
+  size = "small",
 }: ShadeSwatchesProps) {
   return (
-    <div className="cardSwatches" role="group" aria-label={`Choose a shade for ${productName}`}>
+    <div
+      className={`${styles.swatches} ${styles[size]}`}
+      role="group"
+      aria-label={`Choose a shade for ${productName}`}
+    >
       {variants.map((variant) => {
         const soldOut = variant.stock === 0;
         const isSelected = selectedId === variant.id;
@@ -27,17 +32,14 @@ export default function ShadeSwatches({
           <button
             key={variant.id}
             type="button"
-            className={isSelected ? "selected" : ""}
-            style={{ "--swatch": variant.swatch }}
+            className={styles.swatch}
+            style={{ "--swatch": variant.swatch } as CSSProperties}
             onClick={() => onSelect(variant.id)}
             aria-label={`Select ${variant.name} shade${soldOut ? ", out of stock" : ""}`}
             aria-pressed={isSelected}
             disabled={soldOut}
-            title={`${variant.name}${soldOut ? " — Out of stock" : ""}`}
-          >
-            <span />
-            {showCheck && isSelected && <Check aria-hidden="true" />}
-          </button>
+            title={`${variant.name}${soldOut ? " (out of stock)" : ""}`}
+          />
         );
       })}
     </div>

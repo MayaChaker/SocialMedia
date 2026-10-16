@@ -1,36 +1,36 @@
+import ProductGrid, { ProductGridItem } from "../../components/ui/ProductGrid";
+import SectionHeader from "../../components/ui/SectionHeader";
 import type { Product } from "../../types/commerce";
 import ProductCard from "./ProductCard";
 
 interface ProductShelfProps {
   title: string;
-  eyebrow: string;
+  eyebrow?: string;
   products: Product[];
   openCart: () => void;
-  /** Modifier for the section's class name, e.g. "related" → "relatedShelf". */
-  shelf: string;
+  /** "View all" link on the right of the title. */
+  link?: { label: string; href: string };
 }
 
-/** A titled row of product cards, e.g. "Pairs well with" or "Recently viewed". */
+/** A titled row of product cards, e.g. "Bestsellers" or "You may also like". */
 export default function ProductShelf({
   title,
   eyebrow,
   products,
   openCart,
-  shelf,
+  link,
 }: ProductShelfProps) {
+  if (!products.length) return null;
   return (
-    <section className={`recommendations ${shelf}Shelf`}>
-      <div className="sectionHeader">
-        <div>
-          <span className="kicker">{eyebrow}</span>
-          <h2>{title}</h2>
-        </div>
-      </div>
-      <div className="productGrid">
+    <section>
+      <SectionHeader title={title} eyebrow={eyebrow} link={link} />
+      <ProductGrid>
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} onAdded={openCart} />
+          <ProductGridItem key={product.id}>
+            <ProductCard product={product} onAdded={openCart} />
+          </ProductGridItem>
         ))}
-      </div>
+      </ProductGrid>
     </section>
   );
 }
