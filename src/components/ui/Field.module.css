@@ -40,6 +40,14 @@
   color: var(--color-error);
 }
 
+.textarea {
+  height: auto;
+  min-height: 88px;
+  padding-block: var(--space-3);
+  font: inherit;
+  resize: vertical;
+}
+
 .selectWrap {
   position: relative;
 }

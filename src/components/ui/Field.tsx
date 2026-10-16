@@ -1,4 +1,10 @@
-import { useId, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from "react";
+import {
+  useId,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type SelectHTMLAttributes,
+  type TextareaHTMLAttributes,
+} from "react";
 import { ExpandMore } from "@mui/icons-material";
 import styles from "./Field.module.css";
 
@@ -57,6 +63,31 @@ export function Input({
         className={[styles.control, className].filter(Boolean).join(" ")}
         aria-invalid={error ? true : undefined}
         aria-describedby={describedBy(inputId, { label, hint, error })}
+        {...rest}
+      />
+    </FieldFrame>
+  );
+}
+
+/** Multi-line text with the same frame as Input. */
+export function TextArea({
+  label,
+  hint,
+  error,
+  hideLabel,
+  id,
+  className,
+  ...rest
+}: FieldProps & TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  const autoId = useId();
+  const textareaId = id ?? autoId;
+  return (
+    <FieldFrame id={textareaId} label={label} hint={hint} error={error} hideLabel={hideLabel}>
+      <textarea
+        id={textareaId}
+        className={[styles.control, styles.textarea, className].filter(Boolean).join(" ")}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={describedBy(textareaId, { label, hint, error })}
         {...rest}
       />
     </FieldFrame>
