@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { Check, Star } from "@mui/icons-material";
+import { Check } from "@mui/icons-material";
 import { money } from "../../lib/money";
 import { resolveProductSelection } from "../../domain/product/productSelection";
 import { productRepository } from "../../repositories/productRepository";
@@ -86,9 +86,6 @@ export default function ProductPage({ slug }: { slug: string }) {
           </div>
           <h1>{product.name}</h1>
           <p className="detailNote">{product.note}</p>
-          <div className="rating">
-            <Star /> {product.rating} <span>{product.reviews} reviews</span>
-          </div>
           <div className="detailPrice">
             {money(display.price)} <small>{product.size}</small>
           </div>
