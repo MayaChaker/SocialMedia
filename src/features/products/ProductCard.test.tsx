@@ -22,10 +22,13 @@ test("a shade selection updates the product art and the added cart variant", () 
   const product = catalogueProduct(productRepository.getBySlug("estee-lauder-double-wear"));
   renderCard(product);
   expect(screen.getByRole("img", { name: product.name })).toBeTruthy();
-  expect(screen.getByRole("button", { name: "Choose shade" })).toBeDisabled();
+  expect(screen.getByRole("link", { name: "Choose shade" })).toHaveAttribute(
+    "href",
+    `/product/${product.slug}`,
+  );
   fireEvent.click(screen.getByRole("button", { name: "Select 6W1 Sandalwood shade" }));
   expect(screen.getByRole("img", { name: `${product.name} in 6W1 Sandalwood` })).toBeTruthy();
-  expect(screen.getByText("Shade: 6W1 Sandalwood")).toBeTruthy();
+  expect(screen.getByText("6W1 Sandalwood")).toBeTruthy();
   fireEvent.click(screen.getByRole("button", { name: "Add to bag" }));
   const cart = stored("velouraBeauty.cart.v2");
   expect(cart[0]).toMatchObject({

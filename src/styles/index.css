@@ -1,7 +1,8 @@
-/* Global stylesheet, imported once by src/app/layout.jsx. Order matters for the cascade. */
+/* Global stylesheet, imported once by src/app/layout.tsx. Order matters for the cascade. */
 @import "./tokens.css";
+@import "./system.css";
+/* Legacy page styles: each file is deleted when its pages move to the design system. */
 @import "./base.css";
-@import "./layout.css";
 @import "./product-card.css";
 @import "./shop.css";
 @import "./product-page.css";

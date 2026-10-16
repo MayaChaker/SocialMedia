@@ -4,8 +4,9 @@ import { HAIR } from "./catalogue/hair";
 import { MAKEUP } from "./catalogue/makeup";
 import { SKINCARE } from "./catalogue/skincare";
 import { withPhotography } from "./productImages";
+import { withSubcategory } from "./subcategories";
 
 /** The full catalogue, one file per category under ./catalogue. */
-export const PRODUCTS: Product[] = [...SKINCARE, ...MAKEUP, ...FRAGRANCES, ...HAIR].map(
-  withPhotography,
+export const PRODUCTS: Product[] = [...SKINCARE, ...MAKEUP, ...FRAGRANCES, ...HAIR].map((product) =>
+  withSubcategory(withPhotography(product)),
 );

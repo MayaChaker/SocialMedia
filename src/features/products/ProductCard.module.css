@@ -1,0 +1,135 @@
+.card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--space-3);
+  width: 100%;
+}
+/* The photograph sits in a 4:5 bone mat: one proportion and one ground for every product. */
+.media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--color-bone);
+}
+.imageLink {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.imageLink img,
+.imageLink svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--duration-image) var(--ease);
+}
+.hoverImage {
+  opacity: 0;
+  transition: opacity var(--duration-hover) var(--ease);
+}
+.badge {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+}
+.wishlist {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-ivory) 85%, transparent);
+}
+
+/*
+ * The bag action. On touch screens it sits under the photograph; with a mouse it rests
+ * hidden inside the mat and slides up on hover or keyboard focus.
+ */
+.action {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  left: var(--space-3);
+  display: grid;
+  place-items: center;
+  height: 44px;
+  border: 0;
+  background: var(--color-ivory);
+  color: var(--color-umber);
+  font: var(--weight-medium) var(--text-small) / 1 var(--font-body);
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-hover) var(--ease),
+    color var(--duration-hover) var(--ease);
+}
+.action:hover:not(:disabled) {
+  background: var(--color-umber);
+  color: var(--color-ivory);
+}
+.action:disabled {
+  color: var(--color-taupe);
+  cursor: not-allowed;
+}
+@media (hover: hover) {
+  .action {
+    transform: translateY(calc(100% + var(--space-4)));
+    transition:
+      transform 350ms var(--ease),
+      background-color var(--duration-hover) var(--ease),
+      color var(--duration-hover) var(--ease);
+  }
+  .card:hover .action,
+  .action:focus-visible {
+    transform: none;
+  }
+  .card:hover .imageLink img {
+    transform: scale(1.03);
+  }
+  .hasHover:hover .hoverImage {
+    opacity: 1;
+  }
+}
+@media (hover: none) {
+  .media {
+    overflow: visible;
+    margin-bottom: 52px;
+  }
+  .action {
+    top: calc(100% + var(--space-2));
+    right: 0;
+    bottom: auto;
+    left: 0;
+    border: 1px solid var(--color-umber);
+    background: none;
+  }
+}
+
+.body {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+}
+.name {
+  font: var(--weight-regular) var(--text-body) / 1.35 var(--font-body);
+  letter-spacing: 0;
+}
+.name a {
+  text-decoration: none;
+}
+.name a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-1);
+}
+.body > :last-child:not(.meta) {
+  margin-top: var(--space-2);
+}

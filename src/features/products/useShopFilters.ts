@@ -18,6 +18,7 @@ export function useShopFilters(category?: string) {
   const params = useSearchParams();
   const query = params.get("search") || "";
   const collection = params.get("collection") || "";
+  const subcategory = params.get("sub") || undefined;
   const concern = params.get("concern") || "";
   const underFifty = params.get("price") === "under-50";
   const inStock = params.get("stock") === "in";
@@ -35,13 +36,14 @@ export function useShopFilters(category?: string) {
   const goToCategory = (value: string) => {
     const next = new URLSearchParams(params);
     next.delete("collection");
+    next.delete("sub");
     if (value === "new") next.set("collection", "new");
     const path = CATEGORIES.includes(value) ? `/shop/${value}` : "/shop";
     router.push(withQuery(path, next));
   };
 
   return {
-    filters: { category, collection, query, concern, underFifty, inStock, sort },
+    filters: { category, subcategory, collection, query, concern, underFifty, inStock, sort },
     /** Number of drawer filters in use (concern, price, stock). */
     filterCount: Number(Boolean(concern)) + Number(underFifty) + Number(inStock),
     activeCategory: collection === "new" ? "new" : category || "all",

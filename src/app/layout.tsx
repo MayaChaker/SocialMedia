@@ -1,17 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, Figtree } from "next/font/google";
+import { Albert_Sans, Noto_Serif_Display } from "next/font/google";
 import AppProviders from "../providers/AppProviders";
 import "../styles/index.css";
 
 // Self-hosted at build time: no request to Google at runtime and no layout shift.
-// Both are variable fonts, so every weight comes from one file per style.
-const serif = Bodoni_Moda({
+// Only the weights the type scale uses: 300 for display sizes, 400 for smaller headings.
+const serif = Noto_Serif_Display({
   subsets: ["latin"],
+  weight: ["300", "400"],
   style: ["normal", "italic"],
-  axes: ["opsz"],
   variable: "--font-serif",
 });
-const sans = Figtree({ subsets: ["latin"], variable: "--font-sans" });
+const sans = Albert_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 const DESCRIPTION =
   "Veloura Beauty creates considered skincare, makeup, and rituals with effective formulas and sensorial textures.";
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-export const viewport: Viewport = { themeColor: "#4a2730" };
+export const viewport: Viewport = { themeColor: "#2a231e" };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (

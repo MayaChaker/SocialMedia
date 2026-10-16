@@ -1,0 +1,78 @@
+.field {
+  display: grid;
+  gap: var(--space-2);
+}
+.label {
+  font: var(--weight-medium) var(--text-small) / 1.4 var(--font-body);
+}
+.control {
+  width: 100%;
+  height: var(--control-height);
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-white);
+  font-size: var(--text-body);
+  transition: border-color var(--duration-hover) var(--ease);
+}
+.control::placeholder {
+  color: var(--color-taupe);
+}
+.control:hover {
+  border-color: var(--color-taupe);
+}
+.control:focus-visible {
+  border-color: var(--color-umber);
+  outline: none;
+}
+.control[aria-invalid="true"] {
+  border-color: var(--color-error);
+}
+.hint,
+.error {
+  font-size: var(--text-caption);
+  line-height: 1.4;
+}
+.hint {
+  color: var(--color-taupe);
+}
+.error {
+  color: var(--color-error);
+}
+
+.selectWrap {
+  position: relative;
+}
+.select {
+  padding-right: var(--space-7);
+  appearance: none;
+  cursor: pointer;
+}
+.chevron {
+  position: absolute;
+  top: 50%;
+  right: var(--space-3);
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 36px;
+  font-size: var(--text-small);
+  cursor: pointer;
+}
+.checkInput {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--color-umber);
+  cursor: pointer;
+}
+.count {
+  color: var(--color-taupe);
+}

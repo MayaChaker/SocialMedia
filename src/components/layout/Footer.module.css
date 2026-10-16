@@ -1,0 +1,128 @@
+.footer {
+  margin-top: var(--section-space);
+  padding: var(--space-8) var(--gutter) var(--space-6);
+  background: var(--color-bone);
+}
+.top,
+.bottom,
+.mark {
+  max-width: var(--container-max);
+  margin-inline: auto;
+}
+.top {
+  display: grid;
+  gap: var(--space-7);
+}
+.columns {
+  display: grid;
+}
+
+/* Link columns: accordions on phones, open columns from tablet width. */
+.column {
+  border-top: var(--border);
+}
+.column:last-child {
+  border-bottom: var(--border);
+}
+.column summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  color: var(--color-taupe);
+  list-style: none;
+  cursor: pointer;
+}
+.column summary::-webkit-details-marker {
+  display: none;
+}
+.column summary::after {
+  content: "+";
+  font: var(--weight-light) 1.25rem / 1 var(--font-body);
+  color: var(--color-umber);
+}
+.column[open] summary::after {
+  content: "–";
+}
+.column ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0 0 var(--space-5);
+  list-style: none;
+  font-size: 0.875rem;
+}
+.column a,
+.legal a {
+  text-decoration: none;
+}
+.column a:hover,
+.legal a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* The wordmark as a large, faint signature across the footer. */
+.mark {
+  margin-top: var(--space-8);
+  overflow: hidden;
+  color: color-mix(in srgb, var(--color-umber) 9%, transparent);
+  font: var(--weight-light) clamp(3rem, 14vw, 14rem) / 0.8 var(--font-display);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+  user-select: none;
+}
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: var(--border);
+  color: var(--color-taupe);
+  font-size: var(--text-caption);
+}
+.payments,
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.payments li {
+  padding: var(--space-1) var(--space-2);
+  border: var(--border);
+}
+
+@media (min-width: 768px) {
+  .columns {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-6);
+  }
+  .column,
+  .column:last-child {
+    border: 0;
+  }
+  .column summary {
+    min-height: 0;
+    margin-bottom: var(--space-4);
+    pointer-events: none;
+  }
+  .column summary::after,
+  .column[open] summary::after {
+    content: none;
+  }
+}
+@media (min-width: 1024px) {
+  .footer {
+    padding-top: var(--space-9);
+  }
+  .top {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: var(--space-9);
+  }
+}
