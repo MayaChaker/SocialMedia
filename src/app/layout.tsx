@@ -14,7 +14,7 @@ const serif = Noto_Serif_Display({
 const sans = Albert_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 const DESCRIPTION =
-  "Veloura Beauty creates considered skincare, makeup, and rituals with effective formulas and sensorial textures.";
+  "A considered edit of makeup, skincare, fragrance and haircare from the brands you love.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: "Veloura Beauty",
     title: "Veloura Beauty ",
-    description: "High-performance beauty essentials made for daily ritual.",
+    description: DESCRIPTION,
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
   twitter: { card: "summary_large_image" },

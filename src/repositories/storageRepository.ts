@@ -6,7 +6,6 @@ export const STORAGE_KEYS = Object.freeze({
   wishlist: "wishlist.v1",
   orders: "orders.v1",
   profile: "beautyProfile.v1",
-  routine: "routineResults.v1",
   recent: "recentlyViewed.v1",
 });
 

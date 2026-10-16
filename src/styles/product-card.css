@@ -31,9 +31,7 @@
 .previewVisual,
 .cartThumb,
 .miniVisual,
-.detailVisual,
-.routineProductVisual,
-.savedRoutineThumb {
+.detailVisual {
   background: var(--tone, var(--stone));
 }
 .productBadge,

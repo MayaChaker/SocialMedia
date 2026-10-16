@@ -116,11 +116,9 @@
 }
 .profileLayout {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-  gap: 28px;
+  max-width: 720px;
 }
-.profileForm,
-.savedProfileCard {
+.profileForm {
   border: 1px solid var(--line);
   background: var(--porcelain);
   padding: 30px;
@@ -163,90 +161,11 @@
   min-height: 24px;
   color: var(--color-umber);
 }
-.profileSaved {
-  display: grid;
-  gap: 20px;
-}
-.savedProfileCard h2 {
-  font: 300 var(--text-3xl) var(--serif);
-  margin: 10px 0;
-}
-.savedShadeContent {
-  display: grid;
-  grid-template-columns: 155px 1fr;
-  gap: 22px;
-  margin-top: 18px;
-}
-.savedShadeVisual {
-  background: var(--blush);
-}
-.savedRoutineThumb,
-.savedShadeVisual {
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-}
-.savedShadeVisual {
-  height: 180px;
-}
-.savedRoutineThumb .productArt,
-.savedShadeVisual .productArt {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.savedShadeContent > div:last-child {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-.savedShadeContent p {
-  color: var(--muted);
-}
-.savedShadeContent .textLink {
-  margin-top: 10px;
-}
-.savedRoutineGrid {
-  display: grid;
-  gap: 10px;
-  margin: 20px 0;
-}
-.savedRoutineGrid > a {
-  display: grid;
-  grid-template-columns: 72px 1fr;
-  gap: 14px;
-  align-items: center;
-  text-decoration: none;
-  border: 1px solid var(--line);
-  padding: 8px;
-}
-.savedRoutineThumb {
-  height: 64px;
-}
-.savedRoutineGrid span:last-child {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.profileEmpty p,
-.savedRoutineGrid small {
-  color: var(--muted);
-  font-size: var(--text-md);
-}
-@media (max-width: 1050px) {
-  .profileLayout {
-    grid-template-columns: 1fr;
-  }
-}
 @media (max-width: 700px) {
   .profilePage {
     padding-inline: 18px;
   }
-  .profileForm,
-  .savedProfileCard {
+  .profileForm {
     padding: 22px;
-  }
-  .savedShadeContent {
-    grid-template-columns: 110px 1fr;
   }
 }

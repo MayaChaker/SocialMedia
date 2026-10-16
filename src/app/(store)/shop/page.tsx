@@ -3,7 +3,8 @@ import ShopPage from "../../../features/products/ShopPage";
 
 export const metadata = {
   title: "Shop",
-  description: "Shop considered skincare, makeup, and curated beauty rituals from Veloura Beauty.",
+  description:
+    "Shop makeup, skincare, fragrance and haircare from the brands you love, at Veloura Beauty.",
 };
 
 export default function Page() {

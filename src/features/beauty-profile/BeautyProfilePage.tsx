@@ -1,10 +1,8 @@
 "use client";
 
 import ProfileForm from "./ProfileForm";
-import SavedRoutineCard from "./SavedRoutineCard";
-import SavedShadeCard from "./SavedShadeCard";
 
-/** Browser-saved preferences, plus the shade and routine saved from the guided tools. */
+/** Browser-saved skin and texture preferences. */
 export default function BeautyProfilePage() {
   return (
     <main className="profilePage">
@@ -18,10 +16,6 @@ export default function BeautyProfilePage() {
       </header>
       <div className="profileLayout">
         <ProfileForm />
-        <aside className="profileSaved">
-          <SavedShadeCard />
-          <SavedRoutineCard />
-        </aside>
       </div>
     </main>
   );

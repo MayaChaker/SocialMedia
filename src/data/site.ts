@@ -29,8 +29,8 @@ export const FOOTER_COLUMNS: readonly MenuColumn[] = [
     title: "Veloura",
     links: [
       { label: "Our story", href: "/about" },
-      { label: "Shade Match", href: "/shade-match" },
-      { label: "Routine Builder", href: "/rituals" },
+      { label: "Brands A–Z", href: "/brands" },
+      { label: "Beauty profile", href: "/profile" },
       { label: "Accessibility", href: "/care/accessibility" },
     ],
   },

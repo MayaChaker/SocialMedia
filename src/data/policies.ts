@@ -46,15 +46,15 @@ export const POLICIES: Record<string, Policy> = {
   },
   faq: {
     title: "Frequently asked questions",
-    intro: "Helpful details about products, orders, and daily rituals.",
+    intro: "Helpful details about products and orders.",
     sections: [
       [
-        "Are Veloura products cruelty-free?",
-        "Yes. Veloura products and ingredients are not tested on animals.",
+        "Which brands do you carry?",
+        "Every brand we carry is listed on Brands A–Z, with the products we stock from each.",
       ],
       [
-        "How do I choose a routine?",
-        "Use our Routine Builder for a considered starting point based on your skin goals and preferences.",
+        "How do I choose a shade?",
+        "Each product page shows its shades as swatches. Compare them in daylight; unused products in their original packaging can be returned within 30 days.",
       ],
       [
         "Can I change an order?",
