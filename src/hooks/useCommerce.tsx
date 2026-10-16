@@ -14,7 +14,8 @@ import type { CartLine, Order, ProductId, Totals } from "../types/commerce";
 import { usePersistentState } from "./usePersistentState";
 
 export interface CommerceActions {
-  addToCart: (selection: SelectionInput) => void;
+  /** Adds one, or `quantity`, of a product or shade. */
+  addToCart: (selection: SelectionInput, quantity?: number) => void;
   updateQuantity: (id: string, delta: number) => void;
   removeFromCart: (id: string) => void;
   clearCart: () => void;
@@ -47,7 +48,8 @@ export function CommerceProvider({ children }: { children: ReactNode }) {
   // components can list them as effect dependencies safely.
   const actions = useMemo<CommerceActions>(
     () => ({
-      addToCart: (selection) => setCart((items) => addCartItem(items, selection)),
+      addToCart: (selection, quantity) =>
+        setCart((items) => addCartItem(items, selection, quantity)),
       updateQuantity: (id, delta) => setCart((items) => updateCartItemQuantity(items, id, delta)),
       removeFromCart: (id) => setCart((items) => removeCartItem(items, id)),
       clearCart: () => {

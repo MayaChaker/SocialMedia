@@ -1,0 +1,43 @@
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  height: var(--control-height);
+  border: var(--border);
+  background: var(--color-paper);
+}
+.stepper button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 100%;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: background-color var(--duration-hover) var(--ease);
+}
+.stepper button:hover:not(:disabled) {
+  background: var(--color-bone);
+}
+.stepper button:disabled {
+  color: var(--color-line);
+  cursor: not-allowed;
+}
+.stepper svg {
+  width: 16px;
+  height: 16px;
+}
+.stepper span {
+  min-width: 28px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.small {
+  height: 36px;
+}
+.small button {
+  width: 32px;
+}
+.small svg {
+  width: 14px;
+  height: 14px;
+}

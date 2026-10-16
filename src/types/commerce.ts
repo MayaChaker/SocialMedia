@@ -142,19 +142,30 @@ export interface ContactDetails {
   phone: string;
 }
 
+/**
+ * Where an order goes. Addresses in Lebanon rarely use postcodes, so couriers rely on the
+ * area, building and directions, and on the pin dropped on the map.
+ */
 export interface ShippingAddress {
-  address: string;
-  apartment: string;
-  city: string;
+  area: string;
+  street: string;
+  building: string;
+  floor: string;
+  /** Free text for the courier, e.g. "Next to the pharmacy, blue door". */
+  directions: string;
   country: string;
-  postalCode: string;
+  /** The pin dropped on the map, when the shopper placed one. */
+  location?: { lat: number; lng: number };
 }
+
+export type PaymentMethod = "card" | "apple-pay" | "whish" | "cash";
 
 /** What checkout collects before an order is placed. */
 export interface OrderRequest {
   cart: CartLine[];
   contact: ContactDetails;
   shipping: ShippingAddress;
+  paymentMethod: PaymentMethod;
   promoCode: string;
   total: number;
 }

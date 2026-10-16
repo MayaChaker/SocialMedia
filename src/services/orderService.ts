@@ -1,3 +1,4 @@
+import { paymentLabel } from "../domain/commerce/paymentMethods";
 import type { HostedCheckoutSession, Order, OrderRequest } from "../types/commerce";
 
 /** True when orders go to a hosted payment provider instead of the browser-only demo. */
@@ -13,6 +14,7 @@ export const orderService = {
     cart,
     contact,
     shipping,
+    paymentMethod,
     promoCode,
     total,
   }: OrderRequest): Promise<Order | HostedCheckoutSession> {
@@ -29,6 +31,7 @@ export const orderService = {
           })),
           contact,
           shipping,
+          paymentMethod,
           promoCode,
         }),
       });
@@ -42,9 +45,10 @@ export const orderService = {
       items: cart,
       contact,
       shipping,
+      paymentMethod,
       promoCode,
       total,
-      payment: "Demo payment",
+      payment: paymentLabel(paymentMethod),
     };
   },
 };

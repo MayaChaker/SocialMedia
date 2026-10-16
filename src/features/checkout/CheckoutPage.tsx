@@ -1,34 +1,38 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, LockOutlined } from "@mui/icons-material";
+import { ExpandMore } from "@mui/icons-material";
+import { money } from "../../lib/money";
 import { useCommerce } from "../../hooks/useCommerce";
-import { isHostedCheckout, orderService } from "../../services/orderService";
-import type { ContactDetails, ShippingAddress } from "../../types/commerce";
-import ContactStep from "./ContactStep";
+import { orderService } from "../../services/orderService";
+import type { ContactDetails, PaymentMethod, ShippingAddress } from "../../types/commerce";
+import CheckoutHeader from "./CheckoutHeader";
+import CheckoutStepper from "./CheckoutStepper";
+import DeliveryStep from "./DeliveryStep";
+import InformationStep from "./InformationStep";
 import OrderSummary from "./OrderSummary";
-import ReviewStep from "./ReviewStep";
-import ShippingStep from "./ShippingStep";
+import PaymentStep from "./PaymentStep";
+import styles from "./checkout.module.css";
 
-const STEPS = ["Contact", "Shipping", "Review"];
 const emptyContact: ContactDetails = { email: "", firstName: "", lastName: "", phone: "" };
 const emptyShipping: ShippingAddress = {
-  address: "",
-  apartment: "",
-  city: "",
+  area: "",
+  street: "",
+  building: "",
+  floor: "",
+  directions: "",
   country: "Lebanon",
-  postalCode: "",
 };
 
-/** Three-step checkout: contact, shipping, review. */
+/** Checkout in three steps, one screen each: information, delivery, payment. */
 export default function CheckoutPage() {
   const router = useRouter();
   const { cart, hydrated, totals, promoCode, addOrder, clearCart } = useCommerce();
   const [step, setStep] = useState(1);
   const [contact, setContact] = useState(emptyContact);
   const [shipping, setShipping] = useState(emptyShipping);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [placing, setPlacing] = useState(false);
   const [placed, setPlaced] = useState(false);
   const [checkoutError, setCheckoutError] = useState("");
@@ -39,12 +43,18 @@ export default function CheckoutPage() {
     if (emptyBag) router.replace("/shop");
   }, [emptyBag, router]);
 
+  // Each step starts at the top of the page.
+  useEffect(() => {
+    window.scrollTo?.({ top: 0 });
+  }, [step]);
+
   if (!hydrated || !cart.length) return null;
 
   const goTo = (nextStep: number) => (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setStep(nextStep);
   };
+  const deliveryLabel = `Standard delivery · ${totals.shipping ? money(totals.shipping) : "Free"}`;
 
   const placeOrder = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -55,6 +65,7 @@ export default function CheckoutPage() {
         cart,
         contact,
         shipping,
+        paymentMethod,
         promoCode,
         total: totals.total,
       });
@@ -68,65 +79,78 @@ export default function CheckoutPage() {
       clearCart();
     } catch (error) {
       setCheckoutError(
-        (error instanceof Error && error.message) || "Checkout could not be started.",
+        (error instanceof Error && error.message) || "Your order could not be placed.",
       );
       setPlacing(false);
     }
   };
 
+  const summary = <OrderSummary cart={cart} totals={totals} promoCode={promoCode} />;
+
   return (
-    <main className="checkoutPage">
-      <header>
-        <button onClick={() => router.back()}>
-          <ChevronLeft /> Back
-        </button>
-        <Link className="wordmark" href="/">
-          VELOURA<span>BEAUTY</span>
-        </Link>
-        <span>
-          <LockOutlined /> {isHostedCheckout ? "Secure checkout" : "Demo checkout"}
-        </span>
-      </header>
-      <div className="checkoutLayout">
-        <section className="checkoutForm">
-          <ol className="checkoutSteps" aria-label="Checkout progress">
-            {STEPS.map((label, index) => (
-              <li
-                className={step >= index + 1 ? "active" : ""}
-                aria-current={step === index + 1 ? "step" : undefined}
-                key={label}
-              >
-                <i>{index + 1}</i>
-                {label}
-              </li>
-            ))}
-          </ol>
-          {step === 1 && (
-            <ContactStep contact={contact} setContact={setContact} onSubmit={goTo(2)} />
-          )}
-          {step === 2 && (
-            <ShippingStep
-              shipping={shipping}
-              setShipping={setShipping}
-              totals={totals}
-              onSubmit={goTo(3)}
-              onBack={() => setStep(1)}
-            />
-          )}
-          {step === 3 && (
-            <ReviewStep
-              contact={contact}
-              shipping={shipping}
-              total={totals.total}
-              placing={placing}
-              error={checkoutError}
-              onSubmit={placeOrder}
-              onEdit={setStep}
-            />
-          )}
-        </section>
-        <OrderSummary cart={cart} totals={totals} promoCode={promoCode} />
-      </div>
-    </main>
+    <div className={styles.page}>
+      <CheckoutHeader />
+
+      <details className={styles.mobileSummary}>
+        <summary>
+          <span>
+            Order summary <ExpandMore aria-hidden="true" />
+          </span>
+          <strong>{money(totals.total)}</strong>
+        </summary>
+        {summary}
+      </details>
+
+      <main className={styles.wrap}>
+        <h1 className="srOnly">Checkout</h1>
+        <CheckoutStepper step={step} />
+        <div className={styles.grid}>
+          <div className={styles.steps}>
+            {step > 1 && step < 3 && (
+              <section className={`${styles.card} ${styles.doneCard}`}>
+                <p>
+                  <strong>Information</strong>
+                  {contact.firstName} {contact.lastName} · {contact.email} · {contact.phone}
+                </p>
+                <button type="button" onClick={() => setStep(1)} aria-label="Edit information">
+                  Edit
+                </button>
+              </section>
+            )}
+            {step === 1 && (
+              <InformationStep contact={contact} setContact={setContact} onSubmit={goTo(2)} />
+            )}
+            {step === 2 && (
+              <DeliveryStep
+                shipping={shipping}
+                setShipping={setShipping}
+                totals={totals}
+                onSubmit={goTo(3)}
+                onBack={() => setStep(1)}
+              />
+            )}
+            {step === 3 && (
+              <PaymentStep
+                contact={contact}
+                shipping={shipping}
+                deliveryLabel={deliveryLabel}
+                method={paymentMethod}
+                onMethod={setPaymentMethod}
+                total={totals.total}
+                placing={placing}
+                error={checkoutError}
+                onSubmit={placeOrder}
+                onEdit={setStep}
+                onBack={() => setStep(2)}
+              />
+            )}
+          </div>
+          <aside className={`${styles.card} ${styles.summary}`} aria-label="Order summary">
+            <h2 className={styles.cardTitle}>Order summary</h2>
+            {summary}
+          </aside>
+        </div>
+      </main>
+    </div>
   );
 }
